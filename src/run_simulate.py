@@ -136,7 +136,6 @@ def features_picker(simulation_dict, sim_df, target, horizon):
     return modified_pre_selected_df, meta_features_df, target_series_df, final_simulation_correlation_df
 
 def load_model(local=True):
-    import pdb;pdb.set_trace()
     if local:
         worst = r'C:\Users\mallict\forecasty-lab\BASF_Metals\artifacts\forecast'
         # load the model from disk
@@ -156,7 +155,6 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     target_name = f"{target}_spot_price"
     print(simulation_dict)
     modified_pre_selected_df, meta_features_df, target_series, final_simulation_correlation_df = features_picker(  sim_df= sim_df, simulation_dict = simulation_dict,target=target_name,horizon=horizon)
-    import pdb;pdb.set_trace()
     # print(modified_pre_selected_df['EXR_CNY_USD'])
     model = load_model(local=True)
     # model = model.fit(modified_pre_selected_df, y=target_series, meta_features=meta_features_df)
