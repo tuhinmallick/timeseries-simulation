@@ -18,7 +18,6 @@ from sklearn.feature_selection import RFE
 from hyperopt import fmin, hp, tpe, Trials, space_eval
 from hyperopt.pyll import scope as ho_scope
 from hyperopt.pyll.stochastic import sample as ho_sample
-import xgboost as xgb
 import lightgbm as lgb 
 
 from statsmodels.tsa.seasonal import STL
