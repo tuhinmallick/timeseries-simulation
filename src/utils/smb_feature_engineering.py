@@ -1,11 +1,10 @@
 import pandas
-
-from BASF_Metals.Models.src.smoothboost.main_regression_deploy import *
-from BASF_Metals.Models.src.smoothboost.pipelib.reduce_memory_usage import reduce_mem_usage
-from BASF_Metals.Models.src.smoothboost.pipelib.grange_and_correlate import grange_and_correlate, user_input_correlation_picker
-from BASF_Metals.Models.src.smoothboost.pipelib.remove_missing_data import remove_features_with_na
-from BASF_Metals.Models.src.smoothboost.pipelib import STLModel
-from BASF_Metals.Models.src.smoothboost.pipelib.reduce_memory_usage import reduce_mem_usage
+import os,sys, logging, pathlib,pickle,traceback
+import pdb;pdb.set_trace()
+utils_location = pathlib.Path(__file__).absolute().parent
+if os.path.realpath(utils_location) not in sys.path:
+    sys.path.append(os.path.realpath(utils_location))
+import STLModel
 
 
 def feature_engineering_pipeline(df: pandas.DataFrame, target: str, horizon: int, pre_selected_features: list, forecast_type: str):
