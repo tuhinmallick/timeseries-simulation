@@ -5,7 +5,8 @@ utils_location = pathlib.Path(__file__).absolute().parent
 if os.path.realpath(utils_location) not in sys.path:
     sys.path.append(os.path.realpath(utils_location))
 import STLModel
-
+import feature_engineering as fe
+import forecastutils as fu
 
 def feature_engineering_pipeline(df: pandas.DataFrame, target: str, horizon: int, pre_selected_features: list, forecast_type: str):
     # ===========================================================================================================
