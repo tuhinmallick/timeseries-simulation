@@ -1,5 +1,4 @@
-from this import d
-import time
+
 import requests
 import os,sys, logging, pathlib,pickle,traceback
 import streamlit as st
@@ -9,13 +8,12 @@ import streamlit_authenticator as stauth
 
 import pandas as pd
 from PIL import Image
-current_location = pathlib.Path(__file__).absolute()
-BASF_Metals_path = current_location.parent.parent.parent.parent
-if os.path.realpath(BASF_Metals_path) not in sys.path:
-    sys.path.append(os.path.realpath(BASF_Metals_path))
-import EDA.src.eda_base  as eda_base
-import Models.notebooks.run_simulate as simulate
-from Models.src.smoothboost.pipelib import grange_and_correlate
+src_location = pathlib.Path(__file__).absolute().parent
+artifact_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'artifacts')
+if os.path.realpath(src_location) not in sys.path:
+    sys.path.append(os.path.realpath(src_location))
+import utils.eda_base as eda_base
+import run_simulate as simulate
 
 def __init__(self):
     self.bytes_data=None
@@ -101,18 +99,18 @@ def historical_forecast():
     with forecast:
         st.button('Forecast', on_click=set_Forecast)
         pickle_df = f"{commodity}_forecast_fig.pickle"
-        with open(os.path.join(BASF_Metals_path,'artifacts','forecast',pickle_df), 'rb') as meta_features:
-            forecast_chart = pickle.load(meta_features)
+        with open(os.path.join(artifact_location,'forecast','forecast_chart',pickle_df), 'rb') as _file:
+            forecast_chart = pickle.load(_file)
     with feature_importance:
         st.button('Drivers', on_click=set_Drivers)
         pickle_df = f"{commodity}_features_fig.pickle"
-        with open(os.path.join(BASF_Metals_path,'artifacts','forecast',pickle_df), 'rb') as meta_features:
-            drivers_chart = pickle.load(meta_features)
+        with open(os.path.join(artifact_location,'forecast','forecast_drivers',pickle_df), 'rb') as _file:
+            drivers_chart = pickle.load(_file)
     with backtesting:
         st.button('Backtesting', on_click=set_Backtesting)
         pickle_df = f"{commodity}_backtest_fig.pickle"
-        with open(os.path.join(BASF_Metals_path,'artifacts','forecast',pickle_df), 'rb') as meta_features:
-            backtesting_chart = pickle.load(meta_features)
+        with open(os.path.join(artifact_location,'forecast','forecast_backtesting',pickle_df), 'rb') as _file:
+            backtesting_chart = pickle.load(_file)
     if st.session_state.Forecast == True:
         st.write("### The plot for Forecast of {} ".format(commodity))
         st.plotly_chart(forecast_chart, use_container_width=False, sharing="streamlit")
@@ -148,7 +146,7 @@ def plot_simulation(simulation_fig, forecast, original_forecast, horizon, commod
     with st.expander("Feature Importance chart"):
         pickle_df = f"{commodity}_features_fig.pickle"
         st.write("**Please note** :  The features listed in this chart shows it influences the prices of the commodity that is being predicted. The new comodity that ")
-        with open(os.path.join(BASF_Metals_path,'artifacts','forecast',pickle_df), 'rb') as meta_features:
+        with open(os.path.join(artifact_location,'forecast','forecast_drivers',pickle_df), 'rb') as meta_features:
             drivers_chart = pickle.load(meta_features)
         st.write(f"### The plot for feature importance of {commodity} ")
         st.plotly_chart(drivers_chart, use_container_width=False, sharing="streamlit")
@@ -259,7 +257,7 @@ def main():
         try : 
             data = None
             st.title("PGM Price Forecasting")
-            image = Image.open(os.path.join(BASF_Metals_path, "raw_data", "logo_forecasty.PNG"))    
+            image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))    
             # Forecasty logo
             st.sidebar.image(image, output_format ='PNG', use_column_width  ='always')
             # st.sidebar.write('##### Machine learns, company earns')

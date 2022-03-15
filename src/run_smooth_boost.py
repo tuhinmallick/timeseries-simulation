@@ -26,17 +26,18 @@ from sqlalchemy import true
 
 
 # base_path = r"C:\Users\OchsP\Documents\Python-dev\forecasty-lab"
-base_path = r"C:\Users\mallict\forecasty-lab"
+# base_path = r"C:\Users\mallict\forecasty-lab"
+src_location = pathlib.Path(__file__).absolute().parent
+artifact_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'artifacts')
 
 
-if os.path.realpath(base_path) not in sys.path:
-    sys.path.append(os.path.realpath(base_path))
-    
-from BASF_Metals.Models.src.smoothboost.main_regression_deploy import *
-from BASF_Metals.Models.src.smoothboost.pipelib.reduce_memory_usage import reduce_mem_usage
-from BASF_Metals.Models.src.smoothboost.pipelib.grange_and_correlate import grange_and_correlate, user_input_correlation_picker
-from BASF_Metals.Models.src.smoothboost.pipelib.remove_missing_data import remove_features_with_na
-from BASF_Metals.Models.src.smoothboost.pipelib.smb_feature_engineering import feature_engineering_pipeline
+if os.path.realpath(src_location) not in sys.path:
+    sys.path.append(os.path.realpath(src_location))
+from utils.main_regression_deploy import *
+from utils.reduce_memory_usage import reduce_mem_usage
+from utils.grange_and_correlate import grange_and_correlate, user_input_correlation_picker
+from utils.remove_missing_data import remove_features_with_na
+from utils.smb_feature_engineering import feature_engineering_pipeline
 
 # =======================================================================================
 #   SUPPORTING FUNCTIONS
@@ -142,7 +143,7 @@ if __name__ == "__main__":
         os.environ["HYPEROPT_FMIN_SEED"] = str(HYPEROPT_FMIN_SEED)
         
         # Set the exfcel parameters.
-        file_name = "Platinum_Drivers_Month"
+        file_name = "PGM_Data_Month"
         sheet_names = ["Data Dictionary", "Compiled Dataset"]
         
         # Configure the hyperopt setting
@@ -217,23 +218,23 @@ if __name__ == "__main__":
             # =========================== RAW UNTRANSFORMED DATA ===========================
             # Get the base data and adjust.
             df = pd.read_excel(
-                os.path.join(base_path, "BASF_Metals", "raw_data", file_name + ".xlsx"),
+                os.path.join(artifact_location,'source_data', file_name + ".xlsx"),
                 sheet_names[1]
                 )
             df["Date"] = pd.to_datetime(df["Date"])
             df.set_index("Date", inplace=True)
             df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
-            path2save_raw_data = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","df.pkl")
+            path2save_raw_data = os.path.join(artifact_location,'dataframes',"df.pkl")
             # Dataset.Tabular.register_pandas_dataframe(dataframe=df, target= (datastore,"forecast/dataframe"), name="df_raw", show_progress = True)
             # df.to_pickle(path2save_raw_data, protocol=4)
             mlflow.log_artifact(local_path = path2save_raw_data, artifact_path ="forecasts")
 
             # Read the data dictionary with the full names.
             df_dict = pd.read_excel(
-                os.path.join(base_path, "BASF_Metals", "raw_data", file_name + ".xlsx"),
+               os.path.join(artifact_location,'source_data', file_name + ".xlsx"),
                 sheet_names[0]
                 )[["Feature Name", "Full Name"]]
-            path2save_df_dict = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","df_dict.pkl")
+            path2save_df_dict = os.path.join(artifact_location,'dataframes',"df_dict.pkl") 
             df.to_pickle(path2save_df_dict, protocol=4)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=df, target="forecast/dataframe", name="df_dict")
             mlflow.log_artifact(local_path = path2save_df_dict, artifact_path ="forecasts")
@@ -244,17 +245,18 @@ if __name__ == "__main__":
             # Remove features that contain a lot of missing data.
             df = remove_features_with_na(df, threshold=65, trailing_value=5)
             df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
-            path2save_tidy_df = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","df_tidy.pkl")
+            path2save_tidy_df = os.path.join(artifact_location,'dataframes',"df_tidy.pkl")
             df.to_pickle(path2save_tidy_df, protocol=4)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=df, target="forecast/dataframe", name="df_tidy")
             mlflow.log_artifact(local_path = path2save_tidy_df, artifact_path ="forecasts/dataframe")
             # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             #   SET META FEATURES
             # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            
+            import pdb;pdb.set_trace()
+
             meta_features = create_meta_feature_frame(df[target].dropna(), horizon, ci_alpha=0.05)
             meta_feature_prefix = "meta__ETS"
-            path2save_meta_features = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","meta_features.pkl")
+            path2save_meta_features = os.path.join(artifact_location,'dataframes',"meta_features.pkl")
             meta_features.to_pickle(path2save_meta_features, protocol=4)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=meta_features, target="forecast/dataframe", name="meta_features")
             mlflow.log_artifact(local_path = path2save_meta_features, artifact_path ="forecasts")
@@ -274,11 +276,11 @@ if __name__ == "__main__":
             df, target_series = feature_engineering_pipeline(df=df, target=target, horizon=horizon, pre_selected_features=indicator_cols, forecast_type=forecast_type)
 
             # The local paths to the dataframes
-            path2save_granger = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","df_granger.pkl")
-            path2save_correlation = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","df_correlation.pkl")
-            path2save_fe_df = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","fe_df.pkl")
-            path2save_target = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","target_series.pkl")
-            path2save_pre_selected_features = os.path.join(base_path, "BASF_Metals", "artifacts", "forecast","pre_selected_features_df.pkl")
+            path2save_granger = os.path.join(artifact_location,'dataframes',"df_granger.pkl")
+            path2save_correlation = os.path.join(artifact_location,'dataframes',"df_correlation.pkl")
+            path2save_fe_df = os.path.join(artifact_location,'dataframes',"fe_df.pkl")
+            path2save_target = os.path.join(artifact_location,'dataframes',"target_series.pkl")
+            path2save_pre_selected_features = os.path.join(artifact_location,'dataframes',"pre_selected_features_df.pkl")
 
             # Pickling the dataframes
             df_granger.to_pickle(path2save_granger, protocol=4)
@@ -493,17 +495,17 @@ if __name__ == "__main__":
                 )
                 import pdb;pdb.set_trace()
                 model_name = f"{target_name}_model_unfit.pkl"
-                with open(os.path.join(base_path, "BASF_Metals", "artifacts", "forecast",model_name), 'wb') as _model:
+                with open(os.path.join(artifact_location,'model',model_name), 'wb') as _model:
                      pickle.dump(model, _model, pickle.HIGHEST_PROTOCOL)
                 mlflow.sklearn.log_model(sk_model=model,registered_model_name  ="Multiple_Timestep_Regression_Forecaster_unfit", artifact_path = os.path.join( "BASF_Metals", "artifacts","Model"))
                 model = model.fit(df, y=target_series, meta_features=meta_features)
                 # mlflow.sklearn.log_model(sk_model=(model.fit(df, y=target_series, meta_features=meta_features)),registered_model_name  ="Multiple_Timestep_Regression_Forecaster_fit", artifact_path = os.path.join( "BASF_Metals", "artifacts","Model"))
                 _model_name = f"{target_name}_model_fit_{horizon}.pkl"
-                with open(os.path.join(base_path, "BASF_Metals", "artifacts", "forecast",_model_name), 'wb') as _model:
+                with open(os.path.join(artifact_location,'model',_model_name), 'wb') as _model:
                      pickle.dump(model, _model, pickle.HIGHEST_PROTOCOL)
                 forecast = model.predict(conf_ints=True)
                 _forecast_name = f"{target_name}_forecast_horizon_{horizon}.pkl"
-                with open(os.path.join(base_path, "BASF_Metals", "artifacts", "forecast",_forecast_name), 'wb') as _forecast:
+                with open(os.path.join(artifact_location,'dataframes',_forecast_name), 'wb') as _forecast:
                      pickle.dump(forecast, _forecast, pickle.HIGHEST_PROTOCOL)
                 forecast = pd.concat((target_series, forecast), axis=0).drop(columns=target)
                 model_uri = "runs:/{}/sklearn-model".format(MultipleTimestepRegressionForecaster.info.run_id)
@@ -545,7 +547,7 @@ if __name__ == "__main__":
                 feature_importances_1.to_csv(os.path.join(base_path, "BASF_Metals", "artifacts",MultipleTimestepRegressionForecaster.info.run_id,"forecast", "Feature_importance", "feature_importances_1.csv"))
                 feature_importances_2.to_csv(os.path.join(base_path, "BASF_Metals", "artifacts",MultipleTimestepRegressionForecaster.info.run_id,"forecast", "Feature_importance", "feature_importances_2.csv"))
                 feature_importances_3.to_csv(os.path.join(base_path, "BASF_Metals", "artifacts",MultipleTimestepRegressionForecaster.info.run_id,"forecast", "Feature_importance", "feature_importances_3.csv"))
-                mlflow.log_artifacts(local_dir = (os.path.join(base_path, "BASF_Metals", "artifacts", "forecast",MultipleTimestepRegressionForecaster.info.run_id)), artifact_path = 'forecasts/results_run')
+                mlflow.log_artifacts(local_dir = (os.path.join(artifact_location,'dataframes',MultipleTimestepRegressionForecaster.info.run_id)), artifact_path = 'forecasts/results_run')
                 mlflow.end_run(nested=True)  # In case the last run was not ended
         mlflow.end_run()  # In case the last run was not ended
     except MlflowException as err:

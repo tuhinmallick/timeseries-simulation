@@ -10,19 +10,17 @@ from mlflow.entities import ViewType
 import mlflow.sklearn
 import azureml.core
 from azureml.core import Workspace, Datastore, Dataset
-current_location = pathlib.Path(__file__).absolute()
-forecasty_path  = current_location.parent.parent.parent.parent
-artifact_path = os.path.join(current_location.parent.parent.parent,"artifacts")
-if os.path.realpath(forecasty_path) not in sys.path:
-    sys.path.append(os.path.realpath(forecasty_path))
-# model.fit(X_train, Y_train)
+src_location = pathlib.Path(__file__).absolute().parent
+artifact_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'artifacts')
+if os.path.realpath(src_location) not in sys.path:
+    sys.path.append(os.path.realpath(src_location))
 # # save the model to disk
 # filename = 'finalized_model.sav'
 # pickle.dump(model, open(filename, 'wb'))
+import utils.eda_base as eda_base
 
-from BASF_Metals.Models.src.smoothboost.pipelib import grange_and_correlate
-from BASF_Metals.Models.src.smoothboost.pipelib import smb_feature_engineering
-from BASF_Metals.Models.src.smoothboost.pipelib import plotly_visualization
+from utils import grange_and_correlate, smb_feature_engineering, plotly_visualization
+
 
 # grange_and_correlate import grange_and_correlate, user_input_correlation_picker
 
@@ -77,35 +75,34 @@ def model_retrieve():
 
 def features_picker(simulation_dict, sim_df, target, horizon):
     modified_pre_selected_df, simulation_correlation, change_pre_selected_df =None, {}, None
-    subscription_id = 'fc563dde-a9ad-4edf-9998-2d52ba8afff9'
-    # Azure Machine Learning resource group 
-    resource_group = 'forecasty_ml_test' 
-    # Azure Machine Learning workspace name
-    workspace_name = 'forecasty_ml_workplace'
-    # Instantiate Azure Machine Learning workspace
-    ws = Workspace.get(name=workspace_name,
-                    subscription_id=subscription_id,
-                    resource_group=resource_group)
-    blob_datastore_name='workspaceblobstore' # Name of the datastore to workspace
-    container_name=os.getenv("BLOB_CONTAINER", "azureml-blobstore-5622c08c-e4fd-4d5a-b2ba-842ccdbea3f4") # Name of Azure blob container
-    account_name=os.getenv("BLOB_ACCOUNTNAME", "forecastymlwor5588590134") # Storage account name
-    account_key=os.getenv("BLOB_ACCOUNT_KEY", "OjZI0eJQm1THrk10yVIpWTBYEXI3UMairzfQnYLjjZ7/+5YYKlVW/FZVtG5uhGi/oR0WSnXe9FmXVF0r+zuGMA==") # Storage account access key
+    # subscription_id = 'fc563dde-a9ad-4edf-9998-2d52ba8afff9'
+    # # Azure Machine Learning resource group 
+    # resource_group = 'forecasty_ml_test' 
+    # # Azure Machine Learning workspace name
+    # workspace_name = 'forecasty_ml_workplace'
+    # # Instantiate Azure Machine Learning workspace
+    # ws = Workspace.get(name=workspace_name,
+    #                 subscription_id=subscription_id,
+    #                 resource_group=resource_group)
+    # blob_datastore_name='workspaceblobstore' # Name of the datastore to workspace
+    # container_name=os.getenv("BLOB_CONTAINER", "azureml-blobstore-5622c08c-e4fd-4d5a-b2ba-842ccdbea3f4") # Name of Azure blob container
+    # account_name=os.getenv("BLOB_ACCOUNTNAME", "forecastymlwor5588590134") # Storage account name
+    # account_key=os.getenv("BLOB_ACCOUNT_KEY", "OjZI0eJQm1THrk10yVIpWTBYEXI3UMairzfQnYLjjZ7/+5YYKlVW/FZVtG5uhGi/oR0WSnXe9FmXVF0r+zuGMA==") # Storage account access key
 
-    # blob_datastore = Datastore.register_azure_blob_container(workspace=ws, 
-    #                                                         datastore_name=blob_datastore_name, 
-    #                                                         container_name=container_name, 
-    #                                                         account_name=account_name,
-    #                                                         account_key=account_key)
+    # # blob_datastore = Datastore.register_azure_blob_container(workspace=ws, 
+    # #                                                         datastore_name=blob_datastore_name, 
+    # #                                                         container_name=container_name, 
+    # #                                                         account_name=account_name,
+    # #                                                         account_key=account_key)
 
-    datastore = Datastore.get(workspace=ws, datastore_name=blob_datastore_name)
-    import pdb;pdb.set_trace()
+    # datastore = Datastore.get(workspace=ws, datastore_name=blob_datastore_name)
 
 
-    with open(os.path.join(artifact_path,'forecast','meta_features.pkl'), 'rb') as meta_features:
+    with open(os.path.join(artifact_location,'dataframes','meta_features.pkl'), 'rb') as meta_features:
         meta_features_df = pickle.load(meta_features)
-    with open(os.path.join(artifact_path,'forecast','pre_selected_features_df.pkl'), 'rb') as pre_selected_features:
+    with open(os.path.join(artifact_location,'dataframes','pre_selected_features_df.pkl'), 'rb') as pre_selected_features:
         pre_selected_features_df = pickle.load(pre_selected_features)
-    with open(os.path.join(artifact_path,'forecast','target_series.pkl'), 'rb') as target_series:
+    with open(os.path.join(artifact_location,'dataframes','target_series.pkl'), 'rb') as target_series:
         target_series_df = pickle.load(target_series)
     first_iteration = False
     # To get the correlation values as dictionary
@@ -139,19 +136,18 @@ def features_picker(simulation_dict, sim_df, target, horizon):
     return modified_pre_selected_df, meta_features_df, target_series_df, final_simulation_correlation_df
 
 def load_model(local=True):
+    import pdb;pdb.set_trace()
     if local:
-        # load the model from diskn
-        with open(os.path.join(artifact_path,'forecast','Platinum_model_fit.pkl'), 'rb') as _model:
-            loaded_model = pickle.load(_model)
+        worst = r'C:\Users\mallict\forecasty-lab\BASF_Metals\artifacts\forecast'
+        # load the model from disk
+        with open(os.path.join(artifact_location,'model','Platinum_model_fit_3.pkl'), 'rb') as meta_features:
+            sys.path.append(r"C:\Users\mallict\forecasty-lab\BASF_Metals")
+            loaded_model = pickle.load(meta_features)
+    #     with open(os.path.join(worst,'Platinum_model_fit_3.pkl'), 'rb') as meta_features:
+    #         loaded_model = pickle.load(meta_features)
     else :
         pass
     return loaded_model
-
-def load_feature_imp(self, local=True):
-    if local:
-            # load the feature importance from disk
-            loaded_importance = pickle.load(open(self.artifact_path+"\feature_importance.csv", 'rb'), encoding="latin1" )
-
 
 
 def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: int):
@@ -160,7 +156,7 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     target_name = f"{target}_spot_price"
     print(simulation_dict)
     modified_pre_selected_df, meta_features_df, target_series, final_simulation_correlation_df = features_picker(  sim_df= sim_df, simulation_dict = simulation_dict,target=target_name,horizon=horizon)
-    # print(sim_df['EXR_CNY_USD'])
+    import pdb;pdb.set_trace()
     # print(modified_pre_selected_df['EXR_CNY_USD'])
     model = load_model(local=True)
     # model = model.fit(modified_pre_selected_df, y=target_series, meta_features=meta_features_df)
@@ -168,7 +164,7 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     # forecast = pd.concat((target_series, forecast), axis=0).drop(columns=target)
     print (forecast)
     original_forecast_name = '{}_forecast_horizon_{}.pkl'.format(target,horizon)
-    with open(os.path.join(artifact_path,'forecast',original_forecast_name), 'rb') as _fe_df:
+    with open(os.path.join(artifact_location,'dataframes',original_forecast_name), 'rb') as _fe_df:
         original_forecast= pickle.load(_fe_df)
     forecast_fig = plotly_visualization.plotly_plot_simulation( df_actuals = target_series.rename(columns= {target_name:'actual'}),df_forecast=original_forecast,  df_simulation = forecast,horizon=3, display_fig=False, figsize=(1200, 600))
 
@@ -177,23 +173,23 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     
 if __name__ == "__main__":
     try:
-        warnings.filterwarnings("ignore")
-        # Setting the seed 
-        np.random.seed(40)
-        commodity = 'CLI_CHN'
-        perc_change = 10
-        simulation_dict = dict([(commodity,perc_change)])
-        file_name = "Platinum_Drivers_Month"
-        sheet_names = ["Data Dictionary", "Compiled Dataset"]
-        # base_path = r"C:\Users\OchsP\Documents\Python-dev\forecasty-lab"
-        base_path = r"C:\Users\mallict\forecasty-lab"
+        # warnings.filterwarnings("ignore")
+        # # Setting the seed 
+        # np.random.seed(40)
+        # commodity = 'CLI_CHN'
+        # perc_change = 10
+        # simulation_dict = dict([(commodity,perc_change)])
+        # file_name = "Platinum_Drivers_Month"
+        # sheet_names = ["Data Dictionary", "Compiled Dataset"]
+        # # base_path = r"C:\Users\OchsP\Documents\Python-dev\forecasty-lab"
+        # base_path = r"C:\Users\mallict\forecasty-lab"
 
-        df = pd.read_excel(
-                os.path.join(base_path, "BASF_Metals", "raw_data", file_name + ".xlsx"),
-                sheet_names[1]
-                )
-        target = 'Palladium_spot_price'
-        main(simulation_dict=simulation_dict,sim_df=df, target = target, horizon=3 )
+        # df = pd.read_excel(
+        #         os.path.join(base_path, "BASF_Metals", "raw_data", file_name + ".xlsx"),
+        #         sheet_names[1]
+        #         )
+        # target = 'Palladium_spot_price'
+        # main(simulation_dict=simulation_dict,sim_df=df, target = target, horizon=3 )
         main()
     except Exception as err:
         logger.exception( 'Error: %s',err)

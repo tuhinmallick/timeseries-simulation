@@ -1,6 +1,5 @@
-import pandas
+import pandas as pd
 import os,sys, logging, pathlib,pickle,traceback
-import pdb;pdb.set_trace()
 utils_location = pathlib.Path(__file__).absolute().parent
 if os.path.realpath(utils_location) not in sys.path:
     sys.path.append(os.path.realpath(utils_location))
@@ -8,7 +7,7 @@ import STLModel
 import feature_engineering as fe
 import forecastutils as fu
 
-def feature_engineering_pipeline(df: pandas.DataFrame, target: str, horizon: int, pre_selected_features: list, forecast_type: str):
+def feature_engineering_pipeline(df: pd.DataFrame, target: str, horizon: int, pre_selected_features: list, forecast_type: str):
     # ===========================================================================================================
     #           CONFIGRUATION
     # ===========================================================================================================
@@ -48,7 +47,7 @@ def feature_engineering_pipeline(df: pandas.DataFrame, target: str, horizon: int
         column_names = indicator_cols
         ## inplacely add lags
         lag_setting = [1, 2, 3, 6]
-        lagdf = fe.create_lag(df, features=column_names, lag=lag_setting, get_momentum=True, droplagna=False)
+        lagdf = fe.create_lag(df, features=column_names, lag=lag_setting, droplagna=False)
         df = pd.concat([df, lagdf], axis=1).dropna()
         lagdf_columns = [c for c in lagdf.columns]
         column_names = column_names+lagdf_columns

@@ -1,4 +1,4 @@
-import functools
+import functools,pathlib, os, sys
 
 import hyperopt
 import hyperopt.hp as hp
@@ -7,12 +7,14 @@ import numpy as np
 import pandas as pd
 import sklearn
 from tqdm import tqdm
-
-from BASF_Metals.Models.src.smoothboost.pipelib import _feature_engineering as fe
-from BASF_Metals.Models.src.smoothboost.pipelib import forecastutils as fu
-from BASF_Metals.Models.src.smoothboost.pipelib import pipeline_model
-from BASF_Metals.Models.src.smoothboost.pipelib import regressionforecasters as rf
-from BASF_Metals.Models.src.smoothboost.pipelib.make_meta_features import create_meta_feature_frame
+utils_location = pathlib.Path(__file__).absolute().parent
+if os.path.realpath(utils_location) not in sys.path:
+    sys.path.append(os.path.realpath(utils_location)) 
+import _feature_engineering as fe
+import forecastutils as fu
+import pipeline_model
+import regressionforecasters as rf
+from make_meta_features import create_meta_feature_frame
 
 # Some utility functions
 def forecaster_cross_val_score(
