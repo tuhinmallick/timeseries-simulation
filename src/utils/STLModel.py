@@ -25,7 +25,7 @@ from statsmodels.tsa.seasonal import STL
 
 from matplotlib import pyplot as plt 
 from functools import partial 
-import os 
+import os,sys, pathlib
 import numpy as np 
 import pandas as pd
 import re  
@@ -40,11 +40,13 @@ from fbprophet.diagnostics import performance_metrics
 
 # TODO: take care of the boundary problem when collecting the trend/season/arma gt. 
 # TODO: add back testing method (train till t and use final point to predict t+1~t+h and compare to the ground truth, then do this repeatedly in a rolling window sense. Finally, average t) to check model performance.
-
+utils_location = pathlib.Path(__file__).absolute().parent
+if os.path.realpath(utils_location) not in sys.path:
+    sys.path.append(os.path.realpath(utils_location))
 # # self defined module
-from BASF_Metals.Models.src.smoothboost.pipelib.kaisutils.metrics import MetricsCls
-from BASF_Metals.Models.src.smoothboost.pipelib.kaisutils.feature_engineering import create_lead
-from BASF_Metals.Models.src.smoothboost.pipelib.kaisutils.misc import config_parser
+from metrics import MetricsCls
+from feature_engineering import create_lead
+from misc import config_parser
 
 # turn off INFO message print from target logger
 logger = logging.getLogger('fbprophet')
