@@ -32,7 +32,7 @@ def plotly_plot_forecast(df_actuals, df_forecast, horizon=6, display_fig=True, f
         go.Scatter(
             x=np.concatenate([df_test.index, df_test.index[::-1]]),
             y=np.concatenate([df_test["upper"], df_test["lower"][::-1]]),
-            name="Confidence Intervall",
+            name="Confidence Interval",
             fill='toself',
             hoverinfo="skip")
         )
@@ -82,7 +82,7 @@ def plotly_plot_backtest(df_backtest, display_fig=True, figsize=(1200, 600), **k
         go.Scatter(
             x=np.concatenate([df_backtest.index, df_backtest.index[::-1]]),
             y=np.concatenate([df_backtest["upper"], df_backtest["lower"][::-1]]),
-            name="Confidence Intervall",
+            name="Confidence Interval",
             fill='toself',
             hoverinfo="skip")
         )
@@ -158,7 +158,7 @@ def plotly_feature_importance(df_features, number_features=10, display_fig=True,
     else: 
         return fig
     
-def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, horizon=6, display_fig=True, figsize=(1200, 600), **kwargs):
+def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, horizon=3, conf_intervall=True, display_fig=True, figsize=(1200, 600), **kwargs):
     """ Function to generate the forecast plot with actuals and confidence intervall.
 
     Args:
@@ -166,6 +166,7 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, horizon=6, di
         df_forecast (pandas.DataFrame): Forecasted values and confidence intervalls of the target series with date on index. Need column name "forecast", "lower", "upper".
         df_simulation (pandas.DataFrame): Simulated values and confidence intervalls of the target series with date on index. Need column name "forecast", "lower", "upper".
         horizon (int, optional): Horizon value to fix adjust the combined dataframe and to make line consistent. Defaults to 6.
+        conf_interval (bool, optional): Select if the confidence intervalls are plotted too. Defaults to True.
         display_fig (bool, optional): Select if plot is displayed or figure object is returned. Defaults to True.
         figisze (tuple, optional): Select the width and height of the figure.
 
@@ -180,7 +181,31 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, horizon=6, di
     for i in range(1, len(df_test.columns)):
         df_test.iloc[-horizon-1, i] = df_test.iloc[-horizon-1, 0]
         
+    # Fix the latest value so the lines are connected.
+    for i in range(1, len(df_test_simulation.columns)):
+        df_test_simulation.iloc[-horizon-1, i] = df_test_simulation.iloc[-horizon-1, 0]
+        
     fig = go.Figure()
+    
+    
+    if conf_intervall:
+        fig.add_trace(
+            go.Scatter(
+                x=np.concatenate([df_test.index, df_test.index[::-1]]),
+                y=np.concatenate([df_test["upper"], df_test["lower"][::-1]]),
+                name="Confidence Interval Forecast",
+                fill='toself',
+                hoverinfo="skip")
+            )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=np.concatenate([df_simulation.index, df_simulation.index[::-1]]),
+                y=np.concatenate([df_simulation["upper"], df_simulation["lower"][::-1]]),
+                name="Confidence Interval Simulation ",
+                fill='toself',
+                hoverinfo="skip")
+            )
 
     fig.add_trace(
         go.Scatter(x=df_test.index, y=df_test["actual"], name="Actuals")
