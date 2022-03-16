@@ -73,7 +73,7 @@ def model_retrieve():
 
 
 
-def features_picker(simulation_dict, sim_df, target, horizon):
+def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     modified_pre_selected_df, simulation_correlation, change_pre_selected_df =None, {}, None
     # subscription_id = 'fc563dde-a9ad-4edf-9998-2d52ba8afff9'
     # # Azure Machine Learning resource group 
@@ -96,13 +96,18 @@ def features_picker(simulation_dict, sim_df, target, horizon):
     # #                                                         account_key=account_key)
 
     # datastore = Datastore.get(workspace=ws, datastore_name=blob_datastore_name)
-
-
-    with open(os.path.join(artifact_location,'dataframes','meta_features.pkl'), 'rb') as meta_features:
+    dataframe_path=os.path.join(artifact_location,'dataframes', original_target, f'horizon_{horizon}')
+    meta_features_name = f"{original_target}_meta_features_{horizon}.pkl"
+    path2save_meta_features = os.path.join(dataframe_path, meta_features_name)
+    with open(path2save_meta_features, 'rb') as meta_features:
         meta_features_df = pickle.load(meta_features)
-    with open(os.path.join(artifact_location,'dataframes','pre_selected_features_df.pkl'), 'rb') as pre_selected_features:
+    pre_selected_features_df_name = f"{original_target}_pre_selected_features_df_{horizon}.pkl"
+    path2save_pre_selected_features = os.path.join(dataframe_path,pre_selected_features_df_name)
+    with open(path2save_pre_selected_features, 'rb') as pre_selected_features:
         pre_selected_features_df = pickle.load(pre_selected_features)
-    with open(os.path.join(artifact_location,'dataframes','target_series.pkl'), 'rb') as target_series:
+    target_series_name = f"{original_target}_target_series_{horizon}.pkl"
+    path2save_target = os.path.join(dataframe_path,target_series_name)
+    with open(path2save_target, 'rb') as target_series:
         target_series_df = pickle.load(target_series)
     first_iteration = False
     # To get the correlation values as dictionary
@@ -135,15 +140,12 @@ def features_picker(simulation_dict, sim_df, target, horizon):
     print("==============================================Feature engineering Done =================================================================================")
     return modified_pre_selected_df, meta_features_df, target_series_df, final_simulation_correlation_df
 
-def load_model(local=True):
+def load_model( horizon, target, local=True):
     if local:
-        worst = r'C:\Users\mallict\forecasty-lab\BASF_Metals\artifacts\forecast'
         # load the model from disk
-        with open(os.path.join(artifact_location,'model','Platinum_model_fit_3.pkl'), 'rb') as meta_features:
-            sys.path.append(r"C:\Users\mallict\forecasty-lab\BASF_Metals")
+        _model_name = f"{target}_model_fit_{horizon}.pkl"
+        with open(os.path.join(artifact_location,'model',target, f'horizon_{horizon}', _model_name), 'rb') as meta_features:
             loaded_model = pickle.load(meta_features)
-    #     with open(os.path.join(worst,'Platinum_model_fit_3.pkl'), 'rb') as meta_features:
-    #         loaded_model = pickle.load(meta_features)
     else :
         pass
     return loaded_model
@@ -154,17 +156,17 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     sim_target : The feature you want to change"""
     target_name = f"{target}_spot_price"
     print(simulation_dict)
-    modified_pre_selected_df, meta_features_df, target_series, final_simulation_correlation_df = features_picker(  sim_df= sim_df, simulation_dict = simulation_dict,target=target_name,horizon=horizon)
+    modified_pre_selected_df, meta_features_df, target_series, final_simulation_correlation_df = features_picker(  sim_df= sim_df, simulation_dict = simulation_dict,target=target_name,original_target =target, horizon=horizon)
     # print(modified_pre_selected_df['EXR_CNY_USD'])
-    model = load_model(local=True)
+    model = load_model(local=True, horizon= horizon, target=target)
     # model = model.fit(modified_pre_selected_df, y=target_series, meta_features=meta_features_df)
     forecast = model.predict( X=modified_pre_selected_df.iloc[-1:], meta_features=meta_features_df, conf_ints=True)
     # forecast = pd.concat((target_series, forecast), axis=0).drop(columns=target)
     print (forecast)
-    original_forecast_name = '{}_forecast_horizon_{}.pkl'.format(target,horizon)
-    with open(os.path.join(artifact_location,'dataframes',original_forecast_name), 'rb') as _fe_df:
+    _forecast_name = f"{target}_forecast_horizon_{horizon}.pkl"
+    with open(os.path.join(artifact_location,'dataframes',target, f'horizon_{horizon}',_forecast_name), 'rb') as _fe_df:
         original_forecast= pickle.load(_fe_df)
-    forecast_fig = plotly_visualization.plotly_plot_simulation( df_actuals = target_series.rename(columns= {target_name:'actual'}),df_forecast=original_forecast,  df_simulation = forecast,horizon=3, display_fig=False, figsize=(1200, 600))
+    forecast_fig = plotly_visualization.plotly_plot_simulation( df_actuals = target_series.rename(columns= {target_name:'actual'}),df_forecast=original_forecast,  df_simulation = forecast,horizon=horizon, display_fig=False, figsize=(1200, 600))
 
     print("==============================================Simulation Done =================================================================================")
     return forecast_fig, forecast, original_forecast, final_simulation_correlation_df
