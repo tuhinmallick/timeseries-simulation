@@ -234,16 +234,16 @@ def set_name(option :  str):
 
 
 def main():
-    def load_config(config_name):
-        config =None
-        config_path = os.path.join(config_location, config_name)
-        with open(config_path) as file:
-            try:
-                config = yaml.safe_load(file)
-            except yaml.YAMLError as exc:
-                print(exc)
-        return config
-    config = load_config("config.yaml")
+    # def load_config(config_name):
+    #     config =None
+    #     config_path = os.path.join(config_location, config_name)
+    #     with open(config_path) as file:
+    #         try:
+    #             config = yaml.safe_load(file)
+    #         except yaml.YAMLError as exc:
+    #             print(exc)
+    #     return config
+    # config = load_config("config.yaml")
     st.set_page_config(page_title='Forecasty.Ai', layout='wide')
     st.markdown(""" <style>
     #MainMenu {visibility: hidden;}
@@ -257,51 +257,71 @@ def main():
             padding-left: {padding}rem;
             padding-bottom: {padding}rem;
         }} </style> """, unsafe_allow_html=True)
-    if config : 
-        names = config['names']
-        usernames = config['usernames']
-        passwords = config['passwords']
-        hashed_passwords = stauth.hasher(passwords).generate()
-        authenticator = stauth.authenticate(names,usernames,hashed_passwords,'some_cookie_name','some_signature_key',cookie_expiry_days=14)
-        name, authentication_status = authenticator.login('Login','main')
-        set_name(name)
-        set_authentication_status(authentication_status)
-        if st.session_state['authentication_status']:
-            set_session_state()
-            try : 
-                data = None
-                st.title("PGM Price Forecasting")
-                image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))    
-                # Forecasty logo
-                st.sidebar.image(image, output_format ='PNG', use_column_width  ='always')
-                # st.sidebar.write('##### Machine learns, company earns')
-                st.sidebar.write('Welcome *%s*' % (st.session_state['name']))
-                uploading_options = st.sidebar.form('uploading-options')
-                option = st.empty()
-                option = st.selectbox('Please select the functionality : ',['Technical indicator', 'Exploratory Data analysis', 'Historical Forecast', 'Simulate the future'],key = 'functionality_typ',  on_change=set_functionality_type, args = (option,))
-                # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))   
-                if st.session_state.functionality_type != 'Historical Forecast' and st.session_state.functionality_type != []:
-                    with uploading_options:
-                        with st.spinner('Uploading the document'):
-                            data = upload()
-                        st.form_submit_button('Upload')
+    names = ['Cathal Prendergast', 'Paul Moschella', 'Bret Mantone','Kaan Kaymak', 'Matthias Dohrn', 'Kate Silvestri',
+            'Scott M Mizrahi', 'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick', 'Ralph Debusmann']
+    usernames =  ['Cathal Prendergast', 'Paul Moschella', 'Bret Mantone','Kaan Kaymak', 'Matthias Dohrn', 'Kate Silvestri',
+            'Scott M Mizrahi',  'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick', 'Ralph Debusmann']
+    passwords = ['YiSA2XNLjlVgwuX', 
+        'pyK7If0ICcb4rTD', 
+        'EQ0r39iRNuCUNAC',
+        'V4dVwhS5DiJpXIe', 
+        'T4zU73l5gQ2doF0',
+        'E2EAK6aJWkgLnJM', 
+        'QrxqKzIfKPaj1fa', 
+        'kyqo4OoWi4oYLUR', 
+        'gmBIVYYHal2rNqh', 
+        'Rvl5naCEXbgyy2b', 
+        'ESZztihHsGI02Bu', 
+        'rdQnHRh3Dy0czdU',
+        'QHcUXlnD6wPYxjQ',
+        'GhOl6tN5RtNOf4Y',
+        'Z1W3HWzsygd9vOw',
+        '2WLVoJ3ylx6NHZ4',
+        '6VcZwzTEERlFNko',
+        'f94pTEW6XO1Yljv',
+        'qwcS732MfbD6YCc',
+        'IS3bppMAilySrZd']
+    hashed_passwords = stauth.hasher(passwords).generate()
+    authenticator = stauth.authenticate(names,usernames,hashed_passwords,'some_cookie_name','some_signature_key',cookie_expiry_days=14)
+    name, authentication_status = authenticator.login('Login','main')
+    set_name(name)
+    set_authentication_status(authentication_status)
+    if st.session_state['authentication_status']:
+        set_session_state()
+        try : 
+            data = None
+            st.title("PGM Price Forecasting")
+            image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))    
+            # Forecasty logo
+            st.sidebar.image(image, output_format ='PNG', use_column_width  ='always')
+            # st.sidebar.write('##### Machine learns, company earns')
+            st.sidebar.write('Welcome *%s*' % (st.session_state['name']))
+            uploading_options = st.sidebar.form('uploading-options')
+            option = st.empty()
+            option = st.selectbox('Please select the functionality : ',['Technical indicator', 'Exploratory Data analysis', 'Historical Forecast', 'Simulate the future'],key = 'functionality_typ',  on_change=set_functionality_type, args = (option,))
+            # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))   
+            if st.session_state.functionality_type != 'Historical Forecast' and st.session_state.functionality_type != []:
+                with uploading_options:
+                    with st.spinner('Uploading the document'):
+                        data = upload()
+                    st.form_submit_button('Upload')
 
-                if option == 'Technical indicator':
-                    technical_indicator(data)
-                elif option == 'Exploratory Data analysis':
-                    exploratory_data_analysis(data)
-                elif option == 'Historical Forecast':
-                    historical_forecast()
-                elif option == 'Simulate the future' and  data is not None:
-                    simulation(data)
-            except Exception as err:
-                    traceback.print_exc()
-                    print(err.args)
+            if option == 'Technical indicator':
+                technical_indicator(data)
+            elif option == 'Exploratory Data analysis':
+                exploratory_data_analysis(data)
+            elif option == 'Historical Forecast':
+                historical_forecast()
+            elif option == 'Simulate the future' and  data is not None:
+                simulation(data)
+        except Exception as err:
+                traceback.print_exc()
+                print(err.args)
 
-        elif st.session_state['authentication_status'] == False:
-            st.error('Username/password is incorrect')
-        elif st.session_state['authentication_status'] == None:
-            st.warning('Please enter your username and password')
+    elif st.session_state['authentication_status'] == False:
+        st.error('Username/password is incorrect')
+    elif st.session_state['authentication_status'] == None:
+        st.warning('Please enter your username and password')
     
 
 if __name__ == '__main__':
