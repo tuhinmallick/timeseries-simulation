@@ -131,13 +131,13 @@ if __name__ == "__main__":
     #   KEY PARAMETERS AND SETTINGS
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     try:
-        target_name = "Platinum"
+        target_name = "Rhodium"
         target = f"{target_name}_spot_price" # This is used as column selector.
         horizon = 3
         
         forecast_type = "absolute_diff"  # Either "proportional", "absolute_diff" or "absolute"
         backtest_val_periods = 24  # Number of periods (e.g. months) used for backtesting and validation (each)
-        validation_split_size = 3  # Number of validation periods in each validation split
+        validation_split_size = 2  # Number of validation periods in each validation split
         
         HYPEROPT_FMIN_SEED = 123
         os.environ["HYPEROPT_FMIN_SEED"] = str(HYPEROPT_FMIN_SEED)
@@ -224,9 +224,12 @@ if __name__ == "__main__":
             df["Date"] = pd.to_datetime(df["Date"])
             df.set_index("Date", inplace=True)
             df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
-            path2save_raw_data = os.path.join(artifact_location,'dataframes',"df.pkl")
+            df_name = f"{target_name}_df_{horizon}.pkl"
+            if os.path.exists(os.path.join(artifact_location,'dataframes',target_name,f'horizon_{horizon}')) == False:
+                os.makedirs(os.path.join(artifact_location,'dataframes',target_name,f'horizon_{horizon}'))
+            path2save_raw_data = os.path.join(artifact_location,'dataframes',target_name,f'horizon_{horizon}', df_name)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=df, target= (datastore,"forecast/dataframe"), name="df_raw", show_progress = True)
-            # df.to_pickle(path2save_raw_data, protocol=4)
+            df.to_pickle(path2save_raw_data, protocol=4)
             mlflow.log_artifact(local_path = path2save_raw_data, artifact_path ="forecasts")
 
             # Read the data dictionary with the full names.
@@ -234,7 +237,8 @@ if __name__ == "__main__":
                os.path.join(artifact_location,'source_data', file_name + ".xlsx"),
                 sheet_names[0]
                 )[["Feature Name", "Full Name"]]
-            path2save_df_dict = os.path.join(artifact_location,'dataframes',"df_dict.pkl") 
+            df_dict_name = f"{target_name}_df_dict_{horizon}.pkl"
+            path2save_df_dict = os.path.join(artifact_location,'dataframes',target_name,f'horizon_{horizon}', df_dict_name) 
             df.to_pickle(path2save_df_dict, protocol=4)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=df, target="forecast/dataframe", name="df_dict")
             mlflow.log_artifact(local_path = path2save_df_dict, artifact_path ="forecasts")
@@ -243,20 +247,21 @@ if __name__ == "__main__":
             
             # =========================== TIDY DATA ===========================
             # Remove features that contain a lot of missing data.
-            df = remove_features_with_na(df, threshold=65, trailing_value=5)
+            df = remove_features_with_na(df, threshold=65, trailing_value=1)
             df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
-            path2save_tidy_df = os.path.join(artifact_location,'dataframes',"df_tidy.pkl")
+            df_tidy_name = f"{target_name}_df_tidy_{horizon}.pkl"
+            path2save_tidy_df = os.path.join(artifact_location,'dataframes',target_name,f'horizon_{horizon}', df_tidy_name)
             df.to_pickle(path2save_tidy_df, protocol=4)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=df, target="forecast/dataframe", name="df_tidy")
             mlflow.log_artifact(local_path = path2save_tidy_df, artifact_path ="forecasts/dataframe")
             # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             #   SET META FEATURES
             # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            import pdb;pdb.set_trace()
 
             meta_features = create_meta_feature_frame(df[target].dropna(), horizon, ci_alpha=0.05)
             meta_feature_prefix = "meta__ETS"
-            path2save_meta_features = os.path.join(artifact_location,'dataframes',"meta_features.pkl")
+            meta_features_name = f"{target_name}_meta_features_{horizon}.pkl"
+            path2save_meta_features = os.path.join(artifact_location,'dataframes',target_name,f'horizon_{horizon}', meta_features_name)
             meta_features.to_pickle(path2save_meta_features, protocol=4)
             # Dataset.Tabular.register_pandas_dataframe(dataframe=meta_features, target="forecast/dataframe", name="meta_features")
             mlflow.log_artifact(local_path = path2save_meta_features, artifact_path ="forecasts")
@@ -269,18 +274,27 @@ if __name__ == "__main__":
 
             simulation_correlation_dict = user_input_correlation_picker(df[target], df.drop([target], axis=1), selected_method="mean", max_lags=30)
             # Get preselected features and other causality and correlation metrics
-            pre_selected_features, df_granger, df_correlation = grange_and_correlate(df, target, granger_lags=12, correlation_lags=12, number_of_features=10)
+            pre_selected_features, df_granger, df_correlation = grange_and_correlate(df, target, granger_lags=12, correlation_lags=12, number_of_features=20)
             # Putiing the indicator columns as pre selected features
             indicator_cols = pre_selected_features
             df = df[pre_selected_features+[target]]
             df, target_series = feature_engineering_pipeline(df=df, target=target, horizon=horizon, pre_selected_features=indicator_cols, forecast_type=forecast_type)
 
+
+            df_granger_name = f"{target_name}_df_granger_{horizon}.pkl"
+            df_correlation_name = f"{target_name}_df_correlation_{horizon}.pkl"
+            fe_df_name = f"{target_name}_fe_df_{horizon}.pkl"
+            target_series_name = f"{target_name}_target_series_{horizon}.pkl"
+            pre_selected_features_df_name = f"{target_name}_pre_selected_features_df_{horizon}.pkl"
+
+
             # The local paths to the dataframes
-            path2save_granger = os.path.join(artifact_location,'dataframes',"df_granger.pkl")
-            path2save_correlation = os.path.join(artifact_location,'dataframes',"df_correlation.pkl")
-            path2save_fe_df = os.path.join(artifact_location,'dataframes',"fe_df.pkl")
-            path2save_target = os.path.join(artifact_location,'dataframes',"target_series.pkl")
-            path2save_pre_selected_features = os.path.join(artifact_location,'dataframes',"pre_selected_features_df.pkl")
+            dataframe_path=os.path.join(artifact_location,'dataframes', target_name, f'horizon_{horizon}')
+            path2save_granger = os.path.join(dataframe_path,df_granger_name)
+            path2save_correlation = os.path.join(dataframe_path,df_correlation_name)
+            path2save_fe_df = os.path.join(dataframe_path,fe_df_name)
+            path2save_target = os.path.join(dataframe_path,target_series_name)
+            path2save_pre_selected_features = os.path.join(dataframe_path,pre_selected_features_df_name)
 
             # Pickling the dataframes
             df_granger.to_pickle(path2save_granger, protocol=4)
@@ -469,18 +483,18 @@ if __name__ == "__main__":
             plt.tight_layout()
             sns.despine()
             # Save figure to outputs directory as mlflow.log_figure() overrides background colour BASF_Metals\Models\notebooks\outputs
-            fig.savefig("BASF_Metals/Models/notebooks/outputs/backtest/barplot_rmse_backtest.png", facecolor=fig.get_facecolor(), edgecolor="none")
-            mlflow.log_figure(fig, "forecasts/backtest/barplot_rmse_backtest.png")
+            # fig.savefig("BASF_Metals/Models/notebooks/outputs/backtest/barplot_rmse_backtest.png", facecolor=fig.get_facecolor(), edgecolor="none")
+            # mlflow.log_figure(fig, "forecasts/backtest/barplot_rmse_backtest.png")
 
             # Create and save tables of forecasted values
-            for i, table in enumerate(forecast_tables_test):
-                table.to_csv(f"BASF_Metals/Models/notebooks/outputs/backtest/backtest_output_table_t{i+1}.csv")
-                mlflow.log_artifact(local_path = f"BASF_Metals/Models/notebooks/outputs/backtest/backtest_output_table_t{i+1}.csv", artifact_path ="forecasts")
+            # for i, table in enumerate(forecast_tables_test):
+            #     table.to_csv(f"BASF_Metals/Models/notebooks/outputs/backtest/backtest_output_table_t{i+1}.csv")
+            #     mlflow.log_artifact(local_path = f"BASF_Metals/Models/notebooks/outputs/backtest/backtest_output_table_t{i+1}.csv", artifact_path ="forecasts")
 
             # Triple barplot of backtest forecasts by horizon
-            fig = fu.plot_backtest_forecasts(target_series, forecast_tables_test, figsize=(8, 8))
-            fig.savefig("BASF_Metals/Models/notebooks/outputs/backtest/backtest_forecasts_plot.png", facecolor=fig.get_facecolor(), edgecolor="none")
-            mlflow.log_figure(fig, "forecasts/backtest/backtest_forecasts_plot.png")
+            # fig = fu.plot_backtest_forecasts(target_series, forecast_tables_test, figsize=(8, 8))
+            # fig.savefig("BASF_Metals/Models/notebooks/outputs/backtest/backtest_forecasts_plot.png", facecolor=fig.get_facecolor(), edgecolor="none")
+            # mlflow.log_figure(fig, "forecasts/backtest/backtest_forecasts_plot.png")
             
             ############ Return forecast
             # Train a multitimestep model on all the data and create the forecast
@@ -493,22 +507,25 @@ if __name__ == "__main__":
                     pipeline_list, horizon, forecast_type,
                     meta_feature_prefix=meta_feature_prefix
                 )
-                import pdb;pdb.set_trace()
                 model_name = f"{target_name}_model_unfit.pkl"
-                with open(os.path.join(artifact_location,'model',model_name), 'wb') as _model:
-                     pickle.dump(model, _model, pickle.HIGHEST_PROTOCOL)
+                if os.path.exists(os.path.join(artifact_location,'model',target_name, f'horizon_{horizon}')) == False:
+                    os.makedirs(os.path.join(artifact_location,'model',target_name, f'horizon_{horizon}'))
+                with open(os.path.join(artifact_location,'model',target_name, f'horizon_{horizon}',model_name), 'wb') as _model:
+                     pickle.dump(model, _model, protocol=4)
                 mlflow.sklearn.log_model(sk_model=model,registered_model_name  ="Multiple_Timestep_Regression_Forecaster_unfit", artifact_path = os.path.join( "BASF_Metals", "artifacts","Model"))
                 model = model.fit(df, y=target_series, meta_features=meta_features)
                 # mlflow.sklearn.log_model(sk_model=(model.fit(df, y=target_series, meta_features=meta_features)),registered_model_name  ="Multiple_Timestep_Regression_Forecaster_fit", artifact_path = os.path.join( "BASF_Metals", "artifacts","Model"))
                 _model_name = f"{target_name}_model_fit_{horizon}.pkl"
-                with open(os.path.join(artifact_location,'model',_model_name), 'wb') as _model:
-                     pickle.dump(model, _model, pickle.HIGHEST_PROTOCOL)
+                with open(os.path.join(artifact_location,'model',target_name, f'horizon_{horizon}', _model_name), 'wb') as _model:
+                     pickle.dump(model, _model, protocol=4)
                 forecast = model.predict(conf_ints=True)
                 _forecast_name = f"{target_name}_forecast_horizon_{horizon}.pkl"
-                with open(os.path.join(artifact_location,'dataframes',_forecast_name), 'wb') as _forecast:
-                     pickle.dump(forecast, _forecast, pickle.HIGHEST_PROTOCOL)
+                with open(os.path.join(artifact_location,'dataframes',target_name, f'horizon_{horizon}',_forecast_name), 'wb') as _forecast:
+                     pickle.dump(forecast, _forecast, protocol=4)
                 forecast = pd.concat((target_series, forecast), axis=0).drop(columns=target)
                 model_uri = "runs:/{}/sklearn-model".format(MultipleTimestepRegressionForecaster.info.run_id)
+                import pdb;pdb.set_trace()
+
                 # mv = mlflow.register_model(model_uri, "Multiple_Timestep_Regression_Forecaster_fit")
                 # print("Name: {}".format(mv.name))
                 # print("Version: {}".format(mv.version))
