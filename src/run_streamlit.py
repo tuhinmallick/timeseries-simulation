@@ -1,5 +1,5 @@
 
-import requests, yaml
+import requests
 import os,sys, logging, pathlib,pickle,traceback
 import streamlit as st
 from streamlit_lottie import st_lottie
