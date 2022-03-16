@@ -146,7 +146,7 @@ def plot_simulation(simulation_fig, forecast, original_forecast, horizon, commod
         st.dataframe(simulated_forecast)
     with st.expander("Feature Importance chart"):
         pickle_df = f"{commodity}_features_fig.pickle"
-        st.write("**Please note** :  The features listed in this chart shows it influences the prices of the commodity that is being predicted. The new comodity that ")
+        # st.write("**Please note** :  The features listed in this chart shows it influences the prices of the commodity that is being predicted. The new comodity that ")
         with open(os.path.join(artifact_location,'forecast','forecast_drivers',pickle_df), 'rb') as meta_features:
             drivers_chart = pickle.load(meta_features)
         st.write(f"### The plot for feature importance of {commodity} ")
@@ -258,9 +258,9 @@ def main():
             padding-bottom: {padding}rem;
         }} </style> """, unsafe_allow_html=True)
     names = ['Cathal Prendergast', 'Paul Moschella', 'Bret Mantone','Kaan Kaymak', 'Matthias Dohrn', 'Kate Silvestri',
-            'Scott M Mizrahi', 'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick', 'Ralph Debusmann']
+            'Scott M Mizrahi', 'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick', 'Ralph Debusmann','John Metcalf']
     usernames =  ['Cathal Prendergast', 'Paul Moschella', 'Bret Mantone','Kaan Kaymak', 'Matthias Dohrn', 'Kate Silvestri',
-            'Scott M Mizrahi',  'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick', 'Ralph Debusmann']
+            'Scott M Mizrahi',  'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick', 'Ralph Debusmann', 'John Metcalf']
     passwords = ['YiSA2XNLjlVgwuX', 
         'pyK7If0ICcb4rTD', 
         'EQ0r39iRNuCUNAC',
@@ -280,7 +280,8 @@ def main():
         '6VcZwzTEERlFNko',
         'f94pTEW6XO1Yljv',
         'qwcS732MfbD6YCc',
-        'IS3bppMAilySrZd']
+        'IS3bppMAilySrZd',
+        'RDBig7nz8ZFzww5']
     hashed_passwords = stauth.hasher(passwords).generate()
     authenticator = stauth.authenticate(names,usernames,hashed_passwords,'some_cookie_name','some_signature_key',cookie_expiry_days=14)
     name, authentication_status = authenticator.login('Login','main')
@@ -290,8 +291,11 @@ def main():
         set_session_state()
         try : 
             data = None
-            st.title("PGM Price Forecasting")
-            image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))    
+            head_col1, head_col2 = st.columns([1,0.5])
+            image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
+            company_image = Image.open(os.path.join(artifact_location, "logo", "logo_basf.PNG")) 
+            head_col1.title(" PGM Price Forecasting")   
+            head_col2.image(company_image, output_format ='PNG', use_column_width  ='auto')
             # Forecasty logo
             st.sidebar.image(image, output_format ='PNG', use_column_width  ='always')
             # st.sidebar.write('##### Machine learns, company earns')
