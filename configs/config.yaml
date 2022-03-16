@@ -1,20 +1,28 @@
 # It contains all the configs required in the project
 
-artifacts:
-  ARTIFACTS_DIR: artifacts
-  TRAINED_MODEL_DIR: model
-  BASE_MODEL_DIR: base_model
-  BASE_MODEL_NAME: base_model.h5
-  UPDATED_BASE_MODEL_NAME: updated_base_model.h5
-  CHECKPOINT_DIR: checkpoints
-  BASE_LOG_DIR: base_model_dir
-  TENSORBOARD_ROOT_LOG_DIR: tensorboard_log_dir
-  CALLBACKS_DIR: callbacks
 
-source_download_dirs:
-  - path_to_data_1
-  - path_to_data_1
+names: ['Cathal Prendergast', 'Paul Moschella', 'Bret Mantone','Kaan Kaymak', 'Matthias Dohrn', 'Kate Silvestri',
+              'Scott M Mizrahi', 'Scott M Mizrahi', 'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick']
 
-local_data_dirs:
-  - path_to_local_data_1
-  - path_to_local_data_2
+usernames: ['Cathal Prendergast', 'Paul Moschella', 'Bret Mantone','Kaan Kaymak', 'Matthias Dohrn', 'Kate Silvestri',
+              'Scott M Mizrahi', 'Scott M Mizrahi', 'Amanda Colyer', 'William Kaplowitz', 'James Gove', 'Vas Vergopoulos', 'Stephen Pender','Will Thomas','Toby Green','Matthew E Gidicsin','Pascal Ochs','Rahul Kalippurayil Moozhipurath','Erika Fonseca','Tuhin Mallick']
+
+passwords: ['EAu&j]%emnZjNq;', 
+            '2E-=g6[%y[+da!;', 
+            'CY#n,+(&Ftubi9Z',
+            'hdVDRZT}&YL&8lh', 
+            'IQuw!L1V(3{fJ(c',
+            'w59wCS.&]9Pn7k[', 
+            'Czt%&w}4K4cgqvQ', 
+            'I0%HGc,J1gxE;aH', 
+            'ZTkR#M8U;M-.#Yj', 
+            'N_HffkOVUDp(4#@', 
+            'C6j=b+,kUaq~u)J', 
+            'dpWVy@e8QphT0+8',
+            'Da6QGV{I.G)BR&e',
+            'S]PKVt2%z,sCyQj',
+            'hZ(gJfo%8-(@9%#',
+            'JiU.O_)9qJA$T+j',
+            'qVIWK=PL@&Rc.88',
+            'mb)VV3o0lvlENxU',
+            'InKfwOy_^+0G[oA']
