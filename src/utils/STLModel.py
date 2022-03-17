@@ -24,28 +24,27 @@ from statsmodels.tsa.seasonal import STL
 
 from matplotlib import pyplot as plt 
 from functools import partial 
-import os,sys, pathlib
+import os 
 import numpy as np 
 import pandas as pd
 import re  
 import logging 
 import warnings
+import shap 
 
-from fbprophet import Prophet 
-from fbprophet.diagnostics import cross_validation 
-from fbprophet.diagnostics import performance_metrics 
+# from fbprophet import Prophet
+# from fbprophet.diagnostics import cross_validation
+# from fbprophet.diagnostics import performance_metrics
 # from fbprophet.plot import add_changepoints_to_plot 
 # from fbprophet.plot import plot_cross_validation_metric 
 
 # TODO: take care of the boundary problem when collecting the trend/season/arma gt. 
 # TODO: add back testing method (train till t and use final point to predict t+1~t+h and compare to the ground truth, then do this repeatedly in a rolling window sense. Finally, average t) to check model performance.
-utils_location = pathlib.Path(__file__).absolute().parent
-if os.path.realpath(utils_location) not in sys.path:
-    sys.path.append(os.path.realpath(utils_location))
+
 # # self defined module
-from metrics import MetricsCls
-from feature_engineering import create_lead
-from misc import config_parser
+from models.SmoothBoost.pipelib.kaisutils.metrics import MetricsCls
+from models.SmoothBoost.pipelib.kaisutils.feature_engineering import create_lead
+from models.SmoothBoost.pipelib.kaisutils.misc import config_parser
 
 # turn off INFO message print from target logger
 logger = logging.getLogger('fbprophet')
@@ -501,24 +500,24 @@ class STLModel():
         assert case in cls.mystl_name
         model = eval(f'cls.{case}_model(hps)')
         
-        # case prophet model
-        if isinstance(model, Prophet): 
-            model.add_country_holidays(country_name='US')
-            #for col in dftra.columns.drop(['ds', 'y']):
-            #    model.add_regressor(col)
-            dftra = di['prophet_tra']
-            with suppress_stdout_stderr():
-                model.fit(dftra)
-                # please self change the freq unit w.r.t days. 
-                # Eg, 30 here means we have monthly data 
-                df_cv = cross_validation(
-                    model, 
-                    initial=f"{di['info']['train_size'] * 30 // cv.n_splits} days", 
-                    period=f"{di['info']['test_size']*30} days", 
-                    horizon=f"{di['info']['horizon']} days", 
-                    parallel='processes'
-                )
-            return performance_metrics(df_cv, rolling_window=1)['rmse'].values[0]
+        # # case prophet model
+        # if isinstance(model, Prophet):
+        #     model.add_country_holidays(country_name='US')
+        #     #for col in dftra.columns.drop(['ds', 'y']):
+        #     #    model.add_regressor(col)
+        #     dftra = di['prophet_tra']
+        #     with suppress_stdout_stderr():
+        #         model.fit(dftra)
+        #         # please self change the freq unit w.r.t days.
+        #         # Eg, 30 here means we have monthly data
+        #         df_cv = cross_validation(
+        #             model,
+        #             initial=f"{di['info']['train_size'] * 30 // cv.n_splits} days",
+        #             period=f"{di['info']['test_size']*30} days",
+        #             horizon=f"{di['info']['horizon']} days",
+        #             parallel='processes'
+        #         )
+        #     return performance_metrics(df_cv, rolling_window=1)['rmse'].values[0]
         
         # case the other models
         cv_res = cross_val_score(
@@ -547,12 +546,12 @@ class STLModel():
         if on == 'all':
             self._validate_model()
             for case in self.mystl_name:
-                if isinstance(self.model[case], Prophet): 
-                    self.model[case] = Prophet(**self.best_hyper[case])
-                    with suppress_stdout_stderr():
-                        self.model[case].fit(di['prophet_tra'].append(di['prophet_tes']))
-                else: 
-                    self.model[case].fit(di[f'X'], di[f'{case}_y'])
+                # if isinstance(self.model[case], Prophet):
+                #     self.model[case] = Prophet(**self.best_hyper[case])
+                #     with suppress_stdout_stderr():
+                #         self.model[case].fit(di['prophet_tra'].append(di['prophet_tes']))
+                # else:
+                self.model[case].fit(di[f'X'], di[f'{case}_y'])
             return self 
             
         # case on==tra
@@ -584,11 +583,11 @@ class STLModel():
         self.best_hyper = best_hyper
         self.model = self.meta_model(self.best_hyper, self.ensemble)
         for case in self.mystl_name:
-            if isinstance(self.model[case], Prophet): 
-                with suppress_stdout_stderr():
-                    self.model[case].fit(di['prophet_tra'])
-            else: 
-                self.model[case].fit(di[f'X_tra'], di[f'{case}_y_tra'])
+            # if isinstance(self.model[case], Prophet):
+            #     with suppress_stdout_stderr():
+            #         self.model[case].fit(di['prophet_tra'])
+            # else:
+            self.model[case].fit(di[f'X_tra'], di[f'{case}_y_tra'])
         # check potential poor performance 
         tmp1 = self.predict(di, at=1, on='tra', aggregate=False) 
         tmp2 = self.predict(di, at=self.horizon, on='tra', aggregate=False) 
@@ -692,12 +691,12 @@ class STLModel():
         pred_matrix = []
         for case in pd.Index(self.model.keys()).drop("ensemble", errors="ignore"):
             # predict based on model type 
-            if isinstance(self.model[case], Prophet): 
-                pred = self._prophet_predict(case, di, at, on, return_ci=False)
-            else: 
-                # decide the pointer, ie, which data to use 
-                pointer =  X_on if on=='final' else X_on[X_on.dummy==at]
-                pred = self.model[case].predict(pointer).reshape(-1, len(di['info']['targets']))
+            # if isinstance(self.model[case], Prophet):
+            #     pred = self._prophet_predict(case, di, at, on, return_ci=False)
+            # else:
+            # decide the pointer, ie, which data to use
+            pointer =  X_on if on=='final' else X_on[X_on.dummy==at]
+            pred = self.model[case].predict(pointer).reshape(-1, len(di['info']['targets']))
             pred_matrix.append(pred)
         pred_matrix = np.array(pred_matrix)     # 3-dim: 3 x sample_size x #target
         # return 
