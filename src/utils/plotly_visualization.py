@@ -200,8 +200,8 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, horizon=3, co
         
         fig.add_trace(
             go.Scatter(
-                x=np.concatenate([df_simulation.index, df_simulation.index[::-1]]),
-                y=np.concatenate([df_simulation["upper"], df_simulation["lower"][::-1]]),
+                x=np.concatenate([df_test_simulation.index, df_test_simulation.index[::-1]]),
+                y=np.concatenate([df_test_simulation["upper"], df_test_simulation["lower"][::-1]]),
                 name="Confidence Interval Simulation ",
                 fill='toself',
                 hoverinfo="skip")
