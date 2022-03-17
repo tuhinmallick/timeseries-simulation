@@ -173,7 +173,7 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     
 if __name__ == "__main__":
     try:
-        # warnings.filterwarnings("ignore")
+        warnings.filterwarnings("ignore")
         # # Setting the seed 
         # np.random.seed(40)
         # commodity = 'CLI_CHN'
