@@ -309,15 +309,15 @@ def main():
                     with st.spinner('Uploading the document'):
                         data = upload()
                     st.form_submit_button('Upload')
-
-            if option == 'Technical indicator':
-                technical_indicator(data)
-            elif option == 'Exploratory Data analysis':
-                exploratory_data_analysis(data)
-            elif option == 'Historical Forecast':
-                historical_forecast()
-            elif option == 'Simulate the future' and  data is not None:
-                simulation(data)
+            if data:
+                if option == 'Technical indicator':
+                    technical_indicator(data)
+                elif option == 'Exploratory Data analysis':
+                    exploratory_data_analysis(data)
+                elif option == 'Historical Forecast':
+                    historical_forecast()
+                elif option == 'Simulate the future' and  data is not None:
+                    simulation(data)
         except Exception as err:
                 traceback.print_exc()
                 print(err.args)
