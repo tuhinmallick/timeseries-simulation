@@ -24,13 +24,13 @@ from statsmodels.tsa.seasonal import STL
 
 from matplotlib import pyplot as plt 
 from functools import partial 
-import os 
+import os,sys, pathlib 
 import numpy as np 
 import pandas as pd
 import re  
 import logging 
 import warnings
-import shap 
+# import shap 
 
 # from fbprophet import Prophet
 # from fbprophet.diagnostics import cross_validation
@@ -40,11 +40,13 @@ import shap
 
 # TODO: take care of the boundary problem when collecting the trend/season/arma gt. 
 # TODO: add back testing method (train till t and use final point to predict t+1~t+h and compare to the ground truth, then do this repeatedly in a rolling window sense. Finally, average t) to check model performance.
-
+utils_location = pathlib.Path(__file__).absolute().parent
+if os.path.realpath(utils_location) not in sys.path:
+    sys.path.append(os.path.realpath(utils_location))
 # # self defined module
-from models.SmoothBoost.pipelib.kaisutils.metrics import MetricsCls
-from models.SmoothBoost.pipelib.kaisutils.feature_engineering import create_lead
-from models.SmoothBoost.pipelib.kaisutils.misc import config_parser
+from metrics import MetricsCls
+from feature_engineering import create_lead
+from misc import config_parser
 
 # turn off INFO message print from target logger
 logger = logging.getLogger('fbprophet')
@@ -705,64 +707,64 @@ class STLModel():
         else: 
             return pred_matrix
     
-    def get_feature_importance(self, di, mode='shap', **kwargs):
-        """
-        Get the feature importance either via tree built-in attributes or via shap algorithm based on ``mode``.
-        Args:
-            di (dict): the dictionary generated from process_data() function
-            mode (str, optional): determine whild method to get the importance. The value can only be in ['tree', 'shape']. Defaults to 'shap'.
+    # def get_feature_importance(self, di, mode='shap', **kwargs):
+    #     """
+    #     Get the feature importance either via tree built-in attributes or via shap algorithm based on ``mode``.
+    #     Args:
+    #         di (dict): the dictionary generated from process_data() function
+    #         mode (str, optional): determine whild method to get the importance. The value can only be in ['tree', 'shape']. Defaults to 'shap'.
 
-        Returns:
-            return the list of feature importances for each of the target feature if mode is tree. 
-            return shap values if mode is shap.
-        """
-        # check 
-        assert mode in ['shap', 'tree'], "argument mode value is not valid."
-        # init 
+    #     Returns:
+    #         return the list of feature importances for each of the target feature if mode is tree. 
+    #         return shap values if mode is shap.
+    #     """
+    #     # check 
+    #     assert mode in ['shap', 'tree'], "argument mode value is not valid."
+    #     # init 
         
-        if mode == 'tree':
-            return self._tree_feature_importance(di, **kwargs)
-        else: 
-            return self._shap_feature_importance(di, **kwargs)
+    #     if mode == 'tree':
+    #         return self._tree_feature_importance(di, **kwargs)
+    #     else: 
+    #         return self._shap_feature_importance(di, **kwargs)
     
-    def _shap_feature_importance(self, di, **kwargs): 
-        # optional kwargs can have: `at`: int, `plot`: bool
+    # def _shap_feature_importance(self, di, **kwargs): 
+    #     # optional kwargs can have: `at`: int, `plot`: bool
 
-        # initial check 
-        self._validate_model()
-        at = kwargs.get('at', -1)
-        at = self._validate_convert_at(at)
-        plot_shap = kwargs.get('plot', True)
-        assert isinstance(plot_shap, bool), "kwargs argument `plot_shap` is invalid."
-        # helper function. input: (#sample, #featuers) output: (#samples, # model outputs)
-        def predict_for_shap(X):
-            pred_matrix = []
-            for case in pd.Index(self.model.keys()).drop("ensemble", errors="ignore"):
-                pred = self.model[case].predict(X)
-                if pred.ndim == 1: 
-                    pred = pd.reshape(-1, 1)
-                pred_matrix.append(pred)
-            pred_matrix = np.array(pred_matrix) # 3-dim: 3 x sample_size x #targets
-            return pred_matrix.sum(axis=0)
+    #     # initial check 
+    #     self._validate_model()
+    #     at = kwargs.get('at', -1)
+    #     at = self._validate_convert_at(at)
+    #     plot_shap = kwargs.get('plot', True)
+    #     assert isinstance(plot_shap, bool), "kwargs argument `plot_shap` is invalid."
+    #     # helper function. input: (#sample, #featuers) output: (#samples, # model outputs)
+    #     def predict_for_shap(X):
+    #         pred_matrix = []
+    #         for case in pd.Index(self.model.keys()).drop("ensemble", errors="ignore"):
+    #             pred = self.model[case].predict(X)
+    #             if pred.ndim == 1: 
+    #                 pred = pd.reshape(-1, 1)
+    #             pred_matrix.append(pred)
+    #         pred_matrix = np.array(pred_matrix) # 3-dim: 3 x sample_size x #targets
+    #         return pred_matrix.sum(axis=0)
 
-        # initializations
-        targets = di['info']['targets']
-        tra_mask = (di["X_tra"].dummy == at)
-        tes_mask = (di["X_tes"].dummy == at)
-        # rather than use the whole training set to estimate expected values, we could summarize with
-        # a set of weighted kmeans, each weighted by the number of points they represent.
-        X_tra_summary = shap.kmeans(di["X_tra"][tra_mask], 12)
-        shapobj = shap.KernelExplainer(predict_for_shap, X_tra_summary)
-        # TODO: train the model only with numpy to auto solve warnings.
-        with warnings.catch_warnings(record=True) as w: 
-            warnings.simplefilter("ignore")
-            shap_values = shapobj.shap_values(di["X_tes"][tes_mask])
-        # plot 
-        if plot_shap:
-            for i in range(len(targets)):
-                shap.summary_plot(shap_values[i], di["X_tes"][tes_mask], plot_type='bar', title=f'Feature Importance Plot for {targets[i]}', class_names=targets[i])
-            shap.summary_plot(shap_values, di["X_tes"][tes_mask], plot_type='bar', title='Feature Importance Plot', class_names=targets)
-        return shap_values
+    #     # initializations
+    #     targets = di['info']['targets']
+    #     tra_mask = (di["X_tra"].dummy == at)
+    #     tes_mask = (di["X_tes"].dummy == at)
+    #     # rather than use the whole training set to estimate expected values, we could summarize with
+    #     # a set of weighted kmeans, each weighted by the number of points they represent.
+    #     X_tra_summary = shap.kmeans(di["X_tra"][tra_mask], 12)
+    #     shapobj = shap.KernelExplainer(predict_for_shap, X_tra_summary)
+    #     # TODO: train the model only with numpy to auto solve warnings.
+    #     with warnings.catch_warnings(record=True) as w: 
+    #         warnings.simplefilter("ignore")
+    #         shap_values = shapobj.shap_values(di["X_tes"][tes_mask])
+    #     # plot 
+    #     if plot_shap:
+    #         for i in range(len(targets)):
+    #             shap.summary_plot(shap_values[i], di["X_tes"][tes_mask], plot_type='bar', title=f'Feature Importance Plot for {targets[i]}', class_names=targets[i])
+    #         shap.summary_plot(shap_values, di["X_tes"][tes_mask], plot_type='bar', title='Feature Importance Plot', class_names=targets)
+    #     return shap_values
 
     def _tree_feature_importance(self, di):
         # init
