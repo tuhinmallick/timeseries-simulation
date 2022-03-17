@@ -295,9 +295,9 @@ def main():
 
             head_col1, head_col2 = st.columns([1,0.5])
             image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
-            # company_image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
+            company_image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.png"))
             head_col1.title(" PGM Price Forecasting")   
-            # head_col2.image(company_image, output_format ='PNG', use_column_width  ='auto')
+            head_col2.image(company_image, output_format ='PNG', use_column_width  ='auto')
             # Forecasty logo
             st.sidebar.image(image, output_format ='PNG', use_column_width  ='always')
             # st.sidebar.write('##### Machine learns, company earns')
