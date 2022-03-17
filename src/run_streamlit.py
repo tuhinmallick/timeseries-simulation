@@ -304,9 +304,9 @@ def main():
             st.sidebar.write('Welcome *%s*' % (st.session_state['name']))
             uploading_options = st.sidebar.form('uploading-options')
             option = st.empty()
-            option = st.selectbox('Please select the functionality : ',['Technical indicator', 'Exploratory Data analysis', 'Historical Forecast', 'Simulate the future'],key = 'functionality_typ',  on_change=set_functionality_type, args = (option,))
+            option = st.selectbox('Please select the functionality : ',['Technical indicator', 'Exploratory Data analysis', 'Base Forecast', 'Simulate the future'],key = 'functionality_typ',  on_change=set_functionality_type, args = (option,))
             # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))   
-            if st.session_state.functionality_type != 'Historical Forecast' and st.session_state.functionality_type != []:
+            if st.session_state.functionality_type != 'Base Forecast' and st.session_state.functionality_type != []:
                 with uploading_options:
                     with st.spinner('Uploading the document'):
                         data = upload()
@@ -317,7 +317,7 @@ def main():
                     technical_indicator(data)
                 elif option == 'Exploratory Data analysis':
                     exploratory_data_analysis(data)
-                elif option == 'Historical Forecast':
+                elif option == 'Base Forecast':
                     historical_forecast()
                 elif option == 'Simulate the future' and  data is not None:
                     simulation(data)
