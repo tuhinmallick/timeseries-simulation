@@ -291,6 +291,8 @@ def main():
         set_session_state()
         try : 
             data = None
+            data_uploaded = False
+
             head_col1, head_col2 = st.columns([1,0.5])
             image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
             # company_image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
@@ -308,8 +310,9 @@ def main():
                 with uploading_options:
                     with st.spinner('Uploading the document'):
                         data = upload()
+                        data_uploaded = True
                     st.form_submit_button('Upload')
-            if data:
+            if data_uploaded:
                 if option == 'Technical indicator':
                     technical_indicator(data)
                 elif option == 'Exploratory Data analysis':

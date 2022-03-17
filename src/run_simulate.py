@@ -5,11 +5,7 @@ logger = logging.getLogger(__name__)
 import pandas as pd
 import numpy as np
 
-from mlflow.tracking import MlflowClient
-from mlflow.entities import ViewType
-import mlflow.sklearn
-import azureml.core
-from azureml.core import Workspace, Datastore, Dataset
+
 src_location = pathlib.Path(__file__).absolute().parent
 artifact_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'artifacts')
 if os.path.realpath(src_location) not in sys.path:
@@ -24,51 +20,51 @@ from utils import grange_and_correlate, smb_feature_engineering, plotly_visualiz
 
 # grange_and_correlate import grange_and_correlate, user_input_correlation_picker
 
-def model_retrieve():
-    # Use MlFlow to retrieve the run that was just completed
-    # client = MlflowClient()
-    # experiment_name = client.get_experiment_by_name(target_name)
-    # experiment_id = experiment_name.experiment_id
-    # # To search all known experiments for any MLflow runs created using the Multitimestepmodel model architecture
-    # all_experiments = [exp.experiment_id for exp in MlflowClient().list_experiments()]
-    # runs = client.search_runs(experiment_id, "", order_by=["metrics.rmse DESC"], max_results=1, run_view_type=ViewType.ALL)
-    # best_run = runs[0]
-    # lookup_metric = "rmse"
-    # best_run, fitted_model = remote_run.get_output(metric = lookup_metric)
-    # # runs = client.search_runs(experiment_ids=all_experiments, filter_string="params.model = 'Inception'", run_view_type=ViewType.ALL)
-    # # lookup_metric = "root_mean_squared_error"
-    # # best_run, fitted_model = remote_run.get_output(metric = lookup_metric)
+# def model_retrieve():
+#     # Use MlFlow to retrieve the run that was just completed
+#     # client = MlflowClient()
+#     # experiment_name = client.get_experiment_by_name(target_name)
+#     # experiment_id = experiment_name.experiment_id
+#     # # To search all known experiments for any MLflow runs created using the Multitimestepmodel model architecture
+#     # all_experiments = [exp.experiment_id for exp in MlflowClient().list_experiments()]
+#     # runs = client.search_runs(experiment_id, "", order_by=["metrics.rmse DESC"], max_results=1, run_view_type=ViewType.ALL)
+#     # best_run = runs[0]
+#     # lookup_metric = "rmse"
+#     # best_run, fitted_model = remote_run.get_output(metric = lookup_metric)
+#     # # runs = client.search_runs(experiment_ids=all_experiments, filter_string="params.model = 'Inception'", run_view_type=ViewType.ALL)
+#     # # lookup_metric = "root_mean_squared_error"
+#     # # best_run, fitted_model = remote_run.get_output(metric = lookup_metric)
 
-    # # download_artifacts(run_id: str, path: str, dst_path: Optional[str] = None) 
-    # metrics = finished_mlflow_run.data.metrics
-    # tags = finished_mlflow_run.data.tags
-    # params = finished_mlflow_run.data.params
+#     # # download_artifacts(run_id: str, path: str, dst_path: Optional[str] = None) 
+#     # metrics = finished_mlflow_run.data.metrics
+#     # tags = finished_mlflow_run.data.tags
+#     # params = finished_mlflow_run.data.params
 
-    # print(metrics,tags,params)
-    subscription_id = 'fc563dde-a9ad-4edf-9998-2d52ba8afff9'
-    # Azure Machine Learning resource group 
-    resource_group = 'forecasty_ml_test' 
-    # Azure Machine Learning workspace name
-    workspace_name = 'forecasty_ml_workplace'
-    # Instantiate Azure Machine Learning workspace
-    ws = Workspace.get(name=workspace_name,
-                    subscription_id=subscription_id,
-                    resource_group=resource_group)
-    #Set MLflow experiment. 
-    # mf.set_env_vars()       # Setting the environment variables
-    # mf.create_s3_bucket()   # Create the S3 bucket in MinIO if it doesn't exist
-    # registry_uri =  r'sqlite:///C:\Users\mallict\forecasty-lab\BASF_Metals\artifacts\mlflow_db.db' #'sqlite:///mlflow_db.db'
-    tracking_uri = ws.get_mlflow_tracking_uri()
-    print(tracking_uri)
-    # mlflow.tracking.set_registry_uri(registry_uri)
-    mlflow.tracking.set_tracking_uri(tracking_uri)
-    model_name = "Multiple_Timestep_Regression_Forecaster_fit"
-    stage = 'Production'
-    model = mlflow.sklearn.load_model(
-        model_uri=f"models:/{model_name}/{stage}"
-    )
+#     # print(metrics,tags,params)
+#     subscription_id = 'fc563dde-a9ad-4edf-9998-2d52ba8afff9'
+#     # Azure Machine Learning resource group 
+#     resource_group = 'forecasty_ml_test' 
+#     # Azure Machine Learning workspace name
+#     workspace_name = 'forecasty_ml_workplace'
+#     # Instantiate Azure Machine Learning workspace
+#     ws = Workspace.get(name=workspace_name,
+#                     subscription_id=subscription_id,
+#                     resource_group=resource_group)
+#     #Set MLflow experiment. 
+#     # mf.set_env_vars()       # Setting the environment variables
+#     # mf.create_s3_bucket()   # Create the S3 bucket in MinIO if it doesn't exist
+#     # registry_uri =  r'sqlite:///C:\Users\mallict\forecasty-lab\BASF_Metals\artifacts\mlflow_db.db' #'sqlite:///mlflow_db.db'
+#     tracking_uri = ws.get_mlflow_tracking_uri()
+#     print(tracking_uri)
+#     # mlflow.tracking.set_registry_uri(registry_uri)
+#     mlflow.tracking.set_tracking_uri(tracking_uri)
+#     model_name = "Multiple_Timestep_Regression_Forecaster_fit"
+#     stage = 'Production'
+#     model = mlflow.sklearn.load_model(
+#         model_uri=f"models:/{model_name}/{stage}"
+#     )
 
-    return model
+#     return model
 
 
 
