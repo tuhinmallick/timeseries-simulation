@@ -313,7 +313,7 @@ def main():
                         data = upload()
                         data_uploaded = True
                     st.form_submit_button('Upload')
-            if data_uploaded:
+            if data is not None:
                 if option == 'Technical indicator':
                     technical_indicator(data)
                 elif option == 'Exploratory Data analysis':
