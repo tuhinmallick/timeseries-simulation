@@ -282,11 +282,12 @@ def main():
         'tuhin',
         'IS3bppMAilySrZd',
         'RDBig7nz8ZFzww5']
-    hashed_passwords = stauth.hasher(passwords).generate()
-    authenticator = stauth.authenticate(names,usernames,hashed_passwords,'some_cookie_name','some_signature_key',cookie_expiry_days=14)
-    name, authentication_status = authenticator.login('Login','main')
-    set_name(name)
-    set_authentication_status(authentication_status)
+    if st.session_state['authentication_status'] ==  False or st.session_state['authentication_status'] is None:
+        hashed_passwords = stauth.hasher(passwords).generate()
+        authenticator = stauth.authenticate(names,usernames,hashed_passwords,'some_cookie_name','some_signature_key',cookie_expiry_days=14)
+        name, authentication_status = authenticator.login('Login','main')
+        set_name(name)
+        set_authentication_status(authentication_status)
     if st.session_state['authentication_status']:
         set_session_state()
         try : 
