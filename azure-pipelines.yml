@@ -1,0 +1,144 @@
+resources:
+  repositories:
+  - repository: source
+    type: git
+    name: Forecasty/timeseries-simulation
+    trigger:
+      branches:
+        include:
+          - demo
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: forecasty-docker
+  - name: REPOSITORY
+    value: timeseries-simulation
+
+stages:
+  - stage: Debug
+    displayName: Debug triggers and environment variables
+    jobs:
+      - job: VarDump
+        displayName: Evaluate different variables
+        steps:
+
+          - script: echo $(Build.Repository.Name)
+            displayName: Build repository name
+
+          - script: echo $(Build.SourceBranchName)
+            displayName: Build source branch name
+
+          - script: dir $(Build.SourcesDirectory)
+            displayName: Build sources directory
+
+          - script: echo $(REPOSITORY)
+            displayName: Docker image repository
+
+  - stage: Publish
+    displayName: Publish container images
+    jobs:
+      - job: BuildAndPushContainerImage
+        displayName: Build and push container image
+        steps:
+          - checkout: git://Forecasty/timeseries-simulation@$(Build.SourceBranchName)
+            clean: 'true'
+            fetchDepth: '1'
+            persistCredentials: 'true'
+
+          - task: Docker@2
+            displayName: Login to ACR
+            inputs:
+              command: login
+              containerRegistry: forecastydevimages.azurecr.io
+
+          - task: Bash@3
+            displayName: Pull last image
+            inputs:
+              targetType: 'inline'
+              script: docker pull $(DOCKER_REGISTRY)/$(REPOSITORY):$(Build.SourceBranchName)
+            continueOnError: true
+
+          - task: Docker@2
+            displayName: Build new image
+            inputs:
+              command: build
+              dockerfile: $(Build.SourcesDirectory)/Dockerfile
+              repository: $(REPOSITORY)
+              containerRegistry: $(DOCKER_REGISTRY)
+              buildContext: $(Build.SourcesDirectory)
+              arguments: --cache-from $(DOCKER_REGISTRY)/$(REPOSITORY):$(Build.SourceBranchName) --build-arg BUILDKIT_INLINE_CACHE=1
+              tags: |
+                $(Build.BuildNumber)
+                $(Build.SourceBranchName)
+
+          - task: Docker@2
+            displayName: Push new image
+            inputs:
+              command: push
+              repository: $(REPOSITORY)
+              containerRegistry: $(DOCKER_REGISTRY)
+              tags: |
+                $(Build.BuildNumber)
+                $(Build.SourceBranchName)
+
+          - task: Docker@2
+            displayName: Logout of ACR
+            inputs:
+              command: logout
+              containerRegistry: forecastydevimages.azurecr.io
+
+      - job: PrepareArtifacts
+        steps:
+          - task: Bash@3
+            displayName: Substitute placeholder with values
+            inputs:
+              targetType: 'inline'
+              script: |
+                sed -i "s%#{Build.BuildId}#%$(Build.BuildNumber)%g" "$(Build.SourcesDirectory)/k8s/kustomization.yaml"
+
+          - task: KubernetesManifest@0
+            name: bake
+            displayName: Kustomize K8s manifests
+            inputs:
+              action: bake
+              renderType: kustomize
+              kustomizationPath: $(Build.SourcesDirectory)/k8s
+
+          - task: Bash@3
+            displayName: Rename compiled kustomize file
+            inputs:
+              targetType: 'inline'
+              script: mv $(bake.manifestsBundle) $(Build.ArtifactStagingDirectory)/$(Build.SourceBranchName)-$(Build.BuildNumber).yaml
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: $(Build.ArtifactStagingDirectory)/$(Build.SourceBranchName)-$(Build.BuildNumber).yaml
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+
+  - stage: Deploy
+    displayName: Deploy images
+    jobs:
+      - deployment: DeployImages
+        displayName: Deploy to kubernetes
+        environment: $(Build.SourceBranchName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(Pipeline.Workspace)'
+
+                - task: KubernetesManifest@0
+                  displayName: Deploy K8s manifests
+                  inputs:
+                    namespace: 'forecasty'
+                    manifests: '$(Pipeline.Workspace)/$(Build.SourceBranchName)-$(Build.BuildNumber).yaml'
+                    kubernetesServiceConnection: '$(Build.SourceBranchName)-forecasty'
+
