@@ -17,4 +17,5 @@ streamlit==1.7.0
 streamlit_authenticator==0.1.1
 streamlit_lottie==0.0.3
 tqdm==4.62.3
+tsmoothie==1.0.4
 
