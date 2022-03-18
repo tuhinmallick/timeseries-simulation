@@ -17,25 +17,6 @@ variables:
     value: timeseries-simulation
 
 stages:
-  - stage: Debug
-    displayName: Debug triggers and environment variables
-    jobs:
-      - job: VarDump
-        displayName: Evaluate different variables
-        steps:
-
-          - script: echo $(Build.Repository.Name)
-            displayName: Build repository name
-
-          - script: echo $(Build.SourceBranchName)
-            displayName: Build source branch name
-
-          - script: dir $(Build.SourcesDirectory)
-            displayName: Build sources directory
-
-          - script: echo $(REPOSITORY)
-            displayName: Docker image repository
-
   - stage: Publish
     displayName: Publish container images
     jobs:
@@ -68,6 +49,8 @@ stages:
               repository: $(REPOSITORY)
               containerRegistry: $(DOCKER_REGISTRY)
               buildContext: $(Build.SourcesDirectory)
+              addPipelineData: false
+              addBaseImageData: false
               arguments: --cache-from $(DOCKER_REGISTRY)/$(REPOSITORY):$(Build.SourceBranchName) --build-arg BUILDKIT_INLINE_CACHE=1
               tags: |
                 $(Build.BuildNumber)
