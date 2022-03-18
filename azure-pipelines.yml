@@ -138,7 +138,7 @@ stages:
                 - task: KubernetesManifest@0
                   displayName: Deploy K8s manifests
                   inputs:
-                    namespace: 'forecasty'
+                    namespace: 'demo'
                     manifests: '$(Pipeline.Workspace)/$(Build.SourceBranchName)-$(Build.BuildNumber).yaml'
-                    kubernetesServiceConnection: '$(Build.SourceBranchName)-forecasty'
+                    kubernetesServiceConnection: '$(Build.SourceBranchName)-demo'
 
