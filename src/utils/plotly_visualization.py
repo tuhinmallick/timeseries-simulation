@@ -342,41 +342,30 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, conf_interval
     fig = go.Figure()
     
     # ================================ ACTUALS AND FORECAST CONNECTION W/ CI ================================
-    df_subline = df_forecast.dropna()
-    df_subline.columns = ["actual", "lower", "upper"]
-    df_subline = df_actuals.iloc[-1:].append(df_subline.dropna().iloc[:1])
+    df_subline1 = df_forecast.dropna()
+    df_subline1.columns = ["actual", "lower", "upper"]
+    df_subline1 = df_actuals.iloc[-1:].append(df_subline1.dropna().iloc[:1])
     
-    for i, _ in enumerate(df_subline.columns):
-        df_subline.iloc[0, i] = df_actuals.iloc[-1:, 0]
+    for i, _ in enumerate(df_subline1.columns):
+        df_subline1.iloc[0, i] = df_actuals.iloc[-1:, 0]
     
     fig.add_trace(
         go.Scatter(
             x=np.concatenate(
                 [
-                    df_subline.index, 
-                    df_subline.index[::-1]
+                    df_subline1.index, 
+                    df_subline1.index[::-1]
                     ]
                 ),
             y=np.concatenate(
-                [df_subline["upper"], 
-                 df_subline["lower"][::-1]
+                [df_subline1["upper"], 
+                 df_subline1["lower"][::-1]
                  ]
                 ),
             marker_color="rgba(98,249,252,0.0)",
             fill='toself',
             hoverinfo="skip",
             showlegend=False
-            )
-        )
-    
-    fig.add_trace(
-        go.Scatter(
-            x=df_subline.index, 
-            y=round(df_subline["actual"], 1), 
-            marker_color="rgba(98,249,252,0.9)", 
-            mode="lines", 
-            showlegend=False, 
-            hoverinfo="skip"
             )
         )
     
@@ -397,7 +386,7 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, conf_interval
                     ]
                 ),
             y=np.concatenate([df_subline["upper"], df_subline["lower"][::-1]]),
-            marker_color="rgba(141,201,40,0.0)",
+            marker_color="rgba(255,192,0,0.0)",
             fill='toself',
             hoverinfo="skip",
             showlegend=False
@@ -408,7 +397,18 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, conf_interval
         go.Scatter(
             x=df_subline.index, 
             y=round(df_subline["actual"], 1), 
-            marker_color="rgba(141,201,40,0.9)", 
+            marker_color="rgba(255,192,0,0.9)", 
+            mode="lines", 
+            showlegend=False, 
+            hoverinfo="skip"
+            )
+        )
+    
+    fig.add_trace(
+        go.Scatter(
+            x=df_subline.index, 
+            y=round(df_subline1["actual"], 1), 
+            marker_color="rgba(98,249,252,0.9)", 
             mode="lines", 
             showlegend=False, 
             hoverinfo="skip"
@@ -455,7 +455,7 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, conf_interval
                 name="Simulation CI*",
                 fill='toself',
                 hoverinfo="skip",
-                marker_color="rgba(141,201,40,0.0)"
+                marker_color="rgba(255,192,0,0.0)"
                 )
             )
     
@@ -474,7 +474,7 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, conf_interval
             x=df_test.index, 
             y=round(df_test["forecast"], 1), 
             name="Forecast", 
-            marker_color="rgba(98,249,252,0.0)"
+            marker_color="rgba(98,249,252,0.9)"
             )
         )
 
@@ -483,7 +483,7 @@ def plotly_plot_simulation(df_actuals, df_forecast, df_simulation, conf_interval
             x=df_test_simulation.index, 
             y=round(df_test_simulation["forecast"], 1), 
             name="Simulation",
-            marker_color="rgba(141,201,40,0.9)"
+            marker_color="rgba(255,192,0,0.9)"
             )
         )
 
