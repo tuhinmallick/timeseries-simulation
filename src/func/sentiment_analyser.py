@@ -369,7 +369,7 @@ def sentiment():
         if not search_params["query_terms"]:
             st.stop()
 
-        submit_button = st.form_submit_button(label="Submit")
+        submit_button = st.form_submit_button(label="❤️ Sentiment Analysis")
 
     # --------------------------------------------------------------------------------------------------
     # Run some numbers...
