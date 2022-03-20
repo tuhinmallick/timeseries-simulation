@@ -50,6 +50,7 @@ print('ping')
 #     "config_streamlit.toml", "config_instructions.toml", "config_readme.toml"
 # )
 st.markdown(""" <style>
+#MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 </style> """, unsafe_allow_html=True)
 padding = 0
