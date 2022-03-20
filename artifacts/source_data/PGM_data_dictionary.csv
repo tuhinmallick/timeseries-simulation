@@ -1,0 +1,136 @@
+Index,Helper,Feature Name,Full Name,String Length,Source/ Reference
+1,B,Palladium_spot_price,Palladium Spot Price,20,BASF Metals internal data
+2,C,Platinum_spot_price,Platinum Spot Price,19,BASF Metals internal data
+3,D,Rhodium_spot_price,Rhodium Spot Price,18,BASF Metals internal data
+4,E,COAL_AUS_USD_M,"Global price of Coal, Australia",31,"Global price of Coal, Australia (PCOALAUUSDM) | FRED | St. Louis Fed (stlouisfed.org)"
+5,F,EXR_RUSSIAN_RUBLE_USD,Exchange Rate Rubel to USD,26,National Currency to US Dollar Exchange Rate: Average of Daily Rates for the Russian Federation (CCUSMA02RUM618N) | FRED | St. Louis Fed (stlouisfed.org)
+6,G,GDP_GERMANY_EUR,GDP Germany,11,https://fred.stlouisfed.org/series/CLVMNACSCAB1GQDE
+7,H,GDP_EU27_EUR,GDP EU,6,https://fred.stlouisfed.org/series/CLVMNACSCAB1GQEU28
+8,I,GDP_US_USD,GDP US,6,https://fred.stlouisfed.org/series/GDP
+9,J,GDP_China_sameQ%,GDP China,9,https://fred.stlouisfed.org/series/MKTGDPCNA646NWDB
+10,K,WTI_USD_BARREL,WTI Crude Price ,16,https://fred.stlouisfed.org/series/DCOILWTICO
+11,L,BRENT_USD_BARREL,Brent Crude Price,17,https://fred.stlouisfed.org/series/POILBREUSDM
+12,M,EXR_USD_EUR,Exchange Rate USD to Euro,25,U.S. Dollars to Euro Spot Exchange Rate (DEXUSEU) | FRED | St. Louis Fed (stlouisfed.org)
+13,N,BALTIC_DRY_IDX,Baltic Dry Index,16,https://www.investing.com/indices/baltic-dry
+14,O,EXR_CNY_USD,Exchange rate CNY to USD,24,Chinese Yuan Renminbi to U.S. Dollar Spot Exchange Rate (DEXCHUS) | FRED | St. Louis Fed (stlouisfed.org)
+15,P,NAT_GAS_HHUB_USD_MBTU,Henry Hub Natural Gas Spot Pric,31,Henry Hub Natural Gas Spot Price (DHHNGSP) | FRED | St. Louis Fed (stlouisfed.org)
+16,Q,VIX,CBOE Volatility Index: VIX,26,https://fred.stlouisfed.org/searchresults/?st=VIX
+17,R,CLI_US,Consumer Leading Indicator: US,30,https://fred.stlouisfed.org/series/USALOLITONOSTSAM
+18,S,CLI_CHN,Consumer Leading Indicator: China,33,https://fred.stlouisfed.org/series/CHNLOLITONOSTSAM
+19,T,CLI_EURO,Consumer Leading Indicator: Euro,32,https://fred.stlouisfed.org/series/EA19LOLITOAASTSAM
+20,U,CPILFESL,Consumper Price Index: All Items,32,https://fred.stlouisfed.org/series/CPILFESL
+21,V,PET.RWTC.M,"Crushing, OK, WTI Spot Price",28,U.S. Energy Information Administration (EIA) - Qb
+22,W,PALLFNFINDEXQ,Global Price Index of All Commodities,37,Global Price Index of All Commodities (PALLFNFINDEXQ) | FRED | St. Louis Fed (stlouisfed.org)
+23,X,DEXSFUS,Exchange Rate Rand to USD,25,South African Rand to U.S. Dollar Spot Exchange Rate (DEXSFUS) | FRED | St. Louis Fed (stlouisfed.org)
+24,Y,PNICKUSDM,Global Nickel Price,19,Forecasty.AI LME Nickel Price
+25,Z,WPU1011,Producer Price Index: Iron Ore,30,Forecasty.AI Investing Nickel Futures
+26,AA,PCU3399103399101,"Producer Price Index: Jewelry, Gold, Platinum",45,"Producer Price Index by Industry: Jewelry and Silverware Manufacturing: Jewelry, Gold and Platinum (PCU3399103399101) | FRED | St. Louis Fed (stlouisfed.org)"
+27,AB,TSIFRGHTC,Freight Transportation Services Index,37,https://fred.stlouisfed.org/series/TSIFRGHTC
+28,AC,SP500,S&P 500,7,https://fred.stlouisfed.org/series/SP500
+29,AD,PPICMM,Producer Price Index: Primary Nonferrous Metals,47,Producer Price Index by Commodity: Metals and Metal Products: Primary Nonferrous Metals (PPICMM) | FRED | St. Louis Fed (stlouisfed.org)
+30,AE,IPB50001N,Industrial Production: Total Index,34,https://fred.stlouisfed.org/series/IPB50001N
+31,AF,A31ATI,Manufacturers Total Inventories: Iron & Steel,45,https://fred.stlouisfed.org/series/A31ATI
+32,AG,A31ANO,Manufacturers New Orders: Iron & Steel,38,https://fred.stlouisfed.org/series/A31ANO
+33,AH,IPG21223S,"Industrial Production: Copper, Nickel Mining",44,"Industrial Production: Mining, Quarrying, and Oil and Gas Extraction: Copper, Nickel, Lead, and Zinc Mining (NAICS = 21223) (IPG21223S) | FRED | St. Louis Fed (stlouisfed.org)"
+34,AI,PIORECRUSDM,Global Iron Ore Price,21,https://fred.stlouisfed.org/series/PIORECRUSDM
+35,AJ,GVZCLS,CBOE Gold ETF Volatility Index,30,https://fred.stlouisfed.org/series/GVZCLS
+36,AK,VXSLVCLS,CBOE Silver ETF Volatility Index,32,https://fred.stlouisfed.org/series/VXSLVCLS
+37,AL,PNRGINDEXM,Global price of Energy index,28,Global price of Energy index (PNRGINDEXM) | FRED | St. Louis Fed (stlouisfed.org)
+38,AM,Nikkei225,"Nikkei Stock Average, Nikkei 225",32,https://fred.stlouisfed.org/series/NIKKEI225
+39,AN,EXJPUS,Exchange Rate Yen to USD,24,Japanese Yen to U.S. Dollar Spot Exchange Rate (EXJPUS) | FRED | St. Louis Fed (stlouisfed.org)
+40,AO,PCU33613361,Producer Price Index: Motor Vehicle Manufacturing,49,https://fred.stlouisfed.org/series/PCU33613361
+41,AP,TOTALSA,Total Vehicle Sales,19,https://fred.stlouisfed.org/series/TOTALSA
+42,AQ,ZAFCPIALLMINMEI,Consumer Price Index: All Items South Africa,44,https://fred.stlouisfed.org/series/ZAFCPIALLMINMEI
+43,AR,LCULMN01ZAQ661S,Total Unit Labor Cost: South Africa,35,Total Unit Labor Cost: Manufacturing for South Africa (LCULMN01ZAQ661S) | FRED | St. Louis Fed (stlouisfed.org)
+44,AS,NGDPRSAXDCZAQ,GDP South Africa,16,https://fred.stlouisfed.org/series/NGDPRSAXDCZAQ
+45,AT,M.W00.PCOBA.USD,Cobalt Price,12,Forecasty.AI LME Cobalt Price
+46,AU,BSCICP03OECDE,Busines Confidence Index,24,Business Tendency Surveys for Manufacturing: Confidence Indicators: Composite Indicators: OECD Indicator for the OECD and Non-member Economies (BSCICP03O9M665S) | FRED | St. Louis Fed (stlouisfed.org)
+47,AV,LOLITOAAUSA,Consumer Leading Indicator,26,Leading Indicators OECD: Leading indicators: CLI: Amplitude adjusted for OECD - Total (OECDLOLITOAASTSAM) | FRED | St. Louis Fed (stlouisfed.org)
+48,AW,IP7110,Import Price Index: Platinum Type,33,"Import Price Index (Harmonized System): Platinum, Unwrought or in Semimanufactured Forms, or in Powder Form (IP7110) | FRED | St. Louis Fed (stlouisfed.org)"
+49,AX,WPS061,Producer Price Index: Industrial Chemicals,42,Producer Price Index by Commodity: Chemicals and Allied Products: Industrial Chemicals (WPS061) | FRED | St. Louis Fed (stlouisfed.org)
+50,AY,GS10,Market Yield US 10-Year,23,Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity (GS10) | FRED | St. Louis Fed (stlouisfed.org)
+51,AZ,GS5,Market Yield US 5-Year,22,Market Yield on U.S. Treasury Securities at 5-Year Constant Maturity (GS5) | FRED | St. Louis Fed (stlouisfed.org)
+52,BA,GS30,Market Yield US 30-Year,23,Market Yield on U.S. Treasury Securities at 30-Year Constant Maturity (GS30) | FRED | St. Louis Fed (stlouisfed.org)
+53,BB,DAX,DAX,3,https://www.investing.com/indices/germany-30
+54,BC,SMI,SMI,3,SMI Index (SSMI) - Investing.com
+55,BD,NASDAQCOM,NASDAQ Composite,16,NASDAQ Composite Index (IXIC) - Investing.com
+56,BE,FTSE100,FTSE 100,8,https://www.investing.com/indices/uk-100
+57,BF,gold_M_USD_PM,Gold Price,10,"Forecasty.AI LME, LBMA Gold Price"
+58,BG,M.W00.PSILVER.USD,Silver Price,12,"Forecasty.AI LME, LBMA Silver Price"
+59,BH,WPU10170502,Producer Price Index: Steel,27,https://fred.stlouisfed.org/series/WPU10170502
+60,BI,CIVPART,Labor Force Participation Rate,30,https://fred.stlouisfed.org/series/CIVPART
+61,BJ,Expected_change_in_Inflation,US Expected Change in Inflation Rates,37,"https://ycharts.com/indicators/us_expected_changes_in_inflation_rates_next_five_years#:~:text=US%20Expected%20Change%20in%20Inflation%20Rates%3A%20Next%205,lower%20than%20the%20long%20term%20average%20of%203.22%25."
+62,BK,FEDfunds,Federal Funds Effective Rate,28,Federal Funds Effective Rate (FEDFUNDS) | FRED | St. Louis Fed (stlouisfed.org)
+63,BL,Vehicles_miles_traveled,Vehicle Miles Traveled,22,Vehicle Miles Traveled (VMTD11) | FRED | St. Louis Fed (stlouisfed.org)
+64,BM,New_car_dealer,New Car Dealers,15,https://fred.stlouisfed.org/series/MRTSSM44111USN
+65,BN,Platinum_total_demand,Platinum Total Demand,21,BASF Metals internal data
+66,BO,Palladium_total_demand,Palladium Total Demand,22,BASF Metals internal data
+67,BP,Rhodium_total_demand,Rhodium Total Demand,20,BASF Metals internal data
+68,BQ,Platinum_total_supply,Platinum Total Supply,21,BASF Metals internal data
+69,BR,Palladium_total_supply,Palladium Total Supply,22,BASF Metals internal data
+70,BS,Rhodium_total_supply,Palladium Total Supply,22,BASF Metals internal data
+71,BT,GDDUWI_index,GDDUWI Index,12,BASF Metals internal data
+72,BU,GDDUUS_index,GDDUUS Index,12,BASF Metals internal data
+73,BV,GDDUE15_index,GDDUE15 Index,13,BASF Metals internal data
+74,BW,GDDUJN_index,GDDUJN Index,12,BASF Metals internal data
+75,BX,GDUEEGF_index,GDUEEGF Index,13,BASF Metals internal data
+76,BY,LBUSTRUU_index,LBUSTRUU Index,14,BASF Metals internal data
+77,BZ,BEUSGA_index,BEUSGA Index,12,BASF Metals internal data
+78,CA,BERPGA_index,BERPGA Index,12,BASF Metals internal data
+79,CB,BEPAGA_index,BEPAGA Index,12,BASF Metals internal data
+80,CC,XPT_curncy,XPT Curncy,10,BASF Metals internal data
+81,CD,XAU_curncy,XAU Curncy,10,BASF Metals internal data
+82,CE,XAG_curncy,XAG Curncy,10,BASF Metals internal data
+83,CF,XPD_curncy,XPD Curncy,10,BASF Metals internal data
+84,CG,Platinum_market_balance,Platinum Market Balance,23,BASF Metals internal data
+85,CH,Platinum_percent_of_demand,Platinum Percent Of Demand,26,BASF Metals internal data
+86,CI,Platinum_cummulative_market_balance,Platinum Cummulative Market Balance,35,BASF Metals internal data
+87,CJ,Platinum_cummulative_percentage_of_demand,Platinum Cummulative Percentage Of Demand,41,BASF Metals internal data
+88,CK,Palladium_market_balance,Palladium Market Balance,24,BASF Metals internal data
+89,CL,Palladium_percent_of_demand,Palladium Percent Of Demand,27,BASF Metals internal data
+90,CM,Palladium_cummulative_market_balance,Palladium Cummulative Market Balance,36,BASF Metals internal data
+91,CN,Palladium_cummulative_percentage_of_demand,Palladium Cummulative Percentage Of Demand,42,BASF Metals internal data
+92,CO,Rhodium_market_balance,Rhodium Market Balance,22,BASF Metals internal data
+93,CP,Rhodium_percent_of_demand,Rhodium Percent Of Demand,25,BASF Metals internal data
+94,CQ,Rhodium_cummulative_market_balance,Rhodium Cummulative Market Balance,34,BASF Metals internal data
+95,CR,Rhodium_cummulative_percentage_of_demand,Rhodium Cummulative Percentage Of Demand,40,BASF Metals internal data
+96,CS,CFTC_NYMEX_Platinum_Non_consumer_Long,CFTC NYMEX Platinum Non consumer Long,37,BASF Metals internal data
+97,CT,CFTC_NYMEX_Platinum_Non_consumer_Short,CFTC NYMEX Platinum Non consumer Short,38,BASF Metals internal data
+98,CU,CFTC_NYMEX_Palladium_Non_consumer_Long,CFTC NYMEX Palladium Non consumer Long,38,BASF Metals internal data
+99,CV,CFTC_NYMEX_Palladium_Non_consumer_Short,CFTC NYMEX Palladium Non consumer Short,39,BASF Metals internal data
+100,CW,Platinum_open_interest,Platinum open interest,22,BASF Metals internal data
+101,CX,Palladium_open_interest,Palladium open interest,23,BASF Metals internal data
+102,CY,Global_PT_ETF_Holdings_PX_LAST    ,Global PT ETF Holdings PX Last,30,BASF Metals internal data
+103,CZ,Standard_Bank_SA_PT_ETF_Holdings,Standard Bank SA PT ETF Holdings,32,BASF Metals internal data
+104,DA,ABSA_PT_ETF_Holdings,ABSA PT ETF Holdings,20,BASF Metals internal data
+105,DB,Global_PD_ETF_Holdings_PX_LAST,Global PD ETF Holdings PX Last,30,BASF Metals internal data
+106,DC,Standard_Bank_SA_PD_ETF_Holdings,Standard Bank SA PD ETF Holdings,32,BASF Metals internal data
+107,DD,ABSA_PD_ETF_Holdings_PX_MID,ABSA PD ETF Holdings PX Mid,27,BASF Metals internal data
+108,DE,DB_RH_ETF_London_xfrd_gr_equity  ,DB RH ETF London xfrd gr Equity,31,BASF Metals internal data
+109,DF,DB_RH_ETF_London_xrh0_In_equity  ,DB RH ETF London xrh0 In Equity,31,BASF Metals internal data
+110,DG,Standard_Bank_SA_RH_ETF_London_etfrho_sj_equity,Standard Bank SA RH ETF London etfrho sj Equity,47,BASF Metals internal data
+111,DH,Total_Platinum_ETF_Holdings,Total Platinum ETF Holdings,27,BASF Metals internal data
+112,DI,Total_Palladium_ETF_Holdings,Total Palladium ETF Holdings,28,BASF Metals internal data
+113,DJ,Total_Rhodium_ETF_Holdings,Total Rhodium ETF Holdings,26,BASF Metals internal data
+114,DK,Platinum_RSI_3_day,Platinum RSI 3 Day,18,BASF Metals internal data
+115,DL,Platinum_RSI_9_day,Platinum RSI 9 Day,18,BASF Metals internal data
+116,DM,Platinum_RSI_14_day,Platinum RSI 14 Day,19,BASF Metals internal data
+117,DN,Platinum_RSI_30_day,Platinum RSI 30 Day,19,BASF Metals internal data
+118,DO,Palladium_RSI_3_day,Palladium RSI 3 Day,19,BASF Metals internal data
+119,DP,Palladium_RSI_9_day,Palladium RSI 9 Day,20,BASF Metals internal data
+120,DQ,Palladium_RSI_14_day,Palladium RSI 14 Day,20,BASF Metals internal data
+121,DR,Palladium_RSI_30_day,Palladium RSI 30 Day,17,BASF Metals internal data
+122,DS,us_car_production,US Car Production,24,BASF Metals internal data
+123,DT,us_car_production_change,US Car Production Change,20,BASF Metals internal data
+124,DU,china_car_production ,China Car Production,27,BASF Metals internal data
+125,DV,china_car_production_change,China Car Production Change,22,BASF Metals internal data
+126,DW,germany_car_production,Germany Car Production,29,BASF Metals internal data
+127,DX,germany_car_production_change,Germany Car Production Change,20,BASF Metals internal data
+128,DY,japan_car_production,Japan Car Production,27,BASF Metals internal data
+129,DZ,japan_car_production_change,Japan Car Production Change,28,BASF Metals internal data
+130,EA,car_production_major_markets,Car Production Major Markets,34,BASF Metals internal data
+131,EB,north_america_car_production_idx,North America Car Production Index,23,BASF Metals internal data
+132,EC,eu_car_production_idx,EU Car Production Index,26,BASF Metals internal data
+133,ED,china_car_production_idx,China Car Production Index,26,BASF Metals internal data
+134,EE,japan_car_production_idx,Japan Car Production Index,26,BASF Metals internal data
+134,EF,total_car_production_idx,Total Car Production Index,,BASF Metals internal data
