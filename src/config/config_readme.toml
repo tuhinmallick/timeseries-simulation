@@ -1,0 +1,287 @@
+[app]
+app_intro = """
+This app allows you to train, evaluate and optimize a Prophet model in just a few clicks.
+All you have to do is to upload a time series dataset, and follow the guidelines in the sidebar to:
+* __Prepare data__: Filter, aggregate, resample and/or clean your dataset.
+* __Choose model parameters__: Default parameters are available but you can tune them.
+Look at the tooltips to understand how each parameter is impacting forecasts.
+* __Select evaluation method__: Define the evaluation process, the metrics and the granularity to
+assess your model performance.
+* __Make a forecast__: Make a forecast on future dates that are not included in your dataset,
+with the model previously trained. \n
+
+
+Once you are satisfied, click on "save experiment" to download all plots and data locally.
+"""
+
+[tooltips]
+launch_forecast = """
+Check to launch forecast. A new forecast will be made each time some parameter is changed in the sidebar.
+"""
+track_experiments = """
+Check to get a link to download a report at the bottom of the page.
+The report contains the data, the plots and the config used to get them.
+Use it only when you actually want to save experiments, as it might make processings a bit slower.
+"""
+upload_choice = """
+* Check to load a toy dataset and see what can be done with this app.
+* Uncheck to upload your own dataset.
+"""
+custom_config = """
+Follow these steps to provide your own configuration file:
+* Download config template and instructions files above.
+* Edit config template file with your own specifications.
+* Upload the edited file below.
+"""
+custom_config_choice = """
+* Check if you want to upload a configuration file with specifications adapted to your usage.
+* Uncheck to enter directly your specifications in the sidebar.
+"""
+dataset_upload = """
+Your csv file should have at least a column with dates and a column with numeric values to forecast.
+"""
+toy_dataset = """
+Five toy datasets are available:
+* __Retail sales__: Sales from Walmart stores (daily)
+* __House sales__: House sales in London boroughs (monthly)
+* __Energy consumption__: Households energy consumption (daily)
+* __Weather__: Temperature in Madrid (hourly)
+* __Commodity prices__: Corn price in USD per bushel (weekly)
+"""
+date_format = """
+For example "%Y-%m-%d" or "%d/%m/%Y %H:%M:%S".
+"""
+separator = """
+Delimiter used in the csv file
+"""
+date_column = """
+Column to be parsed as a date
+"""
+target_column = """
+Quantity to be forecasted
+"""
+dimensions = """
+Prophet can only forecast one series at a time.
+In case your dataset contains several time series, you might want to filter or aggregate these different series.
+Dimensions are the columns on which the dataset can be filtered and aggregated on. \n
+You don't have to select dimensions. In case no dimension is selected,
+all target values at the same date will be aggregated in order to get one target value per date.\n
+Example: For a dataset containing sales from 3 countries A, B and C, you could select countries B and C, and
+forecast the sum of their sales.
+"""
+dimensions_keep = """
+Check to keep all values or uncheck to filter values on column
+"""
+dimensions_filter = """
+All values selected will be aggregated into one time series.
+"""
+dimensions_agg = """
+Function used to aggregate the different time series into one.
+"""
+resample_choice = """
+Check to resample your dataset at a lower time frequency.
+"""
+resample_new_freq = """
+Both training and forecasting will be done at this new frequency.
+"""
+resample_agg = """
+Original values have to be aggregated because the new frequency is lower than the original one.  \n
+Example: For a dataset originally at daily frequency and resampled at weekly frequency,
+the 7 values of each week could be averaged, summed, or we could keep the min or max value of the week.
+"""
+remove_days = """
+Days selected will be removed from both training and forecasting periods.
+"""
+del_zeros = """
+Check if the quantity to forecast should never be 0.
+"""
+del_negative = """
+Check if the quantity to forecast should never be striclty negative.
+"""
+log_transform = """
+Applying a log transformation to the target before modelling might increase performance.
+"""
+choice_eval = """
+* Check to evaluate your model with a train/valid split or a cross-validation.
+* Uncheck if you want to skip evaluation and go directly to forecasting.
+"""
+choice_cv = """
+Check to evaluate performance through a cross-validation, or uncheck to use a simple training/validation split.
+"""
+cv_n_folds = """
+Number of distinct training/validation pairs to include in the cross-validation.
+"""
+cv_horizon = """
+Length of validation period for each fold.
+"""
+choice_forecast = """
+* Check to make a forecast for a period that is not included in the dataset.
+In that case, the model will be trained on the whole dataset and the forecast will be visible at the bottom of the dashboard.
+* Uncheck if you just want to evaluate your model performance on known data.
+"""
+forecast_horizon = """
+Length of the period to forecast after the last date available in input dataset.
+"""
+holidays_prior_scale = """
+Determines the magnitude of the holidays effect on your predictions.
+"""
+changepoint_prior_scale = """
+Prophet automatically detects changepoints in the trend.
+This parameter determines trend flexibility by adjusting the number of changepoints detected.
+If you make it high, the trend will be more flexible (more changepoints),
+but you can end up overfitting and including seasonality patterns in the trend, which is something to avoid.
+"""
+seasonality = """
+Choose whether or not to include this seasonality in the model.
+In 'auto' mode, Prophet will include a seasonality only if there are at least 2 full periods of historical data
+(for example 2 years of data for yearly seasonality).
+"""
+seasonality_prior_scale = """
+Determines the magnitude of seasonality effects on your predictions.
+Decrease this value if you observe that seasonality effects are overfitted.
+"""
+seasonality_mode = """
+Determines how seasonality components should be integrated with the predictions:
+* Use `additive` when seasonality trend should be “constant” over the entire period (typically for linear trends).
+* Use `multiplicative` to increase the importance of the seasonality over time (typically for exponential trends).
+"""
+seasonality_fourier = """
+Each seasonality is a fourier series as a function of time. The fourier order is the number of terms in the series.
+A higher order can fit more complex and quickly changing seasonality patterns,
+but it will also make overfitting more likely.
+You can use the seasonality components plots of this app to tune this parameter visually.
+"""
+seasonality_name = """
+Choose a name for your custom seasonality. That name will appear on components plots, on the right.
+"""
+seasonality_period = """
+Number of days of each cycle.
+"""
+add_custom_seasonality = """
+Check to include a specific seasonality in the model (other than the ones listed above).
+"""
+holidays_country = """
+To add country-specific holidays, start by selecting a single country (multiple countries not supported). \
+Prophet will try to model the impact of each selected holidays on the target variable.
+"""
+public_holidays = """
+Public holidays such as Bastille day in France, Christmas, 4th of July in the US, etc
+"""
+school_holidays = """
+School holidays. Not available for all countries at this time.
+"""
+lockdown_events = """
+Nation-wide lockdown events due to covid 19 pandemic in 2020-2021. Not available for all countries at this time.
+"""
+add_all_regressors = """
+Regressors are quantities related to the target, that will help Prophet adjusting its forecasts.
+Check to include all regressors detected in your dataset, or select them yourself.
+"""
+select_regressors = """
+You don't necessarily have to select regressors. Only select those that improve model performance.
+"""
+regressor_prior_scale = """
+Determines the magnitude of the regressor effect on your predictions.
+"""
+growth = """
+This parameter determines how the trend will evolve between change points:
+* `linear`: The trend will be a line with a slope that can vary at each changepoint.
+* `flat`: The trend will be constant over time.
+* `logistic`: The trend will look like a logistic curve between each changepoint.
+Useful if the time series has a cap or a floor that can't be exceeded.
+"""
+cap = """
+Upper value that can't be exceeded by the trend.
+"""
+floor = """
+Lower value that can't be exceeded by the trend.
+"""
+changepoint_range = """
+Proportion of training data that will be used to detect changepoints in the trend.
+By default, changepoints are only inferred for the first 80% data points in order to avoid overfitting fluctuations
+at the end of the time series. But you can increase this range if the final fluctuations are significant.
+"""
+metrics = """
+Metrics that will be used to compare model predictions to the ground truth.
+"""
+eval_set = """
+Choose whether to evaluate the model on training data or validation data.
+You should look at validation data to assess model performance,
+but evaluation on training data can also be useful to detect overfitting.
+"""
+eval_granularity = """
+Granularity at which predictions on evaluation set will be averaged.
+Select 'Global' if you want to compute performance on the whole evaluation set.
+"""
+choice_agg_perf = """
+Check to sum all predictions and true values at the selected granularity before computing performance metrics.
+Be careful, this method can be misleading as under-prediction errors could be compensated by over-prediction errors.
+"""
+
+[plots]
+overview = """
+This visualization displays several information:
+* The blue line shows the __predictions__ made by the model on both training and validation periods.
+* The blue shade around is a __80% uncertainty interval__ on these predictions,
+obtained through a Monte Carlo simulation.
+* The black points are the __actual values__ of the target on training period.
+* The red line is the __trend__ estimated by the model,
+and the vertical lines show the __changepoints__ at which this trend evolves.
+
+You can use the slider at the bottom or the buttons at the top to focus on a specific time period.
+"""
+metrics = """
+The following metrics can be computed to evaluate model performance:
+* __Mean Absolute Percentage Error (MAPE)__: Measures the average absolute size of each error in percentage
+of the truth. This metric is not ideal for low-volume forecasts,
+because being off by a few units can increase the percentage error signficantly.
+It can't be calculated if the true value is 0 (here samples are excluded from calculation if true value is 0).
+* __Symmetric Mean Absolute Percentage Error (SMAPE)__: Slight variation of the MAPE,
+it measures the average absolute size of each error in percentage of the truth summed with the forecast.
+It is therefore a bit more robust to 0 values.
+* __Mean Squared Error (MSE)__: Measures the average squared difference between forecasts and true values.
+This metric is not ideal with noisy data,
+because a very bad forecast can increase the global error signficantly as all errors are squared.
+* __Root Mean Squared Error (RMSE)__: Square root of the MSE.
+This metric is more robust to outliers than the MSE,
+as the square root limits the impact of large errors in the global error.
+* __Mean Absolute Error (MAE)__: Measures the average absolute error.
+This metric can be interpreted as the absolute average distance between the best possible fit and the forecast.
+"""
+components = """
+The forecast generated by Prophet is the sum of different contributions:
+* Trend
+* Seasonalities
+* Other factors such as holidays or external regressors
+
+The following visualization shows this breakdown and allows you to understand how each component contributes
+to the final value forecasted by the model.
+"""
+waterfall = """
+This plot shows the contributions of each components on a specific period of time.
+All contributions are averaged over the selected period.
+"""
+future = """
+This visualization can be read in the same way as the overview plot:
+* The blue line shows the predictions made by the model for the period to be forecasted.
+* The blue shade is a 80% uncertainty interval.
+* The red line is the trend estimated by the model.
+"""
+helper_metrics = """
+The following table and plots allow you to evaluate model performance. Go to the **Evaluation** section of the sidebar if you wish to customize evaluation settings by:
+* Adding more metrics
+* Changing evaluation period
+* Computing performance at a different granularity to understand on which periods performance drops
+"""
+helper_errors = """
+The following plots can help you to detect patterns in forecasting errors:
+* The first one shows forecasts vs the ground truth on evaluation period.
+* The second one helps to find the worst performing forecasts (ie points far from the red line).
+* The third one shows how errors are distributed (see whether the model makes under-prediction or over-prediction errors).
+
+If you detect a recurring error, change cleaning options or model parameters to try to correct it.
+"""
+
+[links]
+repo = "https://github.com/artefactory/streamlit_prophet"
+article = "https://medium.com/artefact-engineering-and-data-science/visual-time-series-forecasting-with-streamlit-prophet-71d86a769928"
