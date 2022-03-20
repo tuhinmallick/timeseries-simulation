@@ -378,6 +378,7 @@ def sentiment():
 
     if not tweets:
         "No results"
+        st.sidebar.write('No tweets found for this search term')
         st.stop()
 
     results = munge_the_numbers(tweets, tweets[0].created_at, tweets[-1].created_at)
@@ -458,7 +459,7 @@ def sentiment():
         st.write("")
 
     with st.expander("Terms used in Tweet", expanded=False):
-        st.markdown("## ** Top terms **")
+        st.markdown("## Top terms ")
 
         terms = pd.concat(
             [
