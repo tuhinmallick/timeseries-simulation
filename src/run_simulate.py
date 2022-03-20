@@ -103,10 +103,8 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     path2save_target = os.path.join(dataframe_path,target_series_name)
     with open(path2save_target, 'rb') as target_series:
         target_series_df = pickle.load(target_series)
-    df_dict = pd.read_excel(
-               os.path.join(artifact_location,'source_data', "PGM_Data_Month.xlsx"),
-                "Data Dictionary"
-                )[["Feature Name", "Full Name"]]
+    df_dict = pd.read_csv(
+               os.path.join(artifact_location,'source_data', "PGM_data_dictionary.csv"))[["Feature Name", "Full Name"]]
     # df_dict_name = f"{original_target}_df_dict_{horizon}.pkl"
     # path2save_df_dict = os.path.join(dataframe_path,df_dict_name)
     # with open(path2save_df_dict, 'rb') as df_dict_:
