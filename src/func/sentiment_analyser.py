@@ -19,13 +19,13 @@ def sentiment():
 
     a, b = st.columns([1, 10])
 
-    # with a:
-    #     st.text("")
-    #     st.image("logoOfficial.png", width=50)
-    # with b:
-    #     st.title("Twitter Sentiment Analyzer")
+    with a:
+        st.sidebar.text("")
+       
+    with b:
+        st.sidebar.title("Twitter Sentiment Analyzer")
 
-    st.write("Type in a term to view the latest Twitter sentiment on that term.")
+    st.sidebar.write("Type in a term to view the latest Twitter sentiment on that term.")
 
     st.write("")
 
