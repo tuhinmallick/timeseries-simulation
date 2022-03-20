@@ -69,7 +69,7 @@ def get_simulation(data):
             # corr_btn = st.sidebar.checkbox('Check correlation matrix', on_change= set_corr_target,args=(sim_target,), key =n)
             # simulation_dict =  dict([(sim_target,perc_change)])
             simulation_dict.update({sim_target:perc_change})
-        simulated = st.form_submit_button('Simulate', on_click=login.set_simulation_dict, args = (simulation_dict,))  
+        simulated = st.form_submit_button('Simulate 🚀', on_click=login.set_simulation_dict, args = (simulation_dict,))  
     if simulated:
         with st_lottie_spinner(lottie_json, quality = 'high'):
         # with st.spinner(text="Simulating the future"):
