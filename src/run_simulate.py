@@ -13,9 +13,7 @@ if os.path.realpath(src_location) not in sys.path:
 # # save the model to disk
 # filename = 'finalized_model.sav'
 # pickle.dump(model, open(filename, 'wb'))
-import utils.eda_base as eda_base
-
-from utils import grange_and_correlate, smb_feature_engineering, plotly_visualization
+from utils import grange_and_correlate, smb_feature_engineering, plotly_visualization, feature_renaming
 
 
 # grange_and_correlate import grange_and_correlate, user_input_correlation_picker
@@ -105,6 +103,14 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     path2save_target = os.path.join(dataframe_path,target_series_name)
     with open(path2save_target, 'rb') as target_series:
         target_series_df = pickle.load(target_series)
+    df_dict = pd.read_excel(
+               os.path.join(artifact_location,'source_data', "PGM_Data_Month.xlsx"),
+                "Data Dictionary"
+                )[["Feature Name", "Full Name"]]
+    # df_dict_name = f"{original_target}_df_dict_{horizon}.pkl"
+    # path2save_df_dict = os.path.join(dataframe_path,df_dict_name)
+    # with open(path2save_df_dict, 'rb') as df_dict_:
+    #     df_dict = pickle.load(df_dict_)
     first_iteration = False
     # To get the correlation values as dictionary
     print(pre_selected_features_df)
@@ -118,17 +124,22 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
         simulation_correlation = grange_and_correlate.user_input_correlation_picker(sim_df[key], pre_selected_features_df, selected_method='max', max_lags=12)
         simulation_correlation_df = pd.DataFrame(simulation_correlation, index=[1]).melt()
         simulation_correlation_df.columns = ["Feature Name", "Correlation fraction for {}".format(key)]
-        if first_iteration:
-            final_simulation_correlation_df["Correlation fraction for {}".format(key)] = simulation_correlation_df[ "Correlation fraction for {}".format(key)]
-        else : 
-            final_simulation_correlation_df = simulation_correlation_df
+        
         change_pre_selected_df= pre_selected_features_df.copy()
         modified_pre_selected_df = pre_selected_features_df.copy()
         for feature_name, correlation in simulation_correlation.items():
                 change_pre_selected_df[feature_name]= pre_selected_features_df[feature_name] * correlation * (value/100)
                 modified_pre_selected_df[feature_name]= pre_selected_features_df[feature_name] + change_pre_selected_df[feature_name]
+        
         # modified_pre_selected_df = modified_pre_selected_df.append(target_series_df, ignore_index=False)
         modified_pre_selected_df = pd.concat([modified_pre_selected_df, target_series_df], axis=1)
+        pretty_simulation_correlation=feature_renaming.rename_correlation_dict_features(simulation_correlation, df_dict)
+        pretty_simulation_correlation_df = pd.DataFrame(pretty_simulation_correlation, index=[1]).melt()
+        pretty_simulation_correlation_df.columns = ["Feature Name", "Correlation fraction for {}".format(key)]
+        if first_iteration:
+            final_simulation_correlation_df["Correlation fraction for {}".format(key)] = simulation_correlation_df[ "Correlation fraction for {}".format(key)]
+        else : 
+            final_simulation_correlation_df = pretty_simulation_correlation_df
         first_iteration = True
     print(modified_pre_selected_df)
     print("==============================================Feature engineering Starting =================================================================================")
@@ -162,7 +173,7 @@ def main(simulation_dict : dict, sim_df : pd.DataFrame, target: str, horizon: in
     _forecast_name = f"{target}_forecast_horizon_{horizon}.pkl"
     with open(os.path.join(artifact_location,'dataframes',target, f'horizon_{horizon}',_forecast_name), 'rb') as _fe_df:
         original_forecast= pickle.load(_fe_df)
-    forecast_fig = plotly_visualization.plotly_plot_simulation( df_actuals = target_series.rename(columns= {target_name:'actual'}),df_forecast=original_forecast,  df_simulation = forecast,horizon=horizon, display_fig=False, figsize=(1200, 600))
+    forecast_fig = plotly_visualization.plotly_plot_simulation( df_actuals = target_series.rename(columns= {target_name:'actual'}),df_forecast=original_forecast,  df_simulation = forecast, display_fig=False, figsize=(1400, 500))
 
     print("==============================================Simulation Done =================================================================================")
     return forecast_fig, forecast, original_forecast, final_simulation_correlation_df
