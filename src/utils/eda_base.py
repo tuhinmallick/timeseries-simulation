@@ -6,6 +6,9 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 import seaborn as sns
 
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf, month_plot, quarter_plot
@@ -25,13 +28,59 @@ class exploratory_data_analysis():
         
         self.y_target = self.df[self.target_name]
         
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    #                                                                 UTILITY AND CALCULATION
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX    
+    
+    @staticmethod
+    def crosscorr(datax, datay, lag=0):
+        """ Lag-N cross correlation. Taken from: https://stackoverflow.com/questions/33171413/cross-correlation-time-lag-correlation-with-pandas
+
+        Args:
+            datax (pandas.Series): Data for the x values.
+            datay (pandas.Series): Data for the y values.
+            lag (int, optional): Number of lags to be applied. Defaults to 0.
+
+        Returns:
+            float: Croscorrelation between X and Y for n-lags.
+        """
+
+        return datax.corr(datay.shift(lag))
+    
+    def crosscorrelation_generator(self, y_variable: str, x_variable: str, max_lags=12):
+        """ Function to compute the crosscorrelation for a target variable over a period of (+/-) lags.
+
+        Args:
+            y_variable (str): Name of the target variable.
+            x_variable (str): Name of the feature.
+            max_lags (int, optional): Number of lags that are to be computed. Defaults to 12.
+
+        Returns:
+            pandas.DataFrame: Returns the correlation in a dataframe on "Lag" and "Correlation".
+        """
+        # Generate the cross correlation list.
+        xcov_monthly = [self.crosscorr(self.df[y_variable], self.df[x_variable], lag=lag) for lag in range(-max_lags, max_lags+1)] # NOTE needs to be +1 to reach the value.
+
+        # Combine into dataframe.
+        df_corr = pd.DataFrame(
+            {
+                "Lag": np.array(range(-max_lags, max_lags+1)),
+                "Correlation": xcov_monthly
+                }
+            )
+        return df_corr
+    
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    #                                                                 MATPLOTLIB FUNCTIONS
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+         
     def single_timeseries_plot(self, y_variable: str, rolling_mean=False, rolling_std=False, save_path=None, title="", figsize=(14,7), dpi=100, streamlit = False, **kwargs):
-        """Function to create a single series timeseries plot for a target variable.
+        """ Function to create a single series timeseries plot for a target variable.
 
         Args:
             y_variable (str): Column name of the target variable in the dataframe.
-            rolling_mean (boolean, optional):
-            rolling_std
+            rolling_mean (boolean, optional): Select if rolling mean is calculated. Default 6 month.
+            rolling_std (boolean, optional): Select if rolling standard deviation is calculated. Default 6 month.
             save_path (str, optional): Optional save path for a .png image of the plot. Should be direct path. Defaults to None.
             title (str, optional): Title of the plot. Defaults to "".
             figsize (tuple, optional): Figure size of the plot in inch. Defaults to (14,7).
@@ -77,11 +126,12 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"single_timeseries_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
+            
         if streamlit == True:
             return fig
-        
-        plt.show()
-        
+
     def monthly_plot(self, y_variable: str, save_path=None, figsize=(20,7), dpi=80, streamlit = False, **kwargs):
         """Function to plot the monthly trend of a target variable.
 
@@ -118,10 +168,11 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"monthly_plot_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else: 
+            plt.show()
+            
         if streamlit == True:
             return fig
-        
-        plt.show()
         
     def quarterly_plot(self, y_variable: str, save_path=None, figsize=(20,7), dpi=80, streamlit = False, **kwargs):
         """Function to plot the quarterly trend of a target variable.
@@ -162,10 +213,11 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"quarterly_plot_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
+            
         if streamlit == True:
             return fig
-        
-        plt.show()
         
     def seasonal_boxplot_ym(self, y_variable: str, save_path=None, figsize=(20,7), dpi=80, streamlit = False, **kwargs):
         """Function that creates the seasonal boxplot for year and month.
@@ -239,10 +291,11 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"ym_seasonal_decompose_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
+            
         if streamlit == True:
             return fig
-            
-        plt.show()
     
     def target_lag_plots(self, y_variable: str, lags=8, save_path=None, figsize=(16,7), streamlit = False, **kwargs):
         """Function to create a series of lag plots (number specified by lags) for the specified variable.
@@ -288,10 +341,10 @@ class exploratory_data_analysis():
         if save_path!=None:
             plt.savefig(os.path.join(save_path, f"lag_plot_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else: 
+            plt.show()
         if streamlit == True:
-            return fig
-        
-        plt.show()
+            return plt
 
     def plot_acf_pacf(self, y_variable: str, diff_target=False, lags=60, save_path=None, streamlit = False, figsize=(15,6), **kwargs):
         """Function to create the autocorrelation and partial autocorrelation plot.
@@ -329,10 +382,10 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"acf_pacf_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
         if streamlit == True:
             return fig
-        
-        plt.show()
         
     def plot_seasonal_decomposition(self, y_variable: str, save_path=None, figsize=(16,12), streamlit = False, **kwargs):
         """Function to create the seasonal composition plot.
@@ -370,10 +423,11 @@ class exploratory_data_analysis():
         if save_path!=None:
             plt.savefig(os.path.join(save_path, f"seasonal_decomposition_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
         if streamlit == True:
-            return fig
+            return plt
         
-        plt.show()
         
     def ask_adfuller(self, y_variable: str, autolag="aic", streamlit = False, **kwargs):
         """Function to run ad fuller test on target variable.
@@ -394,7 +448,6 @@ class exploratory_data_analysis():
         print('p-value: ', test_results[1])
         print('Critical Values:', test_results[4])
         print("----------------------------------------------------------------------------------------------------------------------")
-    
         
     def plot_stl_decomposition(self, y_variable: str, seasonal=11, trend=15, save_path=None, streamlit = False, figsize=(16,12), **kwargs):
         """Function to create the seasonal composition plot.
@@ -433,11 +486,11 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"stl_decomposition_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
         if streamlit == True:
             return fig
-        
-        plt.show()
-        
+                
     def correlate_all_plot(self, y_variable: str, x_variables: list, max_lags=30, streamlit = False, save_path=None, figsize=(20,35), rect=(0,0,1,0.96), **kwargs):
         """Function to create a correlation plot between a target variable y and all the feature variables x. 
 
@@ -502,10 +555,10 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"cross_correlation_all_{y_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
         if streamlit == True:
             return fig
-        
-        plt.show()
         
     def single_correlate_plot(self, y_variable: str, x_variable: str, max_lags=30, streamlit = False, save_path=None, figsize=(15,6), dpi=180, **kwargs):
         """Function to plot a correlation plot between  variable y and x for n lags.
@@ -556,18 +609,44 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"cross_correlation_{y_variable}_v_{x_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
+            
         if streamlit == True:
             return fig
+    
+    def granger_causality_generator(self, y_variable: str, x_variable: str, max_lags=12):
+        """ Function to calculate the granger causality and return the values for the max_lag period as a dictionary.
+
+        Args:
+            y_variable (str): Name of the target variable.
+            x_variable (str): Name of the feature.
+            max_lags (int, optional): _description_. Defaults to 12.
+
+        Returns:
+            dict: Dictionary with keys "F-value", "P-value" and "Lag-range". Values are lists.
+        """
+        # Calculate Granger Causality
+        lag_range = range(1, max_lags + 1)
+        f_list = []
+        p_list = []
+        # Filter data:
+        x, y = self.df[x_variable].fillna(0), self.df[y_variable].dropna()
+        for lag in lag_range:
+            res = grangercausalitytests(pd.DataFrame(y.dropna()).join(x.dropna(), how="inner"), maxlag=max_lags, verbose=False)
+            f, p, _, _ = res[lag][0]["ssr_ftest"]
+            f_list.append(f)
+            p_list.append(p)
+        result_dict = {"F-value": f_list, "P-value": p_list, "Lag-range": np.array(lag_range).tolist()}
+        return result_dict
         
-        plt.show()
-        
-    def single_granger_plot(self, y_variable: str, x_variable: str, max_lags=30, streamlit = False, save_path=None, figsize=(15,6), dpi=180, **kwargs):
+    def single_granger_plot(self, y_variable: str, x_variable: str, max_lags=12, streamlit = False, save_path=None, figsize=(15,6), dpi=180, **kwargs):
         """ Function to plot the granger causality between x and y for n lags.
 
         Args:
             y_variable (str): Name of the target variable
             x_variable (str): Name of the feature variable
-            max_lags (int, optional): Number of max lags applied in the granger function. Defaults to 30.
+            max_lags (int, optional): Number of max lags applied in the granger function. Defaults to 12.
             save_path (str, optional): Optional save path for a .png image of the plot. Should be direct path. Defaults to None.
             figsize (tuple, optional): Figure size of the plot in inch. Defaults to (15,6).
             dpi (int, optional): dpi (int, optional): DPI value of the plot. Defaults to 180.
@@ -581,33 +660,23 @@ class exploratory_data_analysis():
         facecolor = kwargs["facecolor"] if kwargs.get("facecolor") else "#151934"
         show_pval = kwargs["show_pval"] if kwargs.get("show_pval") else True # If p-value is shown. Can be True and False.
         
-        # Filter data:
-        x, y = self.df[x_variable].fillna(0), self.df[y_variable].dropna()
-        
-        # Calculate Granger Causality
-        lag_range = range(1, max_lags + 1)
-        f_list = []
-        p_list = []
-        for lag in lag_range:
-            res = grangercausalitytests(pd.DataFrame(x.dropna()).join(y.dropna(), how="inner"), maxlag=max_lags, verbose=False)
-            f, p, _, _ = res[lag][0]["ssr_ftest"]
-            f_list.append(f)
-            p_list.append(p)
+        # Generate the Granger Causality
+        grange_dict = self.granger_causality_generator(y_variable, x_variable, max_lags=max_lags)
         
         # Generate Plots
         fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
         
-        ax.bar(x=lag_range, height=f_list)
+        ax.bar(x=grange_dict["Lag-range"], height=grange_dict["F-value"])
         if show_pval:
             props = dict(boxstyle='round', facecolor='black', alpha=0.5)
-            ax.text(x=0.5, y=0.8, s=f"minimum p-value = {min(p_list):.3f}", transform=ax.transAxes, bbox=props)
+            ax.text(x=0.5, y=0.8, s=f"minimum p-value = {min(grange_dict['P-value']):.3f}", transform=ax.transAxes, bbox=props)
         
         # Plot aestethics
         ax.set_title(f"Granger causality, {y_variable.title()} vs {x_variable.title()}", fontsize=fontsize_title)
         ax.set_xlabel('lag -->', fontsize=fontsize_label)
         ax.set_ylabel("Granger Score (F)", fontsize=fontsize_label)
-        ax.set_xticks(list(lag_range))
-        ax.set_xticklabels(list(lag_range))
+        ax.set_xticks(list(grange_dict["F-value"]))
+        ax.set_xticklabels(list(grange_dict["Lag-range"]))
         ax.tick_params(axis='x', labelbottom=True)
         ax.tick_params(axis = 'both', labelsize=fontsize_xyticks)
         
@@ -616,7 +685,278 @@ class exploratory_data_analysis():
         if save_path!=None:
             fig.savefig(os.path.join(save_path, f"granger_causality_{y_variable}_v_{x_variable}{file_name_addition}"+".png"), facecolor=facecolor, transparent=transparent)
             plt.show()
+        else:
+            plt.show()
         if streamlit == True:
             return fig
         
-        plt.show()
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    #                                                                 PLOTLY FUNCTIONS
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    
+    def plotly_single_timeseries_plot(self, y_variable: str, rolling_mean=False, rolling_std=False, figsize=(1400, 500), streamlit=False, display_fig=True, **kwargs):
+        """ Function to plotly plot as a single time series plot. Select if rolling average and rolling standard deviation is included.
+
+        Args:
+            y_variable (str): Column name of the target variable in the dataframe.
+            rolling_mean (boolean, optional): Select if rolling mean is calculated. Default 6 month.
+            rolling_std (boolean, optional): Select if rolling standard deviation is calculated. Default 6 month.
+            figsize (tuple, optional): Figure size of the plot in inch. Defaults to (1400, 500).
+            streamlit (bool, optional): Select if fig object is returned from function. Defaults to False.
+            display_fig (bool, optional): Select if figure is displayed. Defaults to True.
+
+        Returns:
+           plotly figure object: Returns plotly figure object if streamlit is true.
+        """
+        rolling_window = kwargs["rolling_window"] if kwargs.get("rolling_window") else 6 # Select rolling window for average and standard deviation.
+        
+        fig = go.Figure()
+        
+        fig.add_trace(
+            go.Scatter(
+                x=self.x_date, 
+                y=round(self.df[y_variable], 1),
+                name="Trend"
+                )
+            )
+        
+        if rolling_mean == True:
+            fig.add_trace(
+                go.Scatter(
+                    x=self.x_date, 
+                    y=round(self.df[y_variable].rolling(rolling_window).mean(), 1), 
+                    name="Moving Average"
+                    )
+                )
+
+        if rolling_std == True:
+            fig.add_trace(
+                go.Scatter(
+                    x=self.x_date, 
+                    y=round(self.df[y_variable].rolling(rolling_window).std(), 1), 
+                    name="Moving Standard Deviation"
+                    )
+                )
+            
+        fig.update_layout(
+            autosize=False,
+            width=figsize[0],
+            height=figsize[1],
+            legend=dict(
+                yanchor="top",
+                xanchor="right"
+                ),
+            yaxis_title=y_variable.title(),
+            hovermode="x unified",
+            template="plotly_dark",
+            margin=dict(l=80, r=30, t=30, b=50),
+            plot_bgcolor='#151934',
+            paper_bgcolor ='#151934'
+            )
+        
+        if display_fig == True:
+            # NOTE this could also be adjusted to save the fig.
+            fig.show()
+        if streamlit == True:
+            return fig
+        
+    def plotly_seasonal_boxplot_ym(self, y_variable: str, box_group: str, figsize=(1400, 500), streamlit=False, display_fig=True, **kwargs):
+        """ Function to plot a single box plto for either month or year as defined by the box_group variable.
+
+        Args:
+            y_variable (str): Name of the target variable
+            box_group (str): Select the box group aggregation. Can be yearly or monthly.
+            figsize (tuple, optional): Figure size in inches. Defaults to (1400, 500).
+            streamlit (bool, optional): Select if fig object is returned from function. Defaults to False.
+            display_fig (bool, optional): Select if figure is displayed. Defaults to True.
+
+        Returns:
+            plotly figure object: Returns plotly figure object if streamlit is true.
+        """
+        
+        # Prepare data for plot by adding year and month column.
+        if box_group == "year":
+            self.df[box_group] = [d.year for d in self.df.index]
+        else:
+            self.df[box_group] = [d.strftime('%b') for d in self.df.index]
+        
+        fig = go.Figure()
+        
+        fig.add_trace(
+            go.Box(
+                x=self.df[box_group],
+                y=self.df[y_variable],
+                )
+        )
+        
+        fig.update_layout(
+            title=f"Seasonal Boxplot - {box_group}",
+            autosize=False,
+            width=figsize[0],
+            height=figsize[1],
+            yaxis_title=y_variable.title(),
+            template="plotly_dark",
+            margin=dict(l=80, r=30, t=80, b=50),
+            plot_bgcolor='#151934',
+            paper_bgcolor ='#151934'
+            )
+        
+        # Remove the two helper columns
+        self.df.drop([box_group], axis=1, inplace=True)
+
+        if display_fig == True:
+            # NOTE this could also be adjusted to save the fig.
+            fig.show()
+        if streamlit == True:
+            return fig
+        
+    def plotly_single_correlation(self, y_variable: str, x_variable: str, max_lags=12, figsize=(1400, 500), streamlit=False, display_fig=True, **kwargs):
+        """ Function to generate the crosscorrelation plot of a number of lags between target and feature variable.
+
+        Args:
+            y_variable (str): Name of the target variable
+            x_variable (str): Name of the feature variable
+            max_lags (int, optional): Number of max lags applied in the granger function. Defaults to 12.
+            figsize (tuple, optional): Figure size of the plot in inch. Defaults to (1400, 500).
+            streamlit (bool, optional): Select if fig object is returned from function. Defaults to False.
+            display_fig (bool, optional): Select if figure is displayed. Defaults to True.
+
+        Returns:
+            plotly figure object: Returns plotly figure object if streamlit is true.
+        """
+        df_corr = self.crosscorrelation_generator(
+            y_variable=y_variable, 
+            x_variable=x_variable, 
+            max_lags=max_lags
+            )
+        fig = go.Figure()
+
+        fig.add_trace(
+            go.Scatter(
+                x=np.array(
+                    range(
+                        int(df_corr["Lag"].min()-1), 
+                        int(df_corr["Lag"].max()+2)
+                        )
+                    ),
+                y=(len(df_corr)+2)*[0.1],
+                fill='tozeroy',
+                fillcolor="rgba(245,218,223,0.2)",
+                marker_color="rgba(245,218,223,0.0)",
+                hoverinfo="skip",
+                showlegend=False
+            )
+        )
+
+        fig.add_trace(
+            go.Scatter(
+                x=np.array(
+                    range(
+                        int(df_corr["Lag"].min()-1), 
+                        int(df_corr["Lag"].max()+2)
+                        )
+                    ),
+                y=(len(df_corr)+2)*[-0.1],
+                fill='tozeroy',
+                fillcolor="rgba(245,218,223,0.2)",
+                marker_color="rgba(245,218,223,0.0)",
+                hoverinfo="skip",
+                showlegend=False
+            )
+        )
+
+        fig.add_trace(
+            go.Bar(
+                x=df_corr["Lag"],
+                y=df_corr["Correlation"],
+                orientation="v", 
+                marker_color="rgba(98,249,252,0.9)"
+            )
+        )
+
+        fig.update_layout(
+            yaxis=dict(categoryorder="total ascending"),
+            title=f"Crosscorrelation: {y_variable.title()} vs {x_variable.title()}",
+            autosize=False,
+            width=figsize[0],
+            height=figsize[1],
+            xaxis_title="<- Lag | Lead ->",
+            yaxis_title="Correlation Score",
+            xaxis = dict(
+                tickmode = 'linear',
+                tick0 = 1,
+                dtick = 1,
+                range=(
+                    df_corr["Lag"].min()-0.5, 
+                    df_corr["Lag"].max()+0.5
+                    )
+                ),
+            hovermode="x",
+            template="plotly_dark",
+            margin=dict(l=80, r=30, t=80, b=50),
+            plot_bgcolor='#151934',
+            paper_bgcolor ='#151934',
+            showlegend=False
+            )
+        
+        if display_fig == True:
+            # NOTE this could also be adjusted to save the fig.
+            fig.show()
+        if streamlit == True:
+            return fig
+    
+    def plotly_single_granger(self, y_variable: str, x_variable: str, max_lags=12, figsize=(1400, 500), streamlit=False, display_fig=True, **kwargs):
+        """ Function to generate the single granger causality plot.
+
+        Args:
+            y_variable (str): Name of the target variable
+            x_variable (str): Name of the feature variable
+            max_lags (int, optional): Number of max lags applied in the granger function. Defaults to 12.
+            figsize (tuple, optional): Figure size of the plot in inch. Defaults to (1400, 500).
+            streamlit (bool, optional): Select if fig object is returned from function. Defaults to False.
+            display_fig (bool, optional): Select if figure is displayed. Defaults to True.
+
+        Returns:
+            plotly figure object: Returns plotly figure object if streamlit is true.
+        """
+        
+        # Generate the Granger Causality
+        grange_dict = self.granger_causality_generator(y_variable, x_variable, max_lags=max_lags)
+        
+        fig = go.Figure()
+            
+        fig.add_trace(
+            go.Bar(
+                y=grange_dict["F-value"], 
+                x=grange_dict["Lag-range"], 
+                orientation="v", 
+                marker_color="rgba(98,249,252,0.9)"
+                )
+            )
+        
+        fig.update_layout(
+            yaxis=dict(categoryorder="total ascending"),
+            title=f"Granger Causality: {y_variable.title()} vs {x_variable.title()}",
+            autosize=False,
+            width=figsize[0],
+            height=figsize[1],
+            xaxis_title="Lag ->",
+            yaxis_title="Granger Causality Score",
+            xaxis = dict(
+                tickmode = 'linear',
+                tick0 = 1,
+                dtick = 1
+                ),
+            hovermode="x",
+            template="plotly_dark",
+            margin=dict(l=80, r=30, t=80, b=50),
+            plot_bgcolor='#151934',
+            paper_bgcolor ='#151934'
+            )
+        
+        if display_fig == True:
+            # NOTE this could also be adjusted to save the fig.
+            fig.show()
+        if streamlit == True:
+            return fig
+        

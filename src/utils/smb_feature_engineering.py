@@ -67,7 +67,7 @@ def feature_engineering_pipeline(df: pd.DataFrame, target: str, horizon: int, pr
 
         # df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
         rolling = 24
-        stlhelper = STLModel.STLModel(horizon=horizon)
+        stlhelper = STLModel.STLModel()
         df = stlhelper._make_STL(
             df, target=column_names,
             freq="MS", rolling_strategy='rolling', rolling=rolling, extract_strategy='nanmean'
