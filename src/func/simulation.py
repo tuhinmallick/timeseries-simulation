@@ -65,7 +65,7 @@ def get_simulation(data):
         for n in range(1,num_sim_feat+1):
             sim_target = st.empty()
             sim_target = st.sidebar.selectbox('Please select the target feature to simulate : ',all_features, key='sim_feat{}'.format(n))
-            perc_change = st.sidebar.slider('Percent Change in price',min_value =-100.0, max_value = 100.0,value =0.0,step = 0.1, key='sim_prec_feat{}'.format(n))
+            perc_change = st.sidebar.slider('Percent Change in value',min_value =-100.0, max_value = 100.0,value =0.0,step = 0.1, key='sim_prec_feat{}'.format(n))
             # corr_btn = st.sidebar.checkbox('Check correlation matrix', on_change= set_corr_target,args=(sim_target,), key =n)
             # simulation_dict =  dict([(sim_target,perc_change)])
             simulation_dict.update({sim_target:perc_change})
