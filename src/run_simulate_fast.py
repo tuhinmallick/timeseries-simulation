@@ -10,6 +10,7 @@ if os.path.realpath(src_location) not in sys.path:
 import streamlit as st
 from streamlit_option_menu import option_menu
 import extra_streamlit_components as stx
+import streamlit_analytics
 
 # import streamlit_authenticator as stauth
 
