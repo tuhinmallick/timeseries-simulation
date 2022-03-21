@@ -47,6 +47,7 @@ def plot_simulation(simulation_fig, forecast, original_forecast, horizon, commod
             drivers_chart = pickle.load(meta_features)
         st.write(f"### The plot for feature importance of {commodity} ")
         st.plotly_chart(drivers_chart, use_container_width=False, sharing="streamlit")
+        st.write('*ma = Moving Average, ema = Exp. Moving Average, momentum = Price momentum while suffix like 3 means the number of months')
     with st.expander("Correlation Fraction chart"):
         st.dataframe(final_simulation_correlation_df)
     return forecast
