@@ -4,7 +4,7 @@ if os.path.realpath(func_location) not in sys.path:
     sys.path.append(os.path.realpath(func_location))
 import streamlit as st  # pip install streamlit
 def contact():
-    st.header(":mailbox: Customer Support!")
+    st.header(":mailbox: Get in touch with us")
 
 
     contact_form = """
