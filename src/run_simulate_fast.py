@@ -77,154 +77,155 @@ st.markdown("""
                 }
         </style>
         """, unsafe_allow_html=True)
-# import pdb;pdb.set_trace()
-# if st.session_state['logged'] == False:
-forecasty_image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
-st.sidebar.image(forecasty_image, output_format ='PNG', use_column_width  ='always')
+with streamlit_analytics.track(verbose=True):
+    # import pdb;pdb.set_trace()
+    # if st.session_state['logged'] == False:
+    forecasty_image = Image.open(os.path.join(artifact_location, "logo", "logo_forecasty.PNG"))
+    st.sidebar.image(forecasty_image, output_format ='PNG', use_column_width  ='always')
 
-# if st.experimental_get_query_params() == {}:
-#         print('got') 
-#         st.experimental_set_query_params(logged=False, cred =True,name='')
-# if  st.experimental_get_query_params()['logged'][0] =='False':
-#     names, usernames, passwords = _login.login_crediatils()
-#     hashed_passwords = stauth.Hasher(passwords).generate()
-#     authenticator = Authenticate(names,usernames,hashed_passwords,
-#     'some_cookie_name','some_signature_key',cookie_expiry_days=30)
-#     name, authentication_status, username = authenticator.login('Login','main')
-# if st.experimental_get_query_params()['logged'][0] =='True' and st.experimental_get_query_params() != {}:
-#             cookie_manager = stx.CookieManager(key='getout')
-#             col1,col2 = st.sidebar.columns([1, 0.5])
-#             col1.write('Welcome *%s*' % (st.experimental_get_query_params()['name'][0]))
-#             if col2.button('Logout'):
-#                 cookie_manager.delete('some_cookie_name')
-#                 st.session_state['logout'] = True
-#                 st.session_state['name'] = None
-#                 st.session_state['username'] = None
-#                 st.session_state['authentication_status'] = None
-#                 st.experimental_set_query_params(logged=False, cred =True)
-_login.set_session_state()
-if st.session_state['authentication_status'] ==  False or st.session_state['authentication_status'] is None:
-    names, usernames, passwords = _login.login_crediatils()
-    hashed_passwords = Hasher(passwords).generate()
-    authenticator = Authenticate(names,usernames,hashed_passwords,
-        'some_cookie_name','some_signature_key',cookie_expiry_days=30)
-    name, authentication_status, username = authenticator.login('Login','main')
-    _login.set_name(name)
-    _login.set_authentication_status(authentication_status)
+    # if st.experimental_get_query_params() == {}:
+    #         print('got') 
+    #         st.experimental_set_query_params(logged=False, cred =True,name='')
+    # if  st.experimental_get_query_params()['logged'][0] =='False':
+    #     names, usernames, passwords = _login.login_crediatils()
+    #     hashed_passwords = stauth.Hasher(passwords).generate()
+    #     authenticator = Authenticate(names,usernames,hashed_passwords,
+    #     'some_cookie_name','some_signature_key',cookie_expiry_days=30)
+    #     name, authentication_status, username = authenticator.login('Login','main')
+    # if st.experimental_get_query_params()['logged'][0] =='True' and st.experimental_get_query_params() != {}:
+    #             cookie_manager = stx.CookieManager(key='getout')
+    #             col1,col2 = st.sidebar.columns([1, 0.5])
+    #             col1.write('Welcome *%s*' % (st.experimental_get_query_params()['name'][0]))
+    #             if col2.button('Logout'):
+    #                 cookie_manager.delete('some_cookie_name')
+    #                 st.session_state['logout'] = True
+    #                 st.session_state['name'] = None
+    #                 st.session_state['username'] = None
+    #                 st.session_state['authentication_status'] = None
+    #                 st.experimental_set_query_params(logged=False, cred =True)
+    _login.set_session_state()
+    if st.session_state['authentication_status'] ==  False or st.session_state['authentication_status'] is None:
+        names, usernames, passwords = _login.login_crediatils()
+        hashed_passwords = Hasher(passwords).generate()
+        authenticator = Authenticate(names,usernames,hashed_passwords,
+            'some_cookie_name','some_signature_key',cookie_expiry_days=30)
+        name, authentication_status, username = authenticator.login('Login','main')
+        _login.set_name(name)
+        _login.set_authentication_status(authentication_status)
 
 
 
-@st.experimental_memo
-def load_data(uploaded_file):
-    df = pd.read_csv(uploaded_file)
-    df["Date"] = pd.to_datetime(df["Date"])
-    df.set_index("Date", inplace=True)
-    df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
-    return df
+    @st.experimental_memo
+    def load_data(uploaded_file):
+        df = pd.read_csv(uploaded_file)
+        df["Date"] = pd.to_datetime(df["Date"])
+        df.set_index("Date", inplace=True)
+        df.index = pd.DatetimeIndex(df.index, freq=df.index.inferred_freq)
+        return df
 
-def upload():
-    dashboards = ('PGM_curated.csv','PGM_combined_tidy.csv')
-    load_options = dict()
-    load_options["toy_dataset"] = st.checkbox(
-        "Load a uploaded dataset", True, help='Select this option if you want to work with uploaded Dataset'
-    )
-    if load_options["toy_dataset"]:
-        dataset_name = st.selectbox(
-            "Select a uploaded dataset",
-            options=dashboards,
-            help='Select the dataset you want to work with',
+    def upload():
+        dashboards = ('PGM_curated.csv','PGM_combined_tidy.csv')
+        load_options = dict()
+        load_options["toy_dataset"] = st.checkbox(
+            "Load a uploaded dataset", True, help='Select this option if you want to work with uploaded Dataset'
         )
-        df = load_data(os.path.join(artifact_location,'source_data',dataset_name))
-        st.write("{} has been uploaded".format(dataset_name))
-    else :
-        df =None
-        try : 
-            uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
-            for uploaded_file in uploaded_files:
-                df = load_data(uploaded_file)
-                st.write("{} has been uploaded".format(uploaded_file.name))
-        except Exception as err:
-            st.write("{} is not the proper file format".format(uploaded_file.name))
-    return df
+        if load_options["toy_dataset"]:
+            dataset_name = st.selectbox(
+                "Select a uploaded dataset",
+                options=dashboards,
+                help='Select the dataset you want to work with',
+            )
+            df = load_data(os.path.join(artifact_location,'source_data',dataset_name))
+            st.write("{} has been uploaded".format(dataset_name))
+        else :
+            df =None
+            try : 
+                uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
+                for uploaded_file in uploaded_files:
+                    df = load_data(uploaded_file)
+                    st.write("{} has been uploaded".format(uploaded_file.name))
+            except Exception as err:
+                st.write("{} is not the proper file format".format(uploaded_file.name))
+        return df
 
 
 
 
-def streamlit_menu():
-    selected = option_menu(
-            menu_title=None,  # required
-            options=['Technical indicator(Beta)', 'Exploratory Data analysis', 'Base Forecast', 'Simulation','Sentiment Analyser(Beta)','Support'],  # required
-            icons=["bar-chart-fill","table", "cash-coin", "calculator",'search','envelope'],  # optional
-            menu_icon="cast",  # optional
-            default_index=0,  # optional
-            orientation="horizontal",
-            styles={
-                "container": {"padding": "0!important", "background-color": "#151934"},
-                "icon": {"color": "orange", "font-size": "15px"},
-                "nav-link": {
-                    "font-size": "12px",
-                    "text-align": "left",
-                    "margin": "0px",
-                    "--hover-color": "#eee",
+    def streamlit_menu():
+        selected = option_menu(
+                menu_title=None,  # required
+                options=['Technical indicator(Beta)', 'Exploratory Data analysis', 'Base Forecast', 'Simulation','Sentiment Analyser(Beta)','Support'],  # required
+                icons=["bar-chart-fill","table", "cash-coin", "calculator",'search','envelope'],  # optional
+                menu_icon="cast",  # optional
+                default_index=0,  # optional
+                orientation="horizontal",
+                styles={
+                    "container": {"padding": "0!important", "background-color": "#151934"},
+                    "icon": {"color": "orange", "font-size": "15px"},
+                    "nav-link": {
+                        "font-size": "12px",
+                        "text-align": "left",
+                        "margin": "0px",
+                        "--hover-color": "#eee",
+                    },
+                    "nav-link-selected": {"background-color": "#264f27"},
                 },
-                "nav-link-selected": {"background-color": "#264f27"},
-            },
-        )
-    print(st.session_state['authentication_status'])
-    head_col1.title(" PGM Price Forecasting")   
-    head_col2.image(company_image, output_format ='PNG', use_column_width  ='auto')
-    st.session_state.functionality_type = selected
-    if st.session_state['authentication_status'] == True:
-            col1,col2 = st.sidebar.columns([1, 0.5])
-            col1.write('Welcome *%s*' % (st.session_state['name']))
-            if col2.button('Logout', help= 'If the logout buttton does not work, please refresh the page'):
-                cookie_manager = stx.CookieManager(key='logout')
-                cookie_manager.delete('some_cookie_name')
-                st.session_state['logout'] = True
-                st.session_state['name'] = None
-                st.session_state['username'] = None
-                st.session_state['authentication_status'] = None
-    return selected
+            )
+        print(st.session_state['authentication_status'])
+        head_col1.title(" PGM Price Forecasting")   
+        head_col2.image(company_image, output_format ='PNG', use_column_width  ='auto')
+        st.session_state.functionality_type = selected
+        if st.session_state['authentication_status'] == True:
+                col1,col2 = st.sidebar.columns([1, 0.5])
+                col1.write('Welcome *%s*' % (st.session_state['name']))
+                if col2.button('Logout', help= 'If the logout buttton does not work, please refresh the page'):
+                    cookie_manager = stx.CookieManager(key='logout')
+                    cookie_manager.delete('some_cookie_name')
+                    st.session_state['logout'] = True
+                    st.session_state['name'] = None
+                    st.session_state['username'] = None
+                    st.session_state['authentication_status'] = None
+        return selected
 
 
-if  st.session_state['authentication_status']:
-    try : 
-            data= None
-            head_col1, head_col2 = st.columns([1,0.5])
-            
-            company_image = Image.open(os.path.join(artifact_location, "logo", "logo_basf.png"))
-            # Forecasty logo
-            dashboards = ('Technical indicator(Beta)', 'Exploratory Data analysis', 'Historical Forecast', 'Simulation')
-            # option = st.empty()
-            # option = st.selectbox('Please select the functionality : ',dashboards,key = 'functionality_typ',  on_change=_login.set_functionality_type, args = (option,))
-            option = streamlit_menu()
-            print(option)
-            print(st.session_state.functionality_type)
-            # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))   
-            if st.session_state.functionality_type != 'Historical Forecast' and st.session_state.functionality_type != []:
-                with st.sidebar.expander("Dataset", expanded=True):
-                    # data, load_options, config, datasets = input_dataset(config, readme, instructions)
-                    # data, empty_cols = remove_empty_cols(data)
-                    # print_empty_cols(empty_cols)
-                        with st.spinner('Uploading the document'):
-                            data = upload()
-            if data is not None:
-                if option == 'Technical indicator(Beta)':
-                    technical_indicator(data)
-                elif option == 'Exploratory Data analysis':
-                    exploratory_data_analysis(data)
-                elif option == 'Base Forecast':
-                    historical_forecast()
-                elif option == 'Simulation':
-                    get_simulation(data)
-                elif option == 'Support':
-                    contact()
-                elif option == 'Sentiment Analyser(Beta)':
-                    sentiment()
-    except Exception as err:
-                traceback.print_exc()
-                print(err.args)
-elif authentication_status == False:
-        st.error('Username/password is incorrect')
-elif authentication_status == None:
-        st.warning('Please enter your username and password')
+    if  st.session_state['authentication_status']:
+        try : 
+                data= None
+                head_col1, head_col2 = st.columns([1,0.5])
+
+                company_image = Image.open(os.path.join(artifact_location, "logo", "logo_basf.png"))
+                # Forecasty logo
+                dashboards = ('Technical indicator(Beta)', 'Exploratory Data analysis', 'Historical Forecast', 'Simulation')
+                # option = st.empty()
+                # option = st.selectbox('Please select the functionality : ',dashboards,key = 'functionality_typ',  on_change=_login.set_functionality_type, args = (option,))
+                option = streamlit_menu()
+                print(option)
+                print(st.session_state.functionality_type)
+                # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))   
+                if st.session_state.functionality_type != 'Historical Forecast' and st.session_state.functionality_type != []:
+                    with st.sidebar.expander("Dataset", expanded=True):
+                        # data, load_options, config, datasets = input_dataset(config, readme, instructions)
+                        # data, empty_cols = remove_empty_cols(data)
+                        # print_empty_cols(empty_cols)
+                            with st.spinner('Uploading the document'):
+                                data = upload()
+                if data is not None:
+                    if option == 'Technical indicator(Beta)':
+                        technical_indicator(data)
+                    elif option == 'Exploratory Data analysis':
+                        exploratory_data_analysis(data)
+                    elif option == 'Base Forecast':
+                        historical_forecast()
+                    elif option == 'Simulation':
+                        get_simulation(data)
+                    elif option == 'Support':
+                        contact()
+                    elif option == 'Sentiment Analyser(Beta)':
+                        sentiment()
+        except Exception as err:
+                    traceback.print_exc()
+                    print(err.args)
+    elif authentication_status == False:
+            st.error('Username/password is incorrect')
+    elif authentication_status == None:
+            st.warning('Please enter your username and password')
