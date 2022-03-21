@@ -43,7 +43,7 @@ from  lib.login.authenticator import Hasher, Authenticate
 #     remove_empty_cols,
 #     resample_df,
 # )
-st.set_page_config(page_title='Forecasty.Ai', layout='wide')
+st.set_page_config(page_title='Forecasty.Ai', layout='wide', page_icon="chart_with_upwards_trend",)
 print('ping')
 # Load config
 # config, instructions, readme = load_config(
