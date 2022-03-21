@@ -18,7 +18,7 @@ def exploratory_data_analysis(data):
     eda = None
     option = st.sidebar.selectbox(
         'Please select the type of plot : ',
-        ['Time Series', 'Cross-Correlation', 'Monthly Box Plot','Yearly Box Plot', 'Granger Casaulity check'], key = 'EDA_type')
+        ['Time Series', 'Cross-Correlation', 'Monthly Box Plot','Yearly Box Plot', 'Granger Causality check'], key = 'EDA_type')
     st.sidebar.write('You have selected:', option)
     if data is not None:
         st.write('##### You have selected the commodity: ',commodity)
@@ -39,7 +39,7 @@ def exploratory_data_analysis(data):
         elif option == 'Yearly Box Plot':
             fig = eda.plotly_seasonal_boxplot_ym(y_variable=target_name,  box_group = "year", figsize=(1400, 500), streamlit=True, display_fig=False)
             st.plotly_chart(fig,  transparent=False )
-        elif option == 'Granger Casaulity check':
+        elif option == 'Granger Causality check':
             features = data.drop(target_name, axis =1).columns
             feat = st.sidebar.selectbox(
         'Please select the feature you want to check: ',
