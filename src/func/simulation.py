@@ -30,14 +30,14 @@ def plot_simulation(simulation_fig, forecast, original_forecast, horizon, commod
         st.write(f"#### The plot of the simulated forecast of {commodity} for {horizon} months ahead forecast")
         st.plotly_chart(simulation_fig, use_container_width=False, sharing="streamlit")
     with st.expander("Predicted Forecast chart"):
-        st.write("####  Original  forecast prices for {} months".format(horizon))
-        original_forecast= original_forecast.rename(columns = {'forecast':'Predicted price($)','lower':'Lower probable price($)','upper':'Upper probable price($)'})
+        st.write("####  Original monthly average forecast prices for {} months".format(horizon))
+        original_forecast= original_forecast.rename(columns = {'forecast':'Predicted price(USD/Toz)','lower':'Lower probable price(USD/Toz)','upper':'Upper probable price(USD/Toz)'})
         st.dataframe( original_forecast)    
     with st.expander("Simulated Forecast chart"):
-        st.write("#### Simulated forecast prices for {} months".format(horizon))
-        diff = diff.rename(columns = {'forecast':'Difference in  price($)','lower':'Difference in Lower probable price($)','upper':'Difference in Upper probable price($)'})
+        st.write("#### Simulated monthly average forecast prices for {} months".format(horizon))
+        diff = diff.rename(columns = {'forecast':'Difference in  price(USD/Toz)','lower':'Difference in Lower probable price(USD/Toz)','upper':'Difference in Upper probable price(USD/Toz)'})
         diff.index = forecast.index
-        forecast = forecast.rename(columns = {'forecast':'Simulated price($)','lower':'Lower probable price($)','upper':'Upper probable price($)'})
+        forecast = forecast.rename(columns = {'forecast':'Simulated price(USD/Toz)','lower':'Lower probable price(USD/Toz)','upper':'Upper probable price(USD/Toz)'})
         simulated_forecast =  pd.concat([forecast,diff],axis =1,ignore_index=False)
         st.dataframe(simulated_forecast)
     with st.expander("Feature Importance chart"):
