@@ -177,7 +177,7 @@ def streamlit_menu():
     if st.session_state['authentication_status'] == True:
             col1,col2 = st.sidebar.columns([1, 0.5])
             col1.write('Welcome *%s*' % (st.session_state['name']))
-            if col2.button('Logout'):
+            if col2.button('Logout', help= 'If the logout buttton does not work, please refresh the page'):
                 cookie_manager = stx.CookieManager(key='logout')
                 cookie_manager.delete('some_cookie_name')
                 st.session_state['logout'] = True
