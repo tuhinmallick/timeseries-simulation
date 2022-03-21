@@ -69,6 +69,9 @@ def get_simulation(data):
             perc_change = st.sidebar.slider('Percent Change in value',min_value =-100.0, max_value = 100.0,value =0.0,step = 0.1, key='sim_prec_feat{}'.format(n))
             # corr_btn = st.sidebar.checkbox('Check correlation matrix', on_change= set_corr_target,args=(sim_target,), key =n)
             # simulation_dict =  dict([(sim_target,perc_change)])
+            col1,col2 =st.sidebar.columns([1,1])
+            col1.write(f'Current value: {round(data[sim_target][-1])}')
+            col2.write(f'Simulated value: {round(data[sim_target][-1]+data[sim_target][-1]*(perc_change/100))}')
             simulation_dict.update({sim_target:perc_change})
         simulated = st.form_submit_button('Simulate 🚀', on_click=login.set_simulation_dict, args = (simulation_dict,))  
     if simulated:
