@@ -71,7 +71,7 @@ def get_simulation(data):
             # simulation_dict =  dict([(sim_target,perc_change)])
             col1,col2 =st.sidebar.columns([1,1])
             col1.write(f'Current value: {round(data[sim_target][-1])}')
-            col2.write(f'Simulated value: {round(data[sim_target][-1]+data[sim_target][-1]*(perc_change/100))}')
+            col2.write(f'New value: {round(data[sim_target][-1]+data[sim_target][-1]*(perc_change/100))}')
             simulation_dict.update({sim_target:perc_change})
         simulated = st.form_submit_button('Simulate 🚀', on_click=login.set_simulation_dict, args = (simulation_dict,))  
     if simulated:
