@@ -26,3 +26,5 @@ tsmoothie==1.0.4
 tweepy==4.7.0
 dnspython==2.2.1
 praw==7.5.0
+pymongo==4.0.2
+
