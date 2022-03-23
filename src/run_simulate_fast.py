@@ -1,5 +1,4 @@
 import os,sys, logging, pathlib,pickle,traceback,time
-from turtle import onclick
 src_location = pathlib.Path(__file__).absolute().parent
 config_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'configs')
 artifact_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'artifacts')
