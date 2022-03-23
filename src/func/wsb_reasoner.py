@@ -211,7 +211,6 @@ def get_last_upload_time():
     Procedure loads upload last upload time to db
     :return: None
     """
-    import pdb;pdb.set_trace()
     db_handler = pymongo.MongoClient(settings.mongodb_connection_string)[settings.wall_db_name][
         settings.last_upload_time]
     date = pd.to_datetime(db_handler.find_one({})['upload_time'])
