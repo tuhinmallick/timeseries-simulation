@@ -234,10 +234,10 @@ if  st.session_state['authentication_status']:
                                     },
                                     "nav-link-selected": {"background-color": "#264f27"},
                                 },)
-                        if sentiment_type == 'Tweets':
-                                sentiment()
-                        elif sentiment_type == 'Reddit':
-                                reedit_sentiments()
+                    if sentiment_type == 'Tweets':
+                            sentiment()
+                    elif sentiment_type == 'Reddit':
+                            reedit_sentiments()
     except Exception as err:
                 traceback.print_exc()
                 print(err.args)
