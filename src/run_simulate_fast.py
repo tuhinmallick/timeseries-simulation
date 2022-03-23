@@ -1,4 +1,5 @@
 import os,sys, logging, pathlib,pickle,traceback,time
+from turtle import onclick
 src_location = pathlib.Path(__file__).absolute().parent
 config_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'configs')
 artifact_location = os.path.join(pathlib.Path(__file__).absolute().parent.parent, 'artifacts')
@@ -24,6 +25,7 @@ from func.hist_forecast import historical_forecast
 from func.simulation import get_simulation
 from func.contact_form import contact
 from func.sentiment_analyser import sentiment
+from func.streamlit_visual import reedit_sentiments
 from  lib.login.login_cred import login as _login
 from  lib.login.authenticator import Hasher, Authenticate
 # from lib.inputs.dataset import input_dataset
@@ -43,14 +45,13 @@ from  lib.login.authenticator import Hasher, Authenticate
 #     remove_empty_cols,
 #     resample_df,
 # )
-st.set_page_config(page_title='Forecasty.Ai', layout='wide', page_icon="chart_with_upwards_trend",)
+st.set_page_config(page_title='Forecasty.Ai', layout='wide')
 print('ping')
 # Load config
 # config, instructions, readme = load_config(
 #     "config_streamlit.toml", "config_instructions.toml", "config_readme.toml"
 # )
 st.markdown(""" <style>
-#MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 </style> """, unsafe_allow_html=True)
 padding = 0
@@ -61,6 +62,8 @@ st.markdown(f""" <style>
         padding-left: {padding}rem;
         padding-bottom: {padding}rem;
     }} </style> """, unsafe_allow_html=True)
+
+# Remove whitespace from the top of the page and sidebar
 st.markdown("""
         <style>
                .css-18e3th9 {
@@ -174,24 +177,32 @@ def streamlit_menu():
     head_col1.title(" PGM Price Forecasting")   
     head_col2.image(company_image, output_format ='PNG', use_column_width  ='auto')
     st.session_state.functionality_type = selected
-    if st.session_state['authentication_status'] == True:
+    
+    return selected
+def clickin ():
+    
+        if 'logout' not in st.session_state:
+            st.session_state['logout'] = None
+        cookie_manager = stx.CookieManager(key='logout')
+        cookie_manager.delete('some_cookie_name')
+        st.session_state['logout'] = True
+        st.session_state['name'] = None
+        st.session_state['username'] = None
+        st.session_state['authentication_status'] = None
+        print('checking' + st.session_state['logout'] )
+        st.stop()
+    
+if st.session_state['authentication_status'] == True:
             col1,col2 = st.sidebar.columns([1, 0.5])
             col1.write('Welcome *%s*' % (st.session_state['name']))
-            if col2.button('Logout', help= 'If the logout buttton does not work, please refresh the page'):
-                cookie_manager = stx.CookieManager(key='logout')
-                cookie_manager.delete('some_cookie_name')
-                st.session_state['logout'] = True
-                st.session_state['name'] = None
-                st.session_state['username'] = None
-                st.session_state['authentication_status'] = None
-    return selected
-
+            logout =  col2.button('Logout', help = 'hey')
+            
 
 if  st.session_state['authentication_status']:
     try : 
             data= None
             head_col1, head_col2 = st.columns([1,0.5])
-
+            
             company_image = Image.open(os.path.join(artifact_location, "logo", "logo_basf.png"))
             # Forecasty logo
             dashboards = ('Technical indicator(Beta)', 'Exploratory Data analysis', 'Historical Forecast', 'Simulation')
@@ -220,7 +231,12 @@ if  st.session_state['authentication_status']:
                 elif option == 'Support':
                     contact()
                 elif option == 'Sentiment Analyser(Beta)':
-                    sentiment()
+                    with st.sidebar:
+                        sentiment_type = option_menu("Sentiment Menu", ["Tweets", 'Reddit'], icons=['house', 'gear'], menu_icon="cast", default_index=1)
+                        if sentiment_type == 'Tweets':
+                                sentiment()
+                        elif sentiment_type == 'Reddit':
+                                reedit_sentiments()
     except Exception as err:
                 traceback.print_exc()
                 print(err.args)
