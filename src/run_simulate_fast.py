@@ -221,7 +221,7 @@ if  st.session_state['authentication_status']:
                     contact()
                 elif option == 'Sentiment Analyser(Beta)':
                     with st.sidebar:
-                        sentiment_type = option_menu("Sentiment Menu", ["Tweets", 'Reddit'], icons=['house', 'gear'], menu_icon="cast", default_index=1)
+                        sentiment_type = option_menu("Sentiment Menu", ["Tweets", 'Reddit'], icons=['twitter', 'reddit'], menu_icon="search-heart-fill", default_index=1)
                         if sentiment_type == 'Tweets':
                                 sentiment()
                         elif sentiment_type == 'Reddit':
