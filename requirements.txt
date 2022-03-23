@@ -24,3 +24,5 @@ streamlit_option_menu==0.3.2
 textblob==0.17.1
 tsmoothie==1.0.4
 tweepy==4.7.0
+dnspython==2.2.1
+praw==7.5.0
