@@ -127,7 +127,7 @@ def reedit_sentiments():
     data = get_last_data_from_db(last_updated_utc)
 
     # Start page
-    st.sidebar.title('Reddit  Sentiment Analysis')
+    st.title('Reddit  Sentiment Analysis')
 
     # Get dates
     min_date = (data.created_utc.min() + timedelta(hours=24)).to_pydatetime().date()
@@ -137,7 +137,7 @@ def reedit_sentiments():
     date = st.sidebar.date_input('Select day for top list preview:', min_value=min_date, max_value=max_date, value=max_date)
 
     
-    st.title('Tickers insights')
+    st.write('### Tickers insights')
 
     # Add ticker selector to sidebar
     ticker_to_show = st.sidebar.selectbox(
