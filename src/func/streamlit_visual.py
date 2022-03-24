@@ -136,24 +136,7 @@ def reedit_sentiments():
     # Ask for dates input
     date = st.sidebar.date_input('Select day for top list preview:', min_value=min_date, max_value=max_date, value=max_date)
 
-    # Top list
-    with st.expander('Top ' + str(settings.top_elements) + ' mentions'):
-        st.subheader('Top ' + str(settings.top_elements) + ' mentions for  ' + date.strftime("%A, %B %e, %Y"))
-        st.table(get_top_frames(data, date, date - timedelta(days=1)))
-
-    explanation = """The score is the mean compound sentiment score for the horizon period.
-    Rule of thumb for interpretation: (>0.5) is positive; (<-0.5) is negative; else is neutral.
-
-    VADER (Valence Aware Dictionary and sEntiment Reasoner) analysis tool is applied whose scoring is accustomed to social network text and was tuned to recognize lexicon like smiles and emojis.
-    The top list shows top mentions and VADER scores for respective tickers.
-    Mentions and scores are compared on daily basis.
-    False positives are possible with one-letter tickers like $B and $F.
-    The top list and insight tickers data are updated on an hourly basis.
-    Tickers list for searching is from ALPHA VANTAGE.
-    """
-    with st.expander('How to interpret the above table'):
-        st.text(explanation)
-
+    
     st.title('Tickers insights')
 
     # Add ticker selector to sidebar
@@ -239,6 +222,25 @@ def reedit_sentiments():
 
     # Chart data
     sentiments_exp.line_chart(chart_data)
+    
+    # Top list
+    with st.expander('Top ' + str(settings.top_elements) + ' mentions'):
+        st.subheader('Top ' + str(settings.top_elements) + ' mentions for  ' + date.strftime("%A, %B %e, %Y"))
+        st.table(get_top_frames(data, date, date - timedelta(days=1)))
+
+    explanation = """The score is the mean compound sentiment score for the horizon period.
+    Rule of thumb for interpretation: (>0.5) is positive; (<-0.5) is negative; else is neutral.
+
+    VADER (Valence Aware Dictionary and sEntiment Reasoner) analysis tool is applied whose scoring is accustomed to social network text and was tuned to recognize lexicon like smiles and emojis.
+    The top list shows top mentions and VADER scores for respective tickers.
+    Mentions and scores are compared on daily basis.
+    False positives are possible with one-letter tickers like $B and $F.
+    The top list and insight tickers data are updated on an hourly basis.
+    Tickers list for searching is from ALPHA VANTAGE.
+    """
+    with st.expander('How to interpret the above table'):
+        st.write(explanation)
+
 
 #     # Comments downloader (removed for sake of RAM performance)
 #         # Place link to download comments for particular ticker
