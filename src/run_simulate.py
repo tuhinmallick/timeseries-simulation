@@ -120,8 +120,8 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     # pre_selected_features_df, _ = smb_feature_engineering.feature_engineering_pipeline(pre_selected_features_df, target, horizon, pre_selected_features_columns, forecast_type="absolute_diff")
     print("============================================== Calculating meta features =================================================================================")
     meta_features_df = make_meta_features.create_meta_feature_frame(df_tidy[target].dropna(), horizon, ci_alpha=0.05)
-    meta_change_pre_selected_df= pre_selected_features_df.copy()
-    modified_meta_features_df = pre_selected_features_df.copy()
+    meta_change_pre_selected_df= meta_features_df.copy()
+    modified_meta_features_df = meta_features_df.copy()
     for key, value in simulation_dict.items():
         meta_simulation_correlation = grange_and_correlate.user_input_correlation_picker(sim_df[key], meta_features_df, selected_method='max', max_lags=12)
         for feature_name, correlation in meta_simulation_correlation.items():
