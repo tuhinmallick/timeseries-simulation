@@ -69,6 +69,7 @@ from utils import grange_and_correlate, smb_feature_engineering, plotly_visualiz
 
 def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     modified_pre_selected_df, simulation_correlation, change_pre_selected_df =None, {}, None
+    meta_change_pre_selected_df,modified_meta_features_df,meta_simulation_correlation  = None,None, {}
     # subscription_id = 'fc563dde-a9ad-4edf-9998-2d52ba8afff9'
     # # Azure Machine Learning resource group 
     # resource_group = 'forecasty_ml_test' 
