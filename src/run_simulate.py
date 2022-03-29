@@ -13,7 +13,7 @@ if os.path.realpath(src_location) not in sys.path:
 # # save the model to disk
 # filename = 'finalized_model.sav'
 # pickle.dump(model, open(filename, 'wb'))
-from utils import grange_and_correlate, smb_feature_engineering, plotly_visualization, feature_renaming
+from utils import grange_and_correlate, smb_feature_engineering, plotly_visualization, feature_renaming, make_meta_features
 
 
 # grange_and_correlate import grange_and_correlate, user_input_correlation_picker
