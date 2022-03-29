@@ -121,7 +121,9 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     print("============================================== Calculating meta features =================================================================================")
     meta_features_df = make_meta_features.create_meta_feature_frame(df_tidy[target].dropna(), horizon, ci_alpha=0.05)
     meta_simulation_correlation = grange_and_correlate.user_input_correlation_picker(meta_features_df[key], pre_selected_features_df, selected_method='max', max_lags=12)
-
+    for feature_name, correlation in meta_simulation_correlation.items():
+                meta_change_pre_selected_df[feature_name]= meta_features_df[feature_name] * correlation * (value/100)
+                modified_meta_features_df[feature_name]= meta_features_df[feature_name] + meta_change_pre_selected_df[feature_name]
     for key, value in simulation_dict.items():
         simulation_correlation = grange_and_correlate.user_input_correlation_picker(sim_df[key], pre_selected_features_df, selected_method='max', max_lags=12)
         simulation_correlation_df = pd.DataFrame(simulation_correlation, index=[1]).melt()
@@ -147,7 +149,7 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
     print("==============================================Feature engineering Starting =================================================================================")
     modified_pre_selected_df, _ = smb_feature_engineering.feature_engineering_pipeline(modified_pre_selected_df, target, horizon, pre_selected_features_columns, forecast_type="absolute_diff")
     print("==============================================Feature engineering Done =================================================================================")
-    return modified_pre_selected_df, meta_features_df, target_series_df, final_simulation_correlation_df
+    return modified_pre_selected_df, modified_meta_features_df, target_series_df, final_simulation_correlation_df
 
 def load_model( horizon, target, local=True):
     if local:
