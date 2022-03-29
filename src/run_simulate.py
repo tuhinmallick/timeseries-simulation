@@ -92,10 +92,10 @@ def features_picker(simulation_dict, sim_df, target,original_target, horizon):
 
     # datastore = Datastore.get(workspace=ws, datastore_name=blob_datastore_name)
     dataframe_path=os.path.join(artifact_location,'dataframes', original_target, f'horizon_{horizon}')
-    meta_features_name = f"{original_target}_meta_features_{horizon}.pkl"
-    path2save_meta_features = os.path.join(dataframe_path, meta_features_name)
-    with open(path2save_meta_features, 'rb') as meta_features:
-        meta_features_df = pickle.load(meta_features)
+    df_tidy_name = f"{original_target}_df_tidy_{horizon}.pkl"
+    path2save_df_tidy = os.path.join(dataframe_path, df_tidy_name)
+    with open(path2save_df_tidy, 'rb') as _df_tidy_:
+        df_tidy = pickle.load(_df_tidy_)
     pre_selected_features_df_name = f"{original_target}_pre_selected_features_df_{horizon}.pkl"
     path2save_pre_selected_features = os.path.join(dataframe_path,pre_selected_features_df_name)
     with open(path2save_pre_selected_features, 'rb') as pre_selected_features:
