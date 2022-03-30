@@ -6,7 +6,10 @@ resources:
     trigger:
       branches:
         include:
-          - demo
+          - test
+          - develop
+          - qual
+          - master
 
 pool:
   vmImage: 'ubuntu-latest'
