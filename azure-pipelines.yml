@@ -101,6 +101,8 @@ stages:
               script: |
                 sed -i "s%#{REPOSITORY}#%$(REPOSITORY)%g" "$(Build.SourcesDirectory)/k8s/kustomization.yaml"
                 sed -i "s%#{Build.BuildId}#%$(Build.BuildNumber)%g" "$(Build.SourcesDirectory)/k8s/kustomization.yaml"
+                sed -i "s%#{REPOSITORY}#%$(REPOSITORY)%g" "$(Build.SourcesDirectory)/k8s/load-balancer.yaml"
+                sed -i "s%#{Build.SourceBranchName}#%$(Build.SourceBranchName)%g" "$(Build.SourcesDirectory)/k8s/load-balancer.yaml"
 
           - task: KubernetesManifest@0
             name: bake
