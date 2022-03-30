@@ -99,6 +99,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
+                sed -i "s%#{REPOSITORY}#%$(REPOSITORY)%g" "$(Build.SourcesDirectory)/k8s/kustomization.yaml"
                 sed -i "s%#{Build.BuildId}#%$(Build.BuildNumber)%g" "$(Build.SourcesDirectory)/k8s/kustomization.yaml"
 
           - task: KubernetesManifest@0
@@ -141,7 +142,7 @@ stages:
                 - task: KubernetesManifest@0
                   displayName: Deploy K8s manifests
                   inputs:
-                    namespace: 'demo'
+                    namespace: $(REPOSITORY)
                     manifests: '$(Pipeline.Workspace)/$(Build.SourceBranchName)-$(Build.BuildNumber).yaml'
-                    kubernetesServiceConnection: '$(Build.SourceBranchName)-demo'
+                    kubernetesServiceConnection: '$(Build.SourceBranchName)-$(REPOSITORY)'
 
