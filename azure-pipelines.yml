@@ -71,8 +71,6 @@ stages:
               repository: $(REPOSITORY)
               containerRegistry: $(DOCKER_REGISTRY)
               buildContext: $(Build.SourcesDirectory)
-              addPipelineData: false
-              addBaseImageData: false
               arguments: --cache-from $(DOCKER_REGISTRY)/$(REPOSITORY):$(Build.SourceBranchName) --build-arg BUILDKIT_INLINE_CACHE=1
               tags: |
                 $(Build.BuildNumber)
