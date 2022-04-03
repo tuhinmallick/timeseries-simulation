@@ -1,5 +1,6 @@
 import pandas as pd
-import os,sys, logging, pathlib,pickle,traceback
+import os, sys, logging, pathlib, pickle, traceback
+
 utils_location = pathlib.Path(__file__).absolute().parent
 if os.path.realpath(utils_location) not in sys.path:
     sys.path.append(os.path.realpath(utils_location))
@@ -7,7 +8,14 @@ import STLModel
 import feature_engineering as fe
 import forecastutils as fu
 
-def feature_engineering_pipeline(df: pd.DataFrame, target: str, horizon: int, pre_selected_features: list, forecast_type: str):
+
+def feature_engineering_pipeline(
+    df: pd.DataFrame,
+    target: str,
+    horizon: int,
+    pre_selected_features: list,
+    forecast_type: str,
+):
     # ===========================================================================================================
     #           CONFIGRUATION
     # ===========================================================================================================
@@ -17,28 +25,40 @@ def feature_engineering_pipeline(df: pd.DataFrame, target: str, horizon: int, pr
 
     indicator_cols = [c for c in df.columns if c not in target_series]
     indicator_cols = pre_selected_features
-    
+
     if forecast_type == "proportional_diff":
         # ===========================================================================================================
         #           MULTIPLICATIVE FEATURES
         # ===========================================================================================================
 
-        df = df.join(df[[target] + indicator_cols].ewm(alpha=0.6).mean().pct_change().add_suffix("_ewm_pct_change1"))
-        df = df.join(df[[target] + indicator_cols].ewm(alpha=0.6).mean().pct_change(periods=2).add_suffix("_ewm_pct_change2"))
+        df = df.join(
+            df[[target] + indicator_cols]
+            .ewm(alpha=0.6)
+            .mean()
+            .pct_change()
+            .add_suffix("_ewm_pct_change1")
+        )
+        df = df.join(
+            df[[target] + indicator_cols]
+            .ewm(alpha=0.6)
+            .mean()
+            .pct_change(periods=2)
+            .add_suffix("_ewm_pct_change2")
+        )
 
         ## Setting: add skew
         skew_setting = [6]  # should be at least 3
         df, _ = fe.add_skew(df, features=[target] + indicator_cols, window=skew_setting)
-        
+
         # Trigonometric encoding of months
         df = fu.add_month_sin_cos(df, df.index.month.to_numpy(), "month", 12)
-        
+
         # Drop the original raw indicators and target series to improve performance
         # df = df.drop(columns=[target] + indicator_cols)
-    
+
     # NOTE the STLModel is taken from Wen-Kai's PipeGBM Model.
     elif forecast_type in ["absolute_diff" or "absolute"]:
-        
+
         # ===========================================================================================================
         #           ADDITIVE FEATURES
         # ===========================================================================================================
@@ -47,14 +67,16 @@ def feature_engineering_pipeline(df: pd.DataFrame, target: str, horizon: int, pr
         column_names = indicator_cols
         ## inplacely add lags
         lag_setting = [1, 2, 3, 6]
-        lagdf = fe.create_lag(df, features=column_names, lag=lag_setting, droplagna=False)
+        lagdf = fe.create_lag(
+            df, features=column_names, lag=lag_setting, droplagna=False
+        )
         df = pd.concat([df, lagdf], axis=1).dropna()
         lagdf_columns = [c for c in lagdf.columns]
-        column_names = column_names+lagdf_columns
+        column_names = column_names + lagdf_columns
         ## add ma / ema
         ma_setting = [3, 6]
         df, _ = fe.add_MA(df, features=column_names, window=ma_setting)
-        ema_setting = [.2, .4, .6, .8]
+        ema_setting = [0.2, 0.4, 0.6, 0.8]
         df, _ = fe.add_EMA(df, features=column_names, alpha=ema_setting)
 
         ## setting: add std
@@ -69,30 +91,39 @@ def feature_engineering_pipeline(df: pd.DataFrame, target: str, horizon: int, pr
         rolling = 24
         stlhelper = STLModel.STLModel()
         df = stlhelper._make_STL(
-            df, target=column_names,
-            freq="MS", rolling_strategy='rolling', rolling=rolling, extract_strategy='nanmean'
+            df,
+            target=column_names,
+            freq="MS",
+            rolling_strategy="rolling",
+            rolling=rolling,
+            extract_strategy="nanmean",
         )
         # Trigonometric encoding of months
         df = fu.add_month_sin_cos(df, df.index.month.to_numpy(), "month", 12)
         # NOTE ACTIVATE for year and quarter
         df["year"] = df.index.year
-        column_names.append('year')
-        
-        df["quater"] = df.index.year
-        column_names.append('quater')
-        
-        # TODO add month sin cos for year and quarter. 
+        column_names.append("year")
 
+        df["quater"] = df.index.year
+        column_names.append("quater")
+
+        # TODO add month sin cos for year and quarter.
 
     # ===========================================================================================================
     #           CRYSIS DUMMY VARIABLES
     # ===========================================================================================================
-    
-    crisis_dummy = (df.index >= "2008-05-01") & ( df.index < "2008-12-01" )
-    covid_dummy = (df.index >= "2020-02-01")  & ( df.index < "2020-12-01" )
-    debt_ceiling_2011 = (df.index >= "2011-08-01") & ( df.index < "2012-01-01" )
-    debt_ceiling_2013 = (df.index >= "2013-02-01") & ( df.index < "2013-07-01" )
-    chip_shortage = (df.index >= "2021-05-01") & ( df.index < "2021-12-01" )
-    df['crisis_dummy'] = crisis_dummy | covid_dummy | debt_ceiling_2011 | debt_ceiling_2013 | chip_shortage
-    
+
+    crisis_dummy = (df.index >= "2008-05-01") & (df.index < "2008-12-01")
+    covid_dummy = (df.index >= "2020-02-01") & (df.index < "2020-12-01")
+    debt_ceiling_2011 = (df.index >= "2011-08-01") & (df.index < "2012-01-01")
+    debt_ceiling_2013 = (df.index >= "2013-02-01") & (df.index < "2013-07-01")
+    chip_shortage = (df.index >= "2021-05-01") & (df.index < "2021-12-01")
+    df["crisis_dummy"] = (
+        crisis_dummy
+        | covid_dummy
+        | debt_ceiling_2011
+        | debt_ceiling_2013
+        | chip_shortage
+    )
+
     return df, target_series

@@ -12,6 +12,8 @@ import secrets_beta
 import streamlit as st
 import time
 import tweepy
+
+
 def sentiment():
     st.write('<base target="_blank">', unsafe_allow_html=True)
 
@@ -21,11 +23,13 @@ def sentiment():
 
     with a:
         st.sidebar.text("")
-       
+
     with b:
         st.sidebar.title("Twitter Sentiment Analyzer")
 
-    st.sidebar.write("Type in a term to view the latest Twitter sentiment on that term.")
+    st.sidebar.write(
+        "Type in a term to view the latest Twitter sentiment on that term."
+    )
 
     st.write("")
 
@@ -34,12 +38,13 @@ def sentiment():
         @st.cache
         def initial_setup():
             from textblob.download_corpora import download_all
+
             download_all()
             import nltk
 
         initial_setup()
         consumer_key, consumer_secret = secrets_beta.secrets()
-        access_token, access_token_secret =  secrets_beta.access()
+        access_token, access_token_secret = secrets_beta.access()
         # auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
         auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
         twitter_api = tweepy.API(auth)
@@ -94,7 +99,9 @@ def sentiment():
                         padding=(rem(0.8), 0, rem(3), 0),
                     )
                 )(
-                    h2(style=styles(font_size=rem(0.8), font_weight=600, padding=0))(title),
+                    h2(style=styles(font_size=rem(0.8), font_weight=600, padding=0))(
+                        title
+                    ),
                     big(style=styles(font_size=rem(3), font_weight=800, line_height=1))(
                         value
                     ),
@@ -148,7 +155,7 @@ def sentiment():
                 range(1, len(values) // page_size + 1),
                 curr_page,
                 on_change=set_page,
-                args = (option,)
+                args=(option,),
             )
 
             curr_page = getattr(st.session_state, state_key)
@@ -232,7 +239,6 @@ def sentiment():
             },
         )
 
-        
         # @st.experimental_memo
         @st.cache(ttl=60 * 60, **cache_args)
         def search_twitter(
@@ -347,22 +353,25 @@ def sentiment():
             "1 month ago": 30,
             # "6 months ago": 180,
             # "1 year ago": 365,
-
         }
 
         search_params = {}
 
         # a, b = st.columns([1, 1])
-        search_params["query_terms"] = st.text_input("Search term", "Platinum Group Metals")
+        search_params["query_terms"] = st.text_input(
+            "Search term", "Platinum Group Metals"
+        )
         search_params["limit"] = st.slider("Tweet limit", 1, 1000, 100)
 
         search_params["min_replies"] = st.number_input("Minimum replies", 0, None, 0)
         search_params["min_retweets"] = st.number_input("Minimum retweets", 0, None, 0)
         search_params["min_faves"] = st.number_input("Minimum hearts", 0, None, 0)
-        selected_rel_date = st.selectbox("Search from date", list(relative_dates.keys()), 3)
+        selected_rel_date = st.selectbox(
+            "Search from date", list(relative_dates.keys()), 3
+        )
         search_params["days_ago"] = relative_dates[selected_rel_date]
 
-        a, c  = st.columns([1, 1])
+        a, c = st.columns([1, 1])
         search_params["exclude_replies"] = a.checkbox("Exclude replies", False)
         search_params["exclude_retweets"] = c.checkbox("Exclude retweets", False)
 
@@ -378,16 +387,15 @@ def sentiment():
 
     if not tweets:
         "No results"
-        st.sidebar.write('No tweets found for this search term')
+        st.sidebar.write("No tweets found for this search term")
         st.stop()
 
     results = munge_the_numbers(tweets, tweets[0].created_at, tweets[-1].created_at)
 
-
     # --------------------------------------------------------------------------------------------------
     # Draw results
 
-    st.write("## Sentiment from the most recent ", len(tweets)," tweets")
+    st.write("## Sentiment from the most recent ", len(tweets), " tweets")
 
     sentiment_df = pd.DataFrame(results["sentiment_list"])
 
@@ -397,10 +405,14 @@ def sentiment():
     a, b = st.columns(2)
 
     with a:
-        display_dial("POLARITY", f"{sentiment_df['polarity'].mean():.2f}", polarity_color)
+        display_dial(
+            "POLARITY", f"{sentiment_df['polarity'].mean():.2f}", polarity_color
+        )
     with b:
         display_dial(
-            "SUBJECTIVITY", f"{sentiment_df['subjectivity'].mean():.2f}", subjectivity_color
+            "SUBJECTIVITY",
+            f"{sentiment_df['subjectivity'].mean():.2f}",
+            subjectivity_color,
         )
 
     if search_params["days_ago"] <= 1:
@@ -414,15 +426,24 @@ def sentiment():
 
         chart = alt.Chart(sentiment_df, title="Sentiment Subjectivity")
 
-        avg_subjectivity = chart.mark_line(interpolate="catmull-rom", tooltip=True,).encode(
+        avg_subjectivity = chart.mark_line(
+            interpolate="catmull-rom",
+            tooltip=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y(
-                "mean(subjectivity):Q", title="subjectivity", scale=alt.Scale(domain=[0, 1])
+                "mean(subjectivity):Q",
+                title="subjectivity",
+                scale=alt.Scale(domain=[0, 1]),
             ),
             color=alt.Color(value=subjectivity_color),
         )
 
-        subjectivity_values = chart.mark_point(tooltip=True, size=75, filled=True,).encode(
+        subjectivity_values = chart.mark_point(
+            tooltip=True,
+            size=75,
+            filled=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y("subjectivity:Q", title="subjectivity"),
             color=alt.Color(value=subjectivity_color + "88"),
@@ -433,7 +454,9 @@ def sentiment():
 
         avg_polarity = chart.mark_line(interpolate="catmull-rom", tooltip=True,).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
-            y=alt.Y("mean(polarity):Q", title="polarity", scale=alt.Scale(domain=[-1, 1])),
+            y=alt.Y(
+                "mean(polarity):Q", title="polarity", scale=alt.Scale(domain=[-1, 1])
+            ),
             color=alt.Color(value=polarity_color),
         )
 
@@ -446,7 +469,9 @@ def sentiment():
 
         st.altair_chart(avg_polarity + polarity_values, use_container_width=True)
 
-        st.altair_chart(avg_subjectivity + subjectivity_values, use_container_width=True)
+        st.altair_chart(
+            avg_subjectivity + subjectivity_values, use_container_width=True
+        )
 
     with st.expander("ℹ️ How to interpret the results", expanded=False):
         st.write(
@@ -471,16 +496,18 @@ def sentiment():
         )
 
         a, b = st.columns(2)
-        adjustment_factor = a.slider("Prioritize long expressions", 0.0, 1.0, 0.2, 0.001)
+        adjustment_factor = a.slider(
+            "Prioritize long expressions", 0.0, 1.0, 0.2, 0.001
+        )
         # Default value picked heuristically.
 
         max_threshold = terms["count"].max()
         threshold = b.slider("Threshold", 0.0, 1.0, 0.3) * max_threshold
         # Default value picked heuristically.
 
-        weights = (terms["num_words"] * adjustment_factor * (terms["count"] - 1)) + terms[
-            "count"
-        ]
+        weights = (
+            terms["num_words"] * adjustment_factor * (terms["count"] - 1)
+        ) + terms["count"]
 
         filtered_terms = terms[weights > threshold]
 
@@ -532,4 +559,3 @@ def sentiment():
     #         for result in paginator(tweets, "curr_raw_tweet_page", 1):
     #             display_dict(result.__dict__)
     #             "---"
-
