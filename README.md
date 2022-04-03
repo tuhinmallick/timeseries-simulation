@@ -1,5 +1,5 @@
 # dvc-project-
-DVC project template
+DVC project template.
 
 ## STEP -
 
