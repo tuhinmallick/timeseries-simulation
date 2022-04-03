@@ -1,11 +1,13 @@
-import os,sys, logging, pathlib,pickle,traceback
+import os, sys, logging, pathlib, pickle, traceback
+
 func_location = pathlib.Path(__file__).absolute().parent
 if os.path.realpath(func_location) not in sys.path:
     sys.path.append(os.path.realpath(func_location))
 import streamlit as st  # pip install streamlit
+
+
 def contact():
     st.header(":mailbox: Get in touch with us")
-
 
     contact_form = """
 <form action="https://formsubmit.co/tuhin.mllk@gmail.com" method="POST">
@@ -23,5 +25,4 @@ def contact():
         with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-
-    local_css(os.path.join(func_location,'style','style.css'))
+    local_css(os.path.join(func_location, "style", "style.css"))

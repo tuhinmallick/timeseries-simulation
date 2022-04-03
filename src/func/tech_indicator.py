@@ -8,6 +8,7 @@
 # import pandas as pd
 # import yfinance as yf
 import streamlit as st
+
 # import datetime as dt
 # import plotly.graph_objects as go
 # from plotly.subplots import make_subplots
@@ -16,11 +17,11 @@ import streamlit as st
 # #   Technical Indicator
 # # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 def technical_indicator(data):
-    st.write('# Coming Soon')
-    
+    st.write("# Coming Soon")
+
 
 # snp500 = pd.read_csv("Datasets/SP500.csv")
-# symbols = snp500['Symbol'].sort_values().tolist()        
+# symbols = snp500['Symbol'].sort_values().tolist()
 
 # ticker = st.sidebar.selectbox(
 #     'Choose a S&P 500 Stock',
@@ -35,9 +36,9 @@ def technical_indicator(data):
 
 # if(infoType == 'Fundamental'):
 #     stock = yf.Ticker(ticker)
-#     info = stock.info 
+#     info = stock.info
 #     st.title('Company Profile')
-#     st.subheader(info['longName']) 
+#     st.subheader(info['longName'])
 #     st.markdown('** Sector **: ' + info['sector'])
 #     st.markdown('** Industry **: ' + info['industry'])
 #     st.markdown('** Phone **: ' + info['phone'])
@@ -45,7 +46,7 @@ def technical_indicator(data):
 #     st.markdown('** Website **: ' + info['website'])
 #     st.markdown('** Business Summary **')
 #     st.info(info['longBusinessSummary'])
-        
+
 #     fundInfo = {
 #             'Enterprise Value (USD)': info['enterpriseValue'],
 #             'Enterprise To Revenue Ratio': info['enterpriseToRevenue'],
@@ -58,22 +59,22 @@ def technical_indicator(data):
 #             'Forward EPS (USD)': info['forwardEps'],
 #             'Beta ': info['beta'],
 #             'Book Value (USD)': info['bookValue'],
-#             'Dividend Rate (%)': info['dividendRate'], 
+#             'Dividend Rate (%)': info['dividendRate'],
 #             'Dividend Yield (%)': info['dividendYield'],
 #             'Five year Avg Dividend Yield (%)': info['fiveYearAvgDividendYield'],
 #             'Payout Ratio': info['payoutRatio']
 #         }
-    
+
 #     fundDF = pd.DataFrame.from_dict(fundInfo, orient='index')
 #     fundDF = fundDF.rename(columns={0: 'Value'})
-#     st.subheader('Fundamental Info') 
+#     st.subheader('Fundamental Info')
 #     st.table(fundDF)
-    
-#     st.subheader('General Stock Info') 
+
+#     st.subheader('General Stock Info')
 #     st.markdown('** Market **: ' + info['market'])
 #     st.markdown('** Exchange **: ' + info['exchange'])
 #     st.markdown('** Quote Type **: ' + info['quoteType'])
-    
+
 #     start = dt.datetime.today()-dt.timedelta(2 * 365)
 #     end = dt.datetime.today()
 #     df = yf.download(ticker,start,end)
@@ -89,7 +90,7 @@ def technical_indicator(data):
 #             'xanchor': 'center',
 #             'yanchor': 'top'})
 #     st.plotly_chart(fig, use_container_width=True)
-    
+
 #     marketInfo = {
 #             "Volume": info['volume'],
 #             "Average Volume": info['averageVolume'],
@@ -101,9 +102,9 @@ def technical_indicator(data):
 #             "Share Short": info['sharesShort'],
 #             'Short Ratio': info['shortRatio'],
 #             'Share Outstanding': info['sharesOutstanding']
-    
+
 #         }
-    
+
 #     marketDF = pd.DataFrame(data=marketInfo, index=[0])
 #     st.table(marketDF)
 # else:
@@ -113,7 +114,7 @@ def technical_indicator(data):
 #         df['ema'] = df['Adj Close'].ewm(span=size, min_periods=size).mean()
 #         df.dropna(inplace=True)
 #         return df
-    
+
 #     def calc_macd(data):
 #         df = data.copy()
 #         df['ema12'] = df['Adj Close'].ewm(span=12, min_periods=12).mean()
@@ -126,32 +127,32 @@ def technical_indicator(data):
 #     def calcBollinger(data, size):
 #         df = data.copy()
 #         df["sma"] = df['Adj Close'].rolling(size).mean()
-#         df["bolu"] = df["sma"] + 2*df['Adj Close'].rolling(size).std(ddof=0) 
-#         df["bold"] = df["sma"] - 2*df['Adj Close'].rolling(size).std(ddof=0) 
+#         df["bolu"] = df["sma"] + 2*df['Adj Close'].rolling(size).std(ddof=0)
+#         df["bold"] = df["sma"] - 2*df['Adj Close'].rolling(size).std(ddof=0)
 #         df["width"] = df["bolu"] - df["bold"]
 #         df.dropna(inplace=True)
 #         return df
 
 #     st.title('Technical Indicators')
 #     st.subheader('Moving Average')
-    
+
 #     coMA1, coMA2 = st.beta_columns(2)
-    
+
 #     with coMA1:
-#         numYearMA = st.number_input('Insert period (Year): ', min_value=1, max_value=10, value=2, key=0)    
-    
+#         numYearMA = st.number_input('Insert period (Year): ', min_value=1, max_value=10, value=2, key=0)
+
 #     with coMA2:
-#         windowSizeMA = st.number_input('Window Size (Day): ', min_value=5, max_value=500, value=20, key=1)  
-        
+#         windowSizeMA = st.number_input('Window Size (Day): ', min_value=5, max_value=500, value=20, key=1)
+
 
 #     start = dt.datetime.today()-dt.timedelta(numYearMA * 365)
 #     end = dt.datetime.today()
 #     dataMA = yf.download(ticker,start,end)
 #     df_ma = calcMovingAverage(dataMA, windowSizeMA)
 #     df_ma = df_ma.reset_index()
-        
+
 #     figMA = go.Figure()
-    
+
 #     figMA.add_trace(
 #             go.Scatter(
 #                     x = df_ma['Date'],
@@ -159,7 +160,7 @@ def technical_indicator(data):
 #                     name = "Prices Over Last " + str(numYearMA) + " Year(s)"
 #                 )
 #         )
-    
+
 #     figMA.add_trace(
 #                 go.Scatter(
 #                         x = df_ma['Date'],
@@ -167,7 +168,7 @@ def technical_indicator(data):
 #                         name = "SMA" + str(windowSizeMA) + " Over Last " + str(numYearMA) + " Year(s)"
 #                     )
 #             )
-    
+
 #     figMA.add_trace(
 #                 go.Scatter(
 #                         x = df_ma['Date'],
@@ -175,32 +176,32 @@ def technical_indicator(data):
 #                         name = "EMA" + str(windowSizeMA) + " Over Last " + str(numYearMA) + " Year(s)"
 #                     )
 #             )
-    
+
 #     figMA.update_layout(legend=dict(
 #         yanchor="top",
 #         y=0.99,
 #         xanchor="left",
 #         x=0.01
 #     ))
-    
+
 #     figMA.update_layout(legend_title_text='Trend')
 #     figMA.update_yaxes(tickprefix="$")
-    
-#     st.plotly_chart(figMA, use_container_width=True)  
-    
+
+#     st.plotly_chart(figMA, use_container_width=True)
+
 #     st.subheader('Moving Average Convergence Divergence (MACD)')
-#     numYearMACD = st.number_input('Insert period (Year): ', min_value=1, max_value=10, value=2, key=2) 
-    
+#     numYearMACD = st.number_input('Insert period (Year): ', min_value=1, max_value=10, value=2, key=2)
+
 #     startMACD = dt.datetime.today()-dt.timedelta(numYearMACD * 365)
 #     endMACD = dt.datetime.today()
 #     dataMACD = yf.download(ticker,startMACD,endMACD)
 #     df_macd = calc_macd(dataMACD)
 #     df_macd = df_macd.reset_index()
-    
+
 #     figMACD = make_subplots(rows=2, cols=1,
 #                         shared_xaxes=True,
 #                         vertical_spacing=0.01)
-    
+
 #     figMACD.add_trace(
 #             go.Scatter(
 #                     x = df_macd['Date'],
@@ -209,7 +210,7 @@ def technical_indicator(data):
 #                 ),
 #             row=1, col=1
 #         )
-    
+
 #     figMACD.add_trace(
 #             go.Scatter(
 #                     x = df_macd['Date'],
@@ -218,7 +219,7 @@ def technical_indicator(data):
 #                 ),
 #             row=1, col=1
 #         )
-    
+
 #     figMACD.add_trace(
 #             go.Scatter(
 #                     x = df_macd['Date'],
@@ -227,7 +228,7 @@ def technical_indicator(data):
 #                 ),
 #             row=1, col=1
 #         )
-    
+
 #     figMACD.add_trace(
 #             go.Scatter(
 #                     x = df_macd['Date'],
@@ -236,7 +237,7 @@ def technical_indicator(data):
 #                 ),
 #             row=2, col=1
 #         )
-    
+
 #     figMACD.add_trace(
 #             go.Scatter(
 #                     x = df_macd['Date'],
@@ -245,7 +246,7 @@ def technical_indicator(data):
 #                 ),
 #             row=2, col=1
 #         )
-    
+
 #     figMACD.update_layout(legend=dict(
 #         orientation="h",
 #         yanchor="bottom",
@@ -253,18 +254,18 @@ def technical_indicator(data):
 #         xanchor="left",
 #         x=0
 #     ))
-    
+
 #     figMACD.update_yaxes(tickprefix="$")
 #     st.plotly_chart(figMACD, use_container_width=True)
-    
+
 #     st.subheader('Bollinger Band')
 #     coBoll1, coBoll2 = st.beta_columns(2)
 #     with coBoll1:
-#         numYearBoll = st.number_input('Insert period (Year): ', min_value=1, max_value=10, value=2, key=6) 
-        
+#         numYearBoll = st.number_input('Insert period (Year): ', min_value=1, max_value=10, value=2, key=6)
+
 #     with coBoll2:
 #         windowSizeBoll = st.number_input('Window Size (Day): ', min_value=5, max_value=500, value=20, key=7)
-    
+
 #     startBoll= dt.datetime.today()-dt.timedelta(numYearBoll * 365)
 #     endBoll = dt.datetime.today()
 #     dataBoll = yf.download(ticker,startBoll,endBoll)
@@ -278,8 +279,8 @@ def technical_indicator(data):
 #                     name = "Upper Band"
 #                 )
 #         )
-    
-    
+
+
 #     figBoll.add_trace(
 #                 go.Scatter(
 #                         x = df_boll['Date'],
@@ -287,8 +288,8 @@ def technical_indicator(data):
 #                         name = "SMA" + str(windowSizeBoll) + " Over Last " + str(numYearBoll) + " Year(s)"
 #                     )
 #             )
-    
-    
+
+
 #     figBoll.add_trace(
 #                 go.Scatter(
 #                         x = df_boll['Date'],
@@ -296,7 +297,7 @@ def technical_indicator(data):
 #                         name = "Lower Band"
 #                     )
 #             )
-    
+
 #     figBoll.update_layout(legend=dict(
 #         orientation="h",
 #         yanchor="bottom",
@@ -304,6 +305,6 @@ def technical_indicator(data):
 #         xanchor="left",
 #         x=0
 #     ))
-    
+
 #     figBoll.update_yaxes(tickprefix="$")
 #     st.plotly_chart(figBoll, use_container_width=True)
