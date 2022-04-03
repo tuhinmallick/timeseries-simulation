@@ -24,7 +24,7 @@ class login ():
                         '2WLVoJ3ylx6NHZ4',
                         '6VcZwzTEERlFNko',
                         'f94pTEW6XO1Yljv',
-                        'qwcS732MfbD6YCc',
+                        'test',
                         'IS3bppMAilySrZd',
                         'RDBig7nz8ZFzww5']
                 return names, usernames, passwords
