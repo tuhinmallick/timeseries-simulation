@@ -498,8 +498,8 @@ def main():
         st.session_state["authentication_status"] == False
         or st.session_state["authentication_status"] is None
     ):
-        hashed_passwords = stauth.hasher(passwords).generate()
-        authenticator = stauth.authenticate(
+        hashed_passwords = stauth.Hasher(passwords).generate()
+        authenticator = stauth.Authenticate(
             names,
             usernames,
             hashed_passwords,
@@ -507,7 +507,7 @@ def main():
             "some_signature_key",
             cookie_expiry_days=14,
         )
-        name, authentication_status = authenticator.login("Login", "main")
+        name, authentication_status, user_name = authenticator.login("Login", location="main")
         set_name(name)
         set_authentication_status(authentication_status)
     if st.session_state["authentication_status"]:
