@@ -26,3 +26,5 @@ def contact():
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     local_css(os.path.join(func_location, "style", "style.css"))
+    
+    
