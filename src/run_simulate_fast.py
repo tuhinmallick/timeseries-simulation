@@ -243,7 +243,7 @@ if st.session_state["authentication_status"]:
         head_col1, head_col2 = st.columns([1, 0.5])
 
         company_image = Image.open(
-            os.path.join(artifact_location, "logo", "logo_basf.png")
+            os.path.join(artifact_location, "logo", "bearish.png")
         )
         # Forecasty logo
         dashboards = (
