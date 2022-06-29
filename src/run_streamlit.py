@@ -507,7 +507,9 @@ def main():
             "some_signature_key",
             cookie_expiry_days=14,
         )
-        name, authentication_status, user_name = authenticator.login("Login", location="main")
+        name, authentication_status, user_name = authenticator.login(
+            "Login", location="main"
+        )
         set_name(name)
         set_authentication_status(authentication_status)
     if st.session_state["authentication_status"]:
