@@ -3,9 +3,6 @@ DVC project template.
 
 ## STEP
 
-
-
-
 ### STEP 01- Create a repository by using template repository
 
 ### STEP 02- Clone the new repository
