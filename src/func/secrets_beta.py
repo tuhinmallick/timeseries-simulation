@@ -5,8 +5,8 @@ import streamlit
 def secrets():
     #     consumer_key = 'HL9UWl40pWj62f0msQ6Fdx2ZF'
     #     consumer_secret = 'JdKmzL4TjLEpXuBstAWES3F9Bn49oyxTwsy34ojPoSQr3I7qet'
-    consumer_key = 'DEnyjO0x2iXiZOSliyqTz5KPY'
-    consumer_secret = 'qsyEjJbmsWVMqMQegHZ6DSs17jYRgtwFaRMnQVpLY7u9UL4B9x'
+    consumer_key = "DEnyjO0x2iXiZOSliyqTz5KPY"
+    consumer_secret = "qsyEjJbmsWVMqMQegHZ6DSs17jYRgtwFaRMnQVpLY7u9UL4B9x"
     return consumer_key, consumer_secret
 
 
