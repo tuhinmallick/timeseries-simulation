@@ -2,7 +2,7 @@ tqdm==4.62.2
 nltk==3.6.6
 setuptools==56.0.0
 matplotlib==3.4.3
-numpy==1.21.2
+numpy==1.22.0
 Pillow==9.0.1
 PyYAML==6.0
 altair==4.2.0
