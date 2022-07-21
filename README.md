@@ -3,8 +3,6 @@ DVC project template.
 
 
 
-
-
 ## STEP
 
 ### STEP 01- Create a repository by using template repository
@@ -16,6 +14,7 @@ DVC project template.
 ```bash
 conda create --prefix ./env python=3.7 -y
 ```
+
 
 ```bash
 conda activate ./env
