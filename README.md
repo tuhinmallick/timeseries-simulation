@@ -25,6 +25,7 @@ OR
 source activate ./env
 ```
 
+
 ### STEP 04- install the requirements
 ```bash
 pip install -r requirements.txt
