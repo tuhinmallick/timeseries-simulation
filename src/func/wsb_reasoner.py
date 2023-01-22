@@ -127,15 +127,10 @@ def get_mentions_and_vader_scores_from_comments(comments_df, tickers_list):
             if word.isupper() and len(word) <= 5 and word in tickers_list:
                 tickers.append(word)
 
-        # Return none if empty list
         if not tickers:
             return None
-        else:
-            tickers = pd.unique(tickers).tolist()
-            if len(tickers) <= settings.max_comment_mentions:
-                return tickers
-            else:
-                return None
+        tickers = pd.unique(tickers).tolist()
+        return tickers if len(tickers) <= settings.max_comment_mentions else None
 
     # Filter out comments w/out mentions
     comments_df["tickers"] = comments_df.body.apply(
@@ -143,25 +138,23 @@ def get_mentions_and_vader_scores_from_comments(comments_df, tickers_list):
     )
     comments_df = comments_df[~pd.isna(comments_df.tickers)].reset_index(drop=True)
 
-    # Prepare vader scores
     if comments_df.empty:
         return comments_df
-    else:
-        # Get vader scores
-        vader = SentimentIntensityAnalyzer()
-        comments_df["vader_scores"] = comments_df.body.apply(
-            lambda x: vader.polarity_scores(x)
-        )
-        comments_df[["neg", "neu", "pos", "compound"]] = comments_df.vader_scores.apply(
-            pd.Series
-        )
+    # Get vader scores
+    vader = SentimentIntensityAnalyzer()
+    comments_df["vader_scores"] = comments_df.body.apply(
+        lambda x: vader.polarity_scores(x)
+    )
+    comments_df[["neg", "neu", "pos", "compound"]] = comments_df.vader_scores.apply(
+        pd.Series
+    )
 
-        # Pretify comments
-        comments_df = comments_df.drop(columns=["vader_scores"]).rename(
-            columns={"body": "comment"}
-        )
+    # Pretify comments
+    comments_df = comments_df.drop(columns=["vader_scores"]).rename(
+        columns={"body": "comment"}
+    )
 
-        return comments_df
+    return comments_df
 
 
 def clean_db(before=None):
@@ -245,8 +238,7 @@ def get_last_upload_time():
     db_handler = pymongo.MongoClient(settings.mongodb_connection_string)[
         settings.wall_db_name
     ][settings.last_upload_time]
-    date = pd.to_datetime(db_handler.find_one({})["upload_time"])
-    return date
+    return pd.to_datetime(db_handler.find_one({})["upload_time"])
 
 
 def complete_flow(reset=True):

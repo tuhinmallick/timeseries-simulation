@@ -17,16 +17,16 @@ def get_login_info():
         'some_cookie_name','some_signature_key',cookie_expiry_days=30)
         name, authentication_status, username = authenticator.login('Login','main')
     if st.experimental_get_query_params()['logged'][0] =='True' and st.experimental_get_query_params() != {}:
-                cookie_manager = stx.CookieManager(key='getout')
-                col1,col2 = st.sidebar.columns([1, 0.5])
-                col1.write('Welcome *%s*' % (st.experimental_get_query_params()['name'][0]))
-                if col2.button('Logout'):
-                    cookie_manager.delete('some_cookie_name')
-                    st.session_state['logout'] = True
-                    st.session_state['name'] = None
-                    st.session_state['username'] = None
-                    st.session_state['authentication_status'] = None
-                    st.experimental_set_query_params(logged=False, cred =True)
+        cookie_manager = stx.CookieManager(key='getout')
+        col1,col2 = st.sidebar.columns([1, 0.5])
+        col1.write(f"Welcome *{st.experimental_get_query_params()['name'][0]}*")
+        if col2.button('Logout'):
+            cookie_manager.delete('some_cookie_name')
+            st.session_state['logout'] = True
+            st.session_state['name'] = None
+            st.session_state['username'] = None
+            st.session_state['authentication_status'] = None
+            st.experimental_set_query_params(logged=False, cred =True)
 
     if  st.experimental_get_query_params()['logged'][0] =='True':
         st.title('Some content')

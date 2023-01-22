@@ -137,7 +137,7 @@ def forecast_metrics_dict(forecasts: dict, y: pd.DataFrame):
     y = rename_series_or_dataframe(y, "y")
 
     def add_metrics(preds: pd.DataFrame, y: pd.DataFrame):
-        if isinstance(preds, pd.DataFrame) is False:
+        if not isinstance(preds, pd.DataFrame):
             preds = pd.DataFrame(preds)
         preds = rename_series_or_dataframe(preds, "y_pred")
         preds = preds.join(y)
@@ -165,8 +165,7 @@ def step_results_frame(
 ):
     store_list = []
     for start_date in metrics_dict:
-        sd = {}
-        sd["start"] = pd.to_datetime(start_date)
+        sd = {"start": pd.to_datetime(start_date)}
         for step, val in enumerate(metrics_dict[start_date][table][column], start=1):
             sd[f"{column}_s{step}"] = val
         store_list.append(sd)
@@ -311,10 +310,7 @@ def plot_forecasts(metrics_dict, test_dates, y_full, fig_width, numcols, ax_heig
         numrows, numcols, figsize=(fig_width, ax_height * numrows), sharey=False
     )
     for i, start_date in enumerate(dates_to_plot):
-        if axes.ndim == 2:
-            axidx = i // numcols, i % numcols
-        else:
-            axidx = i
+        axidx = (i // numcols, i % numcols) if axes.ndim == 2 else i
         ax = axes[axidx]
         start_date_text = start_date.strftime("%Y-%m")
         # fig, ax = plt.subplots(figsize=(8, 6))
@@ -352,5 +348,4 @@ def darts_date_predictions(
         # Only give the training past covariates to the model, some Darts models will "cheat" and use future values if available
         fit_kwargs["past_covariates"] = past_covariates.split_after(last_train_date)[0]
     model.fit(train, **fit_kwargs)
-    predictions = model.predict(horizon, **predict_kwargs)
-    return predictions
+    return model.predict(horizon, **predict_kwargs)

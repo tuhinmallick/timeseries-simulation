@@ -28,11 +28,11 @@ def get_prophet_cv_horizon(dates: Dict[Any, Any], resampling: Dict[Any, Any]) ->
     """
     freq = resampling["freq"][-1]
     horizon = dates["folds_horizon"]
-    if freq in ["s", "H"]:
-        prophet_horizon = f"{convert_into_nb_of_seconds(freq, horizon)} seconds"
-    else:
-        prophet_horizon = f"{convert_into_nb_of_days(freq, horizon)} days"
-    return prophet_horizon
+    return (
+        f"{convert_into_nb_of_seconds(freq, horizon)} seconds"
+        if freq in ["s", "H"]
+        else f"{convert_into_nb_of_days(freq, horizon)} days"
+    )
 
 
 def add_prophet_holidays(
@@ -83,7 +83,7 @@ def add_prophet_holidays(
         )
         holidays_df_list.append(lockdown_df)
 
-    if len(holidays_df_list) == 0:
+    if not holidays_df_list:
         return model
     holidays_df = pd.concat(holidays_df_list, sort=True)
     model.holidays = holidays_df

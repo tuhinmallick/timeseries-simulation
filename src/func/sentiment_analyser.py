@@ -339,7 +339,7 @@ def sentiment():
         # Other utilities
 
         def rel_to_abs_date(days):
-            if days == None:
+            if days is None:
                 return (datetime.date(day=1, month=1, year=1970),)
             return datetime.date.today() - datetime.timedelta(days=days)
 
@@ -446,7 +446,7 @@ def sentiment():
         ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y("subjectivity:Q", title="subjectivity"),
-            color=alt.Color(value=subjectivity_color + "88"),
+            color=alt.Color(value=f"{subjectivity_color}88"),
             href="url",
         )
 
@@ -460,10 +460,14 @@ def sentiment():
             color=alt.Color(value=polarity_color),
         )
 
-        polarity_values = chart.mark_point(tooltip=True, size=75, filled=True,).encode(
+        polarity_values = chart.mark_point(
+            tooltip=True,
+            size=75,
+            filled=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y("polarity:Q", title="polarity"),
-            color=alt.Color(value=polarity_color + "88"),
+            color=alt.Color(value=f"{polarity_color}88"),
             href="url",
         )
 

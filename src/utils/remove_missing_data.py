@@ -26,9 +26,7 @@ def remove_features_with_na(df, threshold=65, trailing_value=5):
     # Only keep remaining cols.
     df_filtered = df[missing_filtered.index.tolist()]
     # Remove trailing missing data
-    if trailing_value == 0:
-        pass
-    else:
+    if trailing_value != 0:
         df_filtered = df_filtered.iloc[:-trailing_value]
 
     return df_filtered

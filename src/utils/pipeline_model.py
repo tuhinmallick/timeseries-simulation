@@ -58,10 +58,7 @@ class PipelineModel:
             final_est = MultiOutputRegressor(final_est)
 
         steps.append(("est", final_est))
-        # biuld pipeline
-        model = Pipeline(steps=steps, **kwargs)
-
-        return model
+        return Pipeline(steps=steps, **kwargs)
 
     def fit(self, X, y, **fit_params):
         """fit the model.
@@ -121,7 +118,7 @@ class PipelineModel:
             # build quantile model
             hps["est__alpha"] = quan
             # quan_model = deepcopy(self.model)
-            quan_model = Pipeline(steps=self.model.steps[0:-1])
+            quan_model = Pipeline(steps=self.model.steps[:-1])
             tmp_tuple = PipelineModel.get_model(
                 hps, self.estimator, self.multiout_wrapper, **self.kwargs
             ).steps[-1]
@@ -213,7 +210,7 @@ class PipelineModel:
                     )
                     model.fit(X_tra[i], y_tra[i])
                 elif model_mode == "last_step_tune":
-                    model = Pipeline(steps=self.model.steps[0:-1])
+                    model = Pipeline(steps=self.model.steps[:-1])
                     tmp_tuple = PipelineModel.get_model(
                         self.hps, self.estimator, self.multiout_wrapper, **self.kwargs
                     ).steps[-1]
@@ -235,13 +232,12 @@ class PipelineModel:
             int(pred.shape[0] * high),
         )
         ci_lower, median, ci_upper = pred[idl], pred[idm], pred[idu]
-        output = {
+        return {
             "ci_lower": ci_lower,
             "median": median,
             "ci_upper": ci_upper,
             "bootstrapped_models": model_li,
         }
-        return output
 
     def get_feature_importance(
         self, in_feature_names, targets_names=[], normalize=False
@@ -270,9 +266,7 @@ class PipelineModel:
             fi /= fi.sum()
         return fi
 
-    def binary_performances(
-        y_true, y_prob, thresh=0.5, labels=["Positives", "Negatives"]
-    ):
+    def binary_performances(self, y_prob, thresh=0.5, labels=["Positives", "Negatives"]):
 
         shape = y_prob.shape
         if len(shape) > 1:
@@ -284,7 +278,7 @@ class PipelineModel:
         plt.figure(figsize=[15, 4])
 
         # 1 -- Confusion matrix
-        cm = confusion_matrix(y_true, (y_prob > thresh).astype(int))
+        cm = confusion_matrix(self, (y_prob > thresh).astype(int))
 
         plt.subplot(131)
         ax = sns.heatmap(
@@ -305,7 +299,7 @@ class PipelineModel:
         # 2 -- Distributions of Predicted Probabilities of both classes
         plt.subplot(132)
         plt.hist(
-            y_prob[y_true == 1],
+            y_prob[self == 1],
             density=True,
             bins=25,
             alpha=0.5,
@@ -313,7 +307,7 @@ class PipelineModel:
             label=labels[0],
         )
         plt.hist(
-            y_prob[y_true == 0],
+            y_prob[self == 0],
             density=True,
             bins=25,
             alpha=0.5,
@@ -328,7 +322,7 @@ class PipelineModel:
         plt.legend(loc="upper right")
 
         # 3 -- ROC curve with annotated decision point
-        fp_rates, tp_rates, _ = roc_curve(y_true, y_prob)
+        fp_rates, tp_rates, _ = roc_curve(self, y_prob)
         roc_auc = auc(fp_rates, tp_rates)
         plt.subplot(133)
         plt.plot(
@@ -339,7 +333,7 @@ class PipelineModel:
             label="ROC curve (area = %0.3f)" % roc_auc,
         )
         plt.plot([0, 1], [0, 1], lw=1, linestyle="--", color="grey")
-        tn, fp, fn, tp = [i for i in cm.ravel()]
+        tn, fp, fn, tp = list(cm.ravel())
         plt.plot(
             fp / (fp + tn), tp / (tp + fn), "bo", markersize=8, label="Decision Point"
         )
@@ -352,7 +346,7 @@ class PipelineModel:
         plt.subplots_adjust(wspace=0.3)
         plt.show()
 
-        tn, fp, fn, tp = [i for i in cm.ravel()]
+        tn, fp, fn, tp = list(cm.ravel())
         precision = tp / (tp + fp)
         recall = tp / (tp + fn)
         F1 = 2 * (precision * recall) / (precision + recall)

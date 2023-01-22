@@ -107,8 +107,8 @@ def forecast_workflow(
     dict
         Dictionary containing the different forecasts.
     """
-    models: Dict[Any, Any] = dict()
-    forecasts: Dict[Any, Any] = dict()
+    models: Dict[Any, Any] = {}
+    forecasts: Dict[Any, Any] = {}
     with suppress_stdout_stderr():
         if evaluate:
             datasets, models, forecasts = forecast_eval(

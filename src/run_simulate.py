@@ -135,7 +135,7 @@ def features_picker(simulation_dict, sim_df, target, original_target, horizon):
     # To get the correlation values as dictionary
     print(pre_selected_features_df)
     print(simulation_dict)
-    pre_selected_features_columns = [c for c in pre_selected_features_df.columns]
+    pre_selected_features_columns = list(pre_selected_features_df.columns)
     # pre_selected_features_df = pd.concat([pre_selected_features_df, target_series_df], axis=1)
     # print("==============================================Feature engineering Starting =================================================================================")
     # pre_selected_features_df, _ = smb_feature_engineering.feature_engineering_pipeline(pre_selected_features_df, target, horizon, pre_selected_features_columns, forecast_type="absolute_diff")
@@ -170,7 +170,7 @@ def features_picker(simulation_dict, sim_df, target, original_target, horizon):
         ).melt()
         simulation_correlation_df.columns = [
             "Feature Name",
-            "Correlation fraction for {}".format(key),
+            f"Correlation fraction for {key}",
         ]
 
         change_pre_selected_df = pre_selected_features_df.copy()
@@ -198,12 +198,12 @@ def features_picker(simulation_dict, sim_df, target, original_target, horizon):
         ).melt()
         pretty_simulation_correlation_df.columns = [
             "Feature Name",
-            "Correlation fraction for {}".format(key),
+            f"Correlation fraction for {key}",
         ]
         if first_iteration:
             final_simulation_correlation_df[
-                "Correlation fraction for {}".format(key)
-            ] = simulation_correlation_df["Correlation fraction for {}".format(key)]
+                f"Correlation fraction for {key}"
+            ] = simulation_correlation_df[f"Correlation fraction for {key}"]
         else:
             final_simulation_correlation_df = pretty_simulation_correlation_df
         first_iteration = True
@@ -240,8 +240,6 @@ def load_model(horizon, target, local=True):
             "rb",
         ) as meta_features:
             loaded_model = pickle.load(meta_features)
-    else:
-        pass
     return loaded_model
 
 
@@ -320,4 +318,3 @@ if __name__ == "__main__":
         main()
     except Exception as err:
         logger.exception("Error: %s", err)
-    pass

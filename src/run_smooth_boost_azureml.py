@@ -86,7 +86,7 @@ def save_residual_frames(
     forecast_tables_train, forecast_tables_val, forecast_tables_test
 ):
     _ = os.makedirs("BASF_Metals/Models/notebooks/outputs/residuals")
-    for timestep in range(1, horizon + 1, 1):
+    for timestep in range(1, horizon + 1):
         resid_train = add_residuals(
             forecast_tables_train[timestep - 1].iloc[:-1, :], target_series
         )

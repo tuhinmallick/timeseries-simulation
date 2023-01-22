@@ -17,7 +17,7 @@ def load_data(uploaded_file):
     return df
 
 def input_dataset(
-    config: Dict[Any, Any], readme: Dict[Any, Any], instructions: Dict[Any, Any]) :
+    config: Dict[Any, Any], readme: Dict[Any, Any], instructions: Dict[Any, Any]):
     """Lets the user decide whether to upload a dataset or download a toy dataset.
 
     Parameters
@@ -40,7 +40,7 @@ def input_dataset(
     dict
         Dictionary containing all datasets.
     """
-    load_options, datasets = dict(), dict()
+    load_options, datasets = {}, {}
     load_options["toy_dataset"] = st.checkbox(
         "Load a uploaded dataset", True, help='Select this option if you want to work with uploaded Dataset'
     )
@@ -51,16 +51,16 @@ def input_dataset(
             help='Select the dataset you want to work with',
         )
         df = load_data(os.path.join(data_source,dataset_name))
-        st.write("{} has been uploaded".format(dataset_name))
-    else :
+        st.write(f"{dataset_name} has been uploaded")
+    else:
         df =None
-        try : 
+        try: 
             uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
             for uploaded_file in uploaded_files:
                 df = load_data(uploaded_file)
-                st.write("{} has been uploaded".format(uploaded_file.name))
+                st.write(f"{uploaded_file.name} has been uploaded")
         except Exception as err:
-            st.write("{} is not the proper file format".format(uploaded_file.name))
+            st.write(f"{uploaded_file.name} is not the proper file format")
     return df
     # if load_options["toy_dataset"]:
     #     dataset_name = st.selectbox(

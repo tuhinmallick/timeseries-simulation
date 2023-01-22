@@ -18,14 +18,14 @@ def input_metrics(readme: Dict[Any, Any], config: Dict[Any, Any]) -> Dict[Any, A
     dict
         Dictionary containing evaluation metrics information.
     """
-    eval = dict()
-    eval["metrics"] = st.multiselect(
-        "Select evaluation metrics",
-        ["MAPE", "SMAPE", "MSE", "RMSE", "MAE"],
-        default=config["metrics"]["default"]["selection"],
-        help=readme["tooltips"]["metrics"],
-    )
-    return eval
+    return {
+        "metrics": st.multiselect(
+            "Select evaluation metrics",
+            ["MAPE", "SMAPE", "MSE", "RMSE", "MAE"],
+            default=config["metrics"]["default"]["selection"],
+            help=readme["tooltips"]["metrics"],
+        )
+    }
 
 
 def input_scope_eval(eval: Dict[Any, Any], use_cv: bool, readme: Dict[Any, Any]) -> Dict[Any, Any]:

@@ -136,10 +136,7 @@ def __check_date_format(date_series: pd.Series) -> bool:
     test1 = date_series.map(lambda x: x.year).nunique() < 2
     test2 = date_series.map(lambda x: x.month).nunique() < 2
     test3 = date_series.map(lambda x: x.day).nunique() < 2
-    if test1 & test2 & test3:
-        return True
-    else:
-        return False
+    return bool(test1 & test2 & test3)
 
 
 def _format_target(df: pd.DataFrame, target_col: str, config: Dict[Any, Any]) -> pd.DataFrame:
@@ -444,7 +441,7 @@ def check_future_regressors_df(
         Whether or not to use regressors for future forecast.
     """
     use_regressors = False
-    if "future_regressors" in datasets.keys():
+    if "future_regressors" in datasets:
         # Check date column
         if date_col not in datasets["future_regressors"].columns:
             st.error(
@@ -485,7 +482,7 @@ def check_future_regressors_df(
                 )
             st.stop()
         # Check dimensions
-        dim_expected = {dim for dim in dimensions.keys() if dim != "agg"}
+        dim_expected = {dim for dim in dimensions if dim != "agg"}
         if len(input_cols.intersection(dim_expected)) != len(dim_expected):
             missing_dim = [dim for dim in dim_expected if dim not in input_cols]
             if len(missing_dim) > 1:
@@ -543,7 +540,7 @@ def prepare_future_df(
     dict
         Dictionary storing all dataframes.
     """
-    if "future_regressors" in datasets.keys():
+    if "future_regressors" in datasets:
         future = datasets["future_regressors"]
         future[target_col] = 0
         future = pd.concat([datasets["uploaded"][list(future.columns)], future], axis=0)

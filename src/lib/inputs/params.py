@@ -70,12 +70,12 @@ def input_seasonality_params(
                     help=readme["tooltips"]["seasonality_prior_scale"],
                 ),
             }
-    add_custom_seasonality = st.checkbox(
-        "Add a custom seasonality", value=False, help=readme["tooltips"]["add_custom_seasonality"]
-    )
-    if add_custom_seasonality:
-        custom_seasonality: Dict[Any, Any] = dict()
-        custom_seasonality["custom_param"] = dict()
+    if add_custom_seasonality := st.checkbox(
+        "Add a custom seasonality",
+        value=False,
+        help=readme["tooltips"]["add_custom_seasonality"],
+    ):
+        custom_seasonality: Dict[Any, Any] = {"custom_param": {}}
         custom_seasonality["custom_param"]["name"] = st.text_input(
             "Name", value="custom_seasonality", help=readme["tooltips"]["seasonality_name"]
         )
@@ -83,13 +83,19 @@ def input_seasonality_params(
             "Period (in days)", value=10, help=readme["tooltips"]["seasonality_period"]
         )
         custom_seasonality["custom_param"]["mode"] = st.selectbox(
-            f"Mode", default_params["seasonality_mode"], help=readme["tooltips"]["seasonality_mode"]
+            "Mode",
+            default_params["seasonality_mode"],
+            help=readme["tooltips"]["seasonality_mode"],
         )
         custom_seasonality["custom_param"]["fourier_order"] = st.number_input(
-            f"Fourier order", value=15, help=readme["tooltips"]["seasonality_fourier"]
+            "Fourier order",
+            value=15,
+            help=readme["tooltips"]["seasonality_fourier"],
         )
         custom_seasonality["custom_param"]["prior_scale"] = st.number_input(
-            f"Prior scale", value=10, help=readme["tooltips"]["seasonality_prior_scale"]
+            "Prior scale",
+            value=10,
+            help=readme["tooltips"]["seasonality_prior_scale"],
         )
         seasonalities[custom_seasonality["custom_param"]["name"]] = custom_seasonality
     params["seasonalities"] = seasonalities
@@ -111,7 +117,6 @@ def input_prior_scale_params(config: Dict[Any, Any], readme: Dict[Any, Any]) -> 
     dict
         Model prior scale parameters.
     """
-    params = dict()
     default_params = config["model"]
     changepoint_prior_scale = st.number_input(
         "changepoint_prior_scale",
@@ -129,12 +134,13 @@ def input_prior_scale_params(config: Dict[Any, Any], readme: Dict[Any, Any]) -> 
         value=default_params["holidays_prior_scale"],
         help=readme["tooltips"]["holidays_prior_scale"],
     )
-    params["prior_scale"] = {
-        "seasonality_prior_scale": seasonality_prior_scale,
-        "holidays_prior_scale": holidays_prior_scale,
-        "changepoint_prior_scale": changepoint_prior_scale,
+    return {
+        "prior_scale": {
+            "seasonality_prior_scale": seasonality_prior_scale,
+            "holidays_prior_scale": holidays_prior_scale,
+            "changepoint_prior_scale": changepoint_prior_scale,
+        }
     }
-    return params
 
 
 def input_other_params(
@@ -275,7 +281,7 @@ def input_regressors(
     dict
         Model parameters with regressors information added.
     """
-    regressors: Dict[Any, Any] = dict()
+    regressors: Dict[Any, Any] = {}
     default_params = config["model"]
     all_cols = set(df.columns) - {"ds", "y"}
     mask = df[all_cols].isnull().sum() == 0
@@ -291,15 +297,13 @@ def input_regressors(
         else:
             default_regressors = []
         config_regressors = config["columns"]["regressors"]
-        if config_regressors not in ["false", False]:
-            if len(set(config_regressors).intersection(set(eligible_cols))) != len(
-                config_regressors
-            ):
-                st.error(
-                    f"Selected regressors are not in the dataset columns, "
-                    f"please provide a list of valid columns for regressors in the config file."
-                )
-                st.stop()
+        if config_regressors not in ["false", False] and len(
+            set(config_regressors).intersection(set(eligible_cols))
+        ) != len(config_regressors):
+            st.error(
+                'Selected regressors are not in the dataset columns, please provide a list of valid columns for regressors in the config file.'
+            )
+            st.stop()
         regressor_cols = st.multiselect(
             "Select external regressors if any",
             list(eligible_cols),
@@ -309,12 +313,13 @@ def input_regressors(
             help=readme["tooltips"]["select_regressors"],
         )
         for col in regressor_cols:
-            regressors[col] = dict()
-            regressors[col]["prior_scale"] = st.number_input(
-                f"Prior scale for {col}",
-                value=default_params["regressors_prior_scale"],
-                help=readme["tooltips"]["regressor_prior_scale"],
-            )
+            regressors[col] = {
+                "prior_scale": st.number_input(
+                    f"Prior scale for {col}",
+                    value=default_params["regressors_prior_scale"],
+                    help=readme["tooltips"]["regressor_prior_scale"],
+                )
+            }
     else:
         st.write("There are no regressors in your dataset.")
     params["regressors"] = regressors

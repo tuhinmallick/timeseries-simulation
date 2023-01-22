@@ -55,7 +55,6 @@ class STLModel:
         # stl method
         final = []
         for tar in target:
-            subli = []
             # case for initial window
             period = STL(data[tar]).config["period"]
             seasonal = period + (period % 2 == 0)  # Ensure being odd
@@ -63,13 +62,13 @@ class STLModel:
             obj = pd.DataFrame(
                 dict(zip(self.mystl_name, [obj.trend, obj.seasonal, obj.resid]))
             )
-            subli.append(obj)
+            subli = [obj]
             # case starting the rolling/expanding window
             for i in range(1, len(data) - rolling + 1):
-                if rolling_strategy == "rolling":
-                    start = i
-                elif rolling_strategy == "expand":
+                if rolling_strategy == "expand":
                     start = 0
+                elif rolling_strategy == "rolling":
+                    start = i
                 tmp = STL(
                     data[tar].iloc[start : i + rolling], seasonal=seasonal, **kwargs
                 ).fit()
@@ -91,6 +90,4 @@ class STLModel:
                 collector, index=data.index, columns=tar + "_" + self.mystl_name
             )
             final.append(collector)
-        # add back with original data columns
-        output = pd.concat([data, *final], axis=1)
-        return output
+        return pd.concat([data, *final], axis=1)

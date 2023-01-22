@@ -28,9 +28,7 @@ def __init__(self):
 @st.experimental_memo
 def load_lottieurl(url: str):
     r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+    return None if r.status_code != 200 else r.json()
 
 
 @st.experimental_memo
@@ -50,9 +48,9 @@ def upload():
         )
         for uploaded_file in uploaded_files:
             df = load_data(uploaded_file)
-            st.write("{} has been uploaded".format(uploaded_file.name))
+            st.write(f"{uploaded_file.name} has been uploaded")
     except Exception as err:
-        st.write("{} is not the proper file format".format(uploaded_file.name))
+        st.write(f"{uploaded_file.name} is not the proper file format")
     return df
 
 
@@ -176,15 +174,15 @@ def historical_forecast():
         ) as _file:
             backtesting_chart = pickle.load(_file)
     if st.session_state.Forecast == True:
-        st.write("### The plot for Forecast of {} ".format(commodity))
+        st.write(f"### The plot for Forecast of {commodity} ")
         st.plotly_chart(forecast_chart, use_container_width=False, sharing="streamlit")
         st.session_state.Forecast = False
     if st.session_state.Drivers == True:
-        st.write("### The plot for Drivers of {} ".format(commodity))
+        st.write(f"### The plot for Drivers of {commodity} ")
         st.plotly_chart(drivers_chart, use_container_width=False, sharing="streamlit")
         st.session_state.Drivers = False
     if st.session_state.Backtesting == True:
-        st.write("### The plot for Backtesting of {} ".format(commodity))
+        st.write(f"### The plot for Backtesting of {commodity} ")
         st.plotly_chart(
             backtesting_chart, use_container_width=False, sharing="streamlit"
         )
@@ -212,7 +210,7 @@ def plot_simulation(
         )
         st.plotly_chart(simulation_fig, use_container_width=False, sharing="streamlit")
     with st.expander("Predicted Forecast chart"):
-        st.write("####  Original  forecast prices for {} months".format(horizon))
+        st.write(f"####  Original  forecast prices for {horizon} months")
         original_forecast = original_forecast.rename(
             columns={
                 "forecast": "Predicted price($)",
@@ -222,7 +220,7 @@ def plot_simulation(
         )
         st.dataframe(original_forecast)
     with st.expander("Simulated Forecast chart"):
-        st.write("#### Simulated forecast prices for {} months".format(horizon))
+        st.write(f"#### Simulated forecast prices for {horizon} months")
         diff = diff.rename(
             columns={
                 "forecast": "Difference in  price($)",
@@ -284,7 +282,7 @@ def simulation(data):
             sim_target = st.sidebar.selectbox(
                 "Please select the target feature to simulate : ",
                 all_features,
-                key="sim_feat{}".format(n),
+                key=f"sim_feat{n}",
             )
             perc_change = st.sidebar.slider(
                 "Percent Change in price",
@@ -292,11 +290,11 @@ def simulation(data):
                 max_value=100.0,
                 value=0.0,
                 step=0.1,
-                key="sim_prec_feat{}".format(n),
+                key=f"sim_prec_feat{n}",
             )
             # corr_btn = st.sidebar.checkbox('Check correlation matrix', on_change= set_corr_target,args=(sim_target,), key =n)
             # simulation_dict =  dict([(sim_target,perc_change)])
-            simulation_dict.update({sim_target: perc_change})
+            simulation_dict[sim_target] = perc_change
         simulated = st.form_submit_button(
             "Simulate", on_click=set_simulation_dict, args=(simulation_dict,)
         )
@@ -515,7 +513,7 @@ def main():
             # Forecasty logo
             st.sidebar.image(image, output_format="PNG", use_column_width="always")
             # st.sidebar.write('##### Machine learns, company earns')
-            st.sidebar.write("Welcome *%s*" % (st.session_state["name"]))
+            st.sidebar.write(f'Welcome *{st.session_state["name"]}*')
             uploading_options = st.sidebar.form("uploading-options")
             option = st.empty()
             option = st.selectbox(
@@ -531,10 +529,10 @@ def main():
                 args=(option,),
             )
             # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))
-            if (
-                st.session_state.functionality_type != "Historical Forecast"
-                and st.session_state.functionality_type != []
-            ):
+            if st.session_state.functionality_type not in [
+                "Historical Forecast",
+                [],
+            ]:
                 with uploading_options:
                     with st.spinner("Uploading the document"):
                         data = upload()
@@ -554,7 +552,7 @@ def main():
 
     elif st.session_state["authentication_status"] == False:
         st.error("Username/password is incorrect")
-    elif st.session_state["authentication_status"] == None:
+    elif st.session_state["authentication_status"] is None:
         st.warning("Please enter your username and password")
 
 

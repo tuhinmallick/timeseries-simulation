@@ -33,7 +33,7 @@ def historical_forecast():
     forecast, feature_importance, backtesting = st.sidebar.columns([0.8, 0.7, 1])
 
     if forecast.button("Forecast", on_click=login.set_Forecast):
-        st.write("### The plot for Forecast of {} ".format(commodity))
+        st.write(f"### The plot for Forecast of {commodity} ")
         st.plotly_chart(
             item_dict.get("forecast_chart"),
             use_container_width=False,
@@ -42,7 +42,7 @@ def historical_forecast():
         st.session_state.Forecast = False
 
     if feature_importance.button("Drivers", on_click=login.set_Drivers):
-        st.write("### The plot for Drivers of {} ".format(commodity))
+        st.write(f"### The plot for Drivers of {commodity} ")
         st.plotly_chart(
             item_dict.get("forecast_drivers"),
             use_container_width=False,
@@ -51,7 +51,7 @@ def historical_forecast():
         st.session_state.Drivers = False
 
     if backtesting.button("Backtesting", on_click=login.set_Backtesting):
-        st.write("### The plot for Backtesting of {} ".format(commodity))
+        st.write(f"### The plot for Backtesting of {commodity} ")
         st.plotly_chart(
             item_dict.get("forecast_backtesting"),
             use_container_width=False,

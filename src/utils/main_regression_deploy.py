@@ -59,10 +59,9 @@ def forecaster_cross_val_score(
         predictions_list.append(y_pred)
     y_pred_all = pd.concat(predictions_list, axis=0)
     y_pred_all, y_aligned = y_pred_all.align(target_series, join="inner", axis=0)
-    rmse_overall = sklearn.metrics.mean_squared_error(
+    return sklearn.metrics.mean_squared_error(
         y_aligned, y_pred_all, squared=False
     )
-    return rmse_overall
 
 
 def test_hyperparams(
@@ -93,7 +92,7 @@ def test_hyperparams(
     pm = pipeline_model.PipelineModel(
         hps=hps, estimator=regressor, multiout_wrapper=False
     )
-    rmse = forecaster_cross_val_score(
+    return forecaster_cross_val_score(
         pm,
         X,
         target_series,
@@ -103,7 +102,6 @@ def test_hyperparams(
         meta_feature_prefix,
         meta_features,
     )
-    return rmse
 
 
 def hyperopt_all_timesteps(
@@ -136,7 +134,7 @@ def hyperopt_all_timesteps(
         [list of dict, (horizon, )]: A list of dicts containing the best hyperparameters for the pipeline at each timestep.
     """
     best_hyperparams_list = []
-    for timestep in range(1, horizon + 1, 1):
+    for timestep in range(1, horizon + 1):
         objective = functools.partial(
             test_hyperparams,
             regressor,
@@ -156,10 +154,9 @@ def hyperopt_all_timesteps(
 
 
 def wmape_error(y_true, y_pred):  # From the commodity desk utils folder
-    wmape = np.sum(np.abs(y_pred.to_numpy() - y_true.to_numpy())) / np.sum(
+    return np.sum(np.abs(y_pred.to_numpy() - y_true.to_numpy())) / np.sum(
         np.abs(y_true.to_numpy())
     )
-    return wmape
 
 
 def metrics_suite(y_true, y_pred, align=True):
@@ -189,19 +186,13 @@ def backtest_hyperparams(
     """
     Backtest the hyperparameters on the holdout period.
     """
-    if deploy_mode:
-        horizon = 1
-    else:
-        horizon = len(hyperparams_list)
+    horizon = 1 if deploy_mode else len(hyperparams_list)
     backtest_results_tables = []
     rmses = []
     mapes = []
     maes = []
     wmapes = []
-    for i, timestep in tqdm(
-        enumerate(range(1, horizon + 1, 1)),
-        desc=f"Getting backtest results for timesteps",
-    ):
+    for i, timestep in tqdm(enumerate(range(1, horizon + 1)), desc="Getting backtest results for timesteps"):
         hyperparams = hyperparams_list[i]
         pm = pipeline_model.PipelineModel(
             hps=hyperparams, estimator=regressor, multiout_wrapper=False
@@ -246,18 +237,13 @@ def get_train_results(
     Train and test on the same. Only give the training set for X!
     """
     # horizon = len(hyperparams_list)
-    if deploy_mode:
-        horizon = 1
-    else:
-        horizon = len(hyperparams_list)
+    horizon = 1 if deploy_mode else len(hyperparams_list)
     train_results_tables = []
     rmses = []
     mapes = []
     maes = []
     wmapes = []
-    for i, timestep in tqdm(
-        enumerate(range(1, horizon + 1, 1)), desc="Getting results on training set"
-    ):
+    for i, timestep in tqdm(enumerate(range(1, horizon + 1)), desc="Getting results on training set"):
         hyperparams = hyperparams_list[i]
         pm = pipeline_model.PipelineModel(
             hps=hyperparams, estimator=regressor, multiout_wrapper=False
@@ -286,12 +272,11 @@ def metrics_frame_single(timestep, set_name, maes, rmses, mapes, wmapes):
         mapes[timestep - 1],
         wmapes[timestep - 1],
     ]
-    values_frame = pd.DataFrame(
+    return pd.DataFrame(
         data=np.array(values).reshape((1, 4)),
         columns=["MAE", "RMSE", "MAPE", "WMAPE"],
         index=[set_name],
     )
-    return values_frame
 
 
 def main(df, target_name, horizon):
