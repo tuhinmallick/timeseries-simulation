@@ -266,7 +266,9 @@ class PipelineModel:
             fi /= fi.sum()
         return fi
 
-    def binary_performances(self, y_prob, thresh=0.5, labels=["Positives", "Negatives"]):
+    def binary_performances(
+        self, y_prob, thresh=0.5, labels=["Positives", "Negatives"]
+    ):
 
         shape = y_prob.shape
         if len(shape) > 1:

@@ -106,7 +106,7 @@ def feature_engineering_pipeline(
         df["quater"] = df.index.year
         column_names.append("quater")
 
-            # TODO add month sin cos for year and quarter.
+        # TODO add month sin cos for year and quarter.
 
     # ===========================================================================================================
     #           CRYSIS DUMMY VARIABLES

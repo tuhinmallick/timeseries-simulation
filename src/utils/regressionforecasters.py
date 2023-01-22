@@ -446,8 +446,7 @@ class WrappedQuantileRegressor(abc.ABC):
 
         """
         y_predictions = [
-            self.regressors[i].predict(X, **kwargs)
-            for i in range(len(self.quantiles))
+            self.regressors[i].predict(X, **kwargs) for i in range(len(self.quantiles))
         ]
         # Turn the list of predictions into a 2d array
         y_predictions = [np.reshape(y, (-1, 1)) for y in y_predictions]

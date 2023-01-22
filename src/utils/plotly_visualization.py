@@ -91,9 +91,7 @@ def plotly_plot_forecast(
         xaxis_title="",
         yaxis_title="Price, USD/toz",
         hovermode="x unified",
-        legend=dict(
-            orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1
-        ),
+        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1),
         template="plotly_dark",
         margin=dict(l=80, r=30, t=50, b=50),
         plot_bgcolor="#151934",
@@ -239,9 +237,7 @@ def plotly_plot_backtest(
         xaxis_title="",
         yaxis_title="Price, USD/toz",
         hovermode="x unified",
-        legend=dict(
-            orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1
-        ),
+        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1),
         template="plotly_dark",
         margin=dict(l=80, r=30, t=50, b=50),
         plot_bgcolor="#151934",
@@ -457,9 +453,7 @@ def plotly_plot_simulation(
         xaxis_title="",
         yaxis_title="Price, USD/toz",
         hovermode="x unified",
-        legend=dict(
-            orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1
-        ),
+        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1),
         template="plotly_dark",
         margin=dict(l=80, r=30, t=50, b=50),
         plot_bgcolor="#151934",
