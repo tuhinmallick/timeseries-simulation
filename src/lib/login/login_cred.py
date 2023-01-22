@@ -54,26 +54,26 @@ class login ():
                 if 'name' not in st.session_state:
                         st.session_state.name = ''
 
-        def set_corr_target(option: str):
-                st.session_state.corr_target = option
-        def set_number_of_sim_feat(option: int):
-                st.session_state.num_sim_feat = option
-        def set_horizon(option: int):
-                st.session_state.horizon = option
-        def set_functionality_type(option: str):
-                st.session_state.functionality_type = option
-        def set_simulation_dict(option: str):
-                st.session_state.simulation_dict = option
+        def set_corr_target(self):
+                st.session_state.corr_target = self
+        def set_number_of_sim_feat(self):
+                st.session_state.num_sim_feat = self
+        def set_horizon(self):
+                st.session_state.horizon = self
+        def set_functionality_type(self):
+                st.session_state.functionality_type = self
+        def set_simulation_dict(self):
+                st.session_state.simulation_dict = self
         def set_Forecast():
                 st.session_state.Forecast = True
         def set_Drivers():
                 st.session_state.Drivers = True
         def set_Backtesting():
                 st.session_state.Backtesting = True
-        def set_authentication_status(option: bool):
-                st.session_state.authentication_status = option
-        def set_name(option :  str):
-                st.session_state.name = option
+        def set_authentication_status(self):
+                st.session_state.authentication_status = self
+        def set_name(self):
+                st.session_state.name = self
         def set_login_status():
                 st.session_state.logged = True
                 

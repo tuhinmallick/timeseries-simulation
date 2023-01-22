@@ -29,7 +29,7 @@ def create_lag(df, features, lag=[1], droplagna=True):
         res = df[features].shift(i)
         suffix = "lag" if i > 0 else "lead"
         i = i if i > 0 else -i
-        res.columns = [str(s) + "_{}{}".format(suffix, i) for s in features]
+        res.columns = [f"{str(s)}_{suffix}{i}" for s in features]
         resList.append(res)
     res = pd.concat(resList, axis=1)
 
@@ -37,14 +37,14 @@ def create_lag(df, features, lag=[1], droplagna=True):
         lagmax, lagmin = max(lag), min(lag)
         if lagmax > 0 and lagmin > 0:
             res = res.iloc[lagmax:, :]
-            print("#lags={} is dropped".format(lagmax))
+            print(f"#lags={lagmax} is dropped")
         elif lagmax > 0 and lagmin < 0:
             res = res.iloc[lagmax:, :]
             res = res.iloc[:lagmin, :]
-            print("#lags={} and {} is dropped".format(lagmax, lagmin))
+            print(f"#lags={lagmax} and {lagmin} is dropped")
         elif lagmax < 0 and lagmin < 0:
             res = res.iloc[:lagmin, :]
-            print("#lags={} is dropped".format(lagmin))
+            print(f"#lags={lagmin} is dropped")
         else:
             raise ValueError("Impossible case where lagmin > lagmax")
 
@@ -77,7 +77,7 @@ def add_MA(df, features, window, **kwargs):
     resList = []
     for w in window:
         res = df[features].rolling(w, min_periods=1, **kwargs).mean()
-        res.columns = [str(s) + f"_ma{w}" for s in features]
+        res.columns = [f"{str(s)}_ma{w}" for s in features]
         resList.append(res)
     res = pd.concat(resList, axis=1)
 
@@ -110,7 +110,7 @@ def add_MS(df, features, window, **kwargs):
     resList = []
     for w in window:
         res = df[features].rolling(w, min_periods=1, **kwargs).std()
-        res.columns = [str(s) + f"_ms{w}" for s in features]
+        res.columns = [f"{str(s)}_ms{w}" for s in features]
         # use feature mean to fill na  (shall be the first 3 records)
         res.fillna(res.mean(), inplace=True)
         resList.append(res)
@@ -137,7 +137,7 @@ def add_skew(df, features, window, **kwargs):
     resList = []
     for w in window:
         res = df[features].rolling(w, min_periods=1, **kwargs).skew()
-        res.columns = [str(s) + f"_skew{w}" for s in features]
+        res.columns = [f"{str(s)}_skew{w}" for s in features]
         # use feature mean to fill na (shall be the first 3 records)
         res.fillna(res.mean(), inplace=True)
         resList.append(res)
@@ -183,12 +183,10 @@ def fourier_features(index, freq, order):
     k = 2 * np.pi * (1 / freq) * time
     features = {}
     for i in range(1, order + 1):
-        features.update(
-            {
-                f"sin_{freq}_{i}": np.sin(i * k),
-                f"cos_{freq}_{i}": np.cos(i * k),
-            }
-        )
+        features |= {
+            f"sin_{freq}_{i}": np.sin(i * k),
+            f"cos_{freq}_{i}": np.cos(i * k),
+        }
     return pd.DataFrame(features, index=index)
 
 

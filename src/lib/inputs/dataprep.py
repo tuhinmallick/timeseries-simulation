@@ -24,7 +24,7 @@ def input_cleaning(
     dict
         Cleaning specifications (remove_days, del_days, del_negative, del_zeros, log_transform).
     """
-    cleaning: Dict[Any, Any] = dict()
+    cleaning: Dict[Any, Any] = {}
     if resampling["freq"][-1] in ["s", "H", "D"]:
         del_days = st.multiselect(
             "Remove days",
@@ -37,17 +37,17 @@ def input_cleaning(
         cleaning["del_days"] = []
     cleaning["del_zeros"] = st.checkbox(
         "Delete rows where target = 0",
-        False if config["dataprep"]["remove_zeros"] in ["false", False] else True,
+        config["dataprep"]["remove_zeros"] not in ["false", False],
         help=readme["tooltips"]["del_zeros"],
     )
     cleaning["del_negative"] = st.checkbox(
         "Delete rows where target < 0",
-        False if config["dataprep"]["remove_negative"] in ["false", False] else True,
+        config["dataprep"]["remove_negative"] not in ["false", False],
         help=readme["tooltips"]["del_negative"],
     )
     cleaning["log_transform"] = st.checkbox(
         "Target log transform",
-        False if config["dataprep"]["log_transform"] in ["false", False] else True,
+        config["dataprep"]["log_transform"] not in ["false", False],
         help=readme["tooltips"]["log_transform"],
     )
     return cleaning
@@ -72,19 +72,17 @@ def input_dimensions(
     dict
         Filtering and aggregation specifications (dimensions, values to keep, aggregation function).
     """
-    dimensions: Dict[Any, Any] = dict()
+    dimensions: Dict[Any, Any] = {}
     eligible_cols = sorted(set(df.columns) - {"ds", "y"})
     if len(eligible_cols) > 0:
         config_dimensions = config["columns"]["dimensions"]
-        if config_dimensions not in ["false", False]:
-            if len(set(config_dimensions).intersection(set(eligible_cols))) != len(
-                config_dimensions
-            ):
-                st.error(
-                    f"Selected dimensions are not in the dataset columns, "
-                    f"please provide a list of valid columns for dimensions in the config file."
-                )
-                st.stop()
+        if config_dimensions not in ["false", False] and len(
+            set(config_dimensions).intersection(set(eligible_cols))
+        ) != len(config_dimensions):
+            st.error(
+                'Selected dimensions are not in the dataset columns, please provide a list of valid columns for dimensions in the config file.'
+            )
+            st.stop()
         dimensions_cols = st.multiselect(
             "Select dataset dimensions if any",
             list(eligible_cols),
@@ -137,9 +135,10 @@ def _autodetect_dimensions(df: pd.DataFrame) -> List[Any]:
     for col in eligible_cols:
         values = df[col].value_counts()
         values = values.loc[values > 0].to_list()
-        if (len(values) > 1) & (len(values) < 0.05 * len(df)):
-            if max(values) / min(values) <= 20:
-                detected_cols.append(col)
+        if (len(values) > 1) & (len(values) < 0.05 * len(df)) and max(
+            values
+        ) / min(values) <= 20:
+            detected_cols.append(col)
     return detected_cols
 
 
@@ -158,8 +157,7 @@ def input_resampling(df: pd.DataFrame, readme: Dict[Any, Any]) -> Dict[Any, Any]
     dict
         Resampling specifications (resample or not, frequency, aggregation function).
     """
-    resampling: Dict[Any, Any] = dict()
-    resampling["freq"] = _autodetect_freq(df)
+    resampling: Dict[Any, Any] = {"freq": _autodetect_freq(df)}
     st.write(f"Frequency detected in dataset: {resampling['freq']}")
     resampling["resample"] = st.checkbox(
         "Resample my dataset", False, help=readme["tooltips"]["resample_choice"]
@@ -206,10 +204,7 @@ def _autodetect_freq(df: pd.DataFrame) -> str:
     if days == 1:
         return "D"
     elif days < 1:
-        if seconds >= 3600:
-            return f"{round(seconds/3600)}H"
-        else:
-            return f"{seconds}s"
+        return f"{round(seconds / 3600)}H" if seconds >= 3600 else f"{seconds}s"
     elif days > 1:
         if days < 7:
             return f"{days}D"

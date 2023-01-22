@@ -12,9 +12,7 @@ tickers_keys = "tickers_keys"
 last_upload_time = "last_upload_time"
 
 # DB connection string
-mongodb_connection_string = "mongodb+srv://{}:{}@redditsentiments.5bs1x.mongodb.net/{}?retryWrites=true&w=majority".format(
-    username, password, wall_db_name
-)
+mongodb_connection_string = f"mongodb+srv://{username}:{password}@redditsentiments.5bs1x.mongodb.net/{wall_db_name}?retryWrites=true&w=majority"
 # mongodb+srv://m001-student:<password>@sandbox.5bs1x.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 
 # Cut-off date - max date from which to delete comments from the last mention (in hours)

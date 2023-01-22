@@ -41,11 +41,7 @@ class Hasher:
         list
             The list of hashed passwords.
         """
-        hashedpw = []
-
-        for password in self.passwords:
-            hashedpw.append(self.hash(password))
-        return hashedpw
+        return [self.hash(password) for password in self.passwords]
 
 class Authenticate:
     def __init__(self,names,usernames,passwords,cookie_name,key,cookie_expiry_days=30):
@@ -152,44 +148,46 @@ class Authenticate:
                 if 'logout' not in st.session_state:
                     st.session_state['logout'] = None
 
-                if st.session_state['logout'] != True:
-                    if self.token['exp_date'] > datetime.utcnow().timestamp():
-                        st.session_state['name'] = self.token['name']
-                        st.session_state['authentication_status'] = True
-                        st.session_state['username'] = self.token['username']
+                if (
+                    st.session_state['logout'] != True
+                    and self.token['exp_date'] > datetime.utcnow().timestamp()
+                ):
+                    st.session_state['name'] = self.token['name']
+                    st.session_state['authentication_status'] = True
+                    st.session_state['username'] = self.token['username']
             except:
                 pass
 
-            if st.session_state['authentication_status'] != True:
-                if location == 'main':
-                    login_form = st.form('Login')
-                elif location == 'sidebar':
-                    login_form = st.sidebar.form('Login')
+        if st.session_state['authentication_status'] != True:
+            if location == 'main':
+                login_form = st.form('Login')
+            elif location == 'sidebar':
+                login_form = st.sidebar.form('Login')
 
-                login_form.subheader(form_name)
-                self.username = login_form.text_input('Username:', placeholder = 'Please enter your Username eg. Rocky Bilbao')
-                st.session_state['username'] = self.username
-                self.password = login_form.text_input('Password:',type='password',placeholder = 'Please enter your 15 character long alphanumeric password eg. qwcS72mFbD6yCc', max_chars =15 )
-                if login_form.form_submit_button('Login'):
-                    self.index = None
-                    for i in range(0,len(self.usernames)):
-                        if self.usernames[i] == self.username:
-                            self.index = i
-                    if self.index != None:
-                        try:
-                            if self.check_pw():
-                                st.session_state['name'] = self.names[self.index]
-                                self.exp_date = self.exp_date()
-                                self.token = self.token_encode()
-                                cookie_manager.set(self.cookie_name, self.token,
-                                expires_at=datetime.now() + timedelta(days=self.cookie_expiry_days))
-                                st.session_state['authentication_status'] = True
-                            else:
-                                st.session_state['authentication_status'] = False
-                        except Exception as e:
-                            print(e)
-                    else:
-                        st.session_state['authentication_status'] = False
+            login_form.subheader(form_name)
+            self.username = login_form.text_input('Username:', placeholder = 'Please enter your Username eg. Rocky Bilbao')
+            st.session_state['username'] = self.username
+            self.password = login_form.text_input('Password:',type='password',placeholder = 'Please enter your 15 character long alphanumeric password eg. qwcS72mFbD6yCc', max_chars =15 )
+            if login_form.form_submit_button('Login'):
+                self.index = None
+                for i in range(len(self.usernames)):
+                    if self.usernames[i] == self.username:
+                        self.index = i
+                if self.index != None:
+                    try:
+                        if self.check_pw():
+                            st.session_state['name'] = self.names[self.index]
+                            self.exp_date = self.exp_date()
+                            self.token = self.token_encode()
+                            cookie_manager.set(self.cookie_name, self.token,
+                            expires_at=datetime.now() + timedelta(days=self.cookie_expiry_days))
+                            st.session_state['authentication_status'] = True
+                        else:
+                            st.session_state['authentication_status'] = False
+                    except Exception as e:
+                        print(e)
+                else:
+                    st.session_state['authentication_status'] = False
         print(st.session_state['authentication_status'])
         # if st.session_state['authentication_status'] == True:
         #     col1,col2 = st.sidebar.columns([1, 0.5])
@@ -215,11 +213,11 @@ if not _RELEASE:
     name, authentication_status, username = authenticator.login('Login','main')
 
     if authentication_status:
-        st.write('Welcome *%s*' % (name))
+        st.write(f'Welcome *{name}*')
         st.title('Some content')
     elif authentication_status == False:
         st.error('Username/password is incorrect')
-    elif authentication_status == None:
+    elif authentication_status is None:
         st.warning('Please enter your username and password')
 
     # Alternatively you use st.session_state['name'] and

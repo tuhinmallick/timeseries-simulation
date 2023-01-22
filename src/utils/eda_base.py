@@ -64,14 +64,12 @@ class exploratory_data_analysis:
             for lag in range(-max_lags, max_lags + 1)
         ]  # NOTE needs to be +1 to reach the value.
 
-        # Combine into dataframe.
-        df_corr = pd.DataFrame(
+        return pd.DataFrame(
             {
                 "Lag": np.array(range(-max_lags, max_lags + 1)),
                 "Correlation": xcov_monthly,
             }
         )
-        return df_corr
 
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     #                                                                 MATPLOTLIB FUNCTIONS
@@ -128,13 +126,13 @@ class exploratory_data_analysis:
         if rolling_mean == True:
             ax.plot(
                 self.df[y_variable].rolling(rolling_window).mean(),
-                label=f"Moving Average",
+                label="Moving Average",
             )
 
         if rolling_std == True:
             ax.plot(
                 self.df[y_variable].rolling(rolling_window).std(),
-                label=f"Moving Standard Deviation",
+                label="Moving Standard Deviation",
             )
 
         if (rolling_mean == True) or (rolling_std == True):
@@ -160,15 +158,12 @@ class exploratory_data_analysis:
             fig.savefig(
                 os.path.join(
                     save_path,
-                    f"single_timeseries_{y_variable}{file_name_addition}" + ".png",
+                    f"single_timeseries_{y_variable}{file_name_addition}.png",
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
-
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -226,15 +221,12 @@ class exploratory_data_analysis:
         if save_path != None:
             fig.savefig(
                 os.path.join(
-                    save_path, f"monthly_plot_{y_variable}{file_name_addition}" + ".png"
+                    save_path, f"monthly_plot_{y_variable}{file_name_addition}.png"
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
-
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -296,15 +288,12 @@ class exploratory_data_analysis:
             fig.savefig(
                 os.path.join(
                     save_path,
-                    f"quarterly_plot_{y_variable}{file_name_addition}" + ".png",
+                    f"quarterly_plot_{y_variable}{file_name_addition}.png",
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
-
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -419,15 +408,12 @@ class exploratory_data_analysis:
             fig.savefig(
                 os.path.join(
                     save_path,
-                    f"ym_seasonal_decompose_{y_variable}{file_name_addition}" + ".png",
+                    f"ym_seasonal_decompose_{y_variable}{file_name_addition}.png",
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
-
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -471,14 +457,12 @@ class exploratory_data_analysis:
         columns = [values]
 
         # Append the lags t+1.
-        for i in range(1, (lags + 1)):
-            columns.append(values.shift(i))
+        columns.extend(values.shift(i) for i in range(1, (lags + 1)))
         df_lag = pd.concat(columns, axis=1)
         columns = ["t+1"]
 
         # Append the lags t-h
-        for i in range(1, (lags + 1)):
-            columns.append(f"t-{i}")
+        columns.extend(f"t-{i}" for i in range(1, (lags + 1)))
         df_lag.columns = columns
 
         plt.figure(1)
@@ -491,14 +475,12 @@ class exploratory_data_analysis:
         if save_path != None:
             plt.savefig(
                 os.path.join(
-                    save_path, f"lag_plot_{y_variable}{file_name_addition}" + ".png"
+                    save_path, f"lag_plot_{y_variable}{file_name_addition}.png"
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
+        plt.show()
         if streamlit == True:
             return plt
 
@@ -553,14 +535,12 @@ class exploratory_data_analysis:
         if save_path != None:
             fig.savefig(
                 os.path.join(
-                    save_path, f"acf_pacf_{y_variable}{file_name_addition}" + ".png"
+                    save_path, f"acf_pacf_{y_variable}{file_name_addition}.png"
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -628,14 +608,12 @@ class exploratory_data_analysis:
             plt.savefig(
                 os.path.join(
                     save_path,
-                    f"seasonal_decomposition_{y_variable}{file_name_addition}" + ".png",
+                    f"seasonal_decomposition_{y_variable}{file_name_addition}.png",
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
+        plt.show()
         if streamlit == True:
             return plt
 
@@ -728,14 +706,12 @@ class exploratory_data_analysis:
             fig.savefig(
                 os.path.join(
                     save_path,
-                    f"stl_decomposition_{y_variable}{file_name_addition}" + ".png",
+                    f"stl_decomposition_{y_variable}{file_name_addition}.png",
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -852,14 +828,12 @@ class exploratory_data_analysis:
             fig.savefig(
                 os.path.join(
                     save_path,
-                    f"cross_correlation_all_{y_variable}{file_name_addition}" + ".png",
+                    f"cross_correlation_all_{y_variable}{file_name_addition}.png",
                 ),
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -961,10 +935,7 @@ class exploratory_data_analysis:
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
-
+        plt.show()
         if streamlit == True:
             return fig
 
@@ -996,12 +967,11 @@ class exploratory_data_analysis:
             f, p, _, _ = res[lag][0]["ssr_ftest"]
             f_list.append(f)
             p_list.append(p)
-        result_dict = {
+        return {
             "F-value": f_list,
             "P-value": p_list,
             "Lag-range": np.array(lag_range).tolist(),
         }
-        return result_dict
 
     def single_granger_plot(
         self,
@@ -1088,9 +1058,7 @@ class exploratory_data_analysis:
                 facecolor=facecolor,
                 transparent=transparent,
             )
-            plt.show()
-        else:
-            plt.show()
+        plt.show()
         if streamlit == True:
             return fig
 

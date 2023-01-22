@@ -79,13 +79,13 @@ def raise_error_train_val_dates(
     threshold_train = config["validity"]["min_data_points_train"]
     threshold_val = config["validity"]["min_data_points_val"]
     if dates["train_end_date"] >= dates["val_start_date"]:
-        st.error(f"Training end date should be before validation start date.")
+        st.error("Training end date should be before validation start date.")
         st.stop()
     if dates["val_start_date"] >= dates["val_end_date"]:
-        st.error(f"Validation start date should be before validation end date.")
+        st.error("Validation start date should be before validation end date.")
         st.stop()
     if dates["train_start_date"] >= dates["train_end_date"]:
-        st.error(f"Training start date should be before training end date.")
+        st.error("Training start date should be before training end date.")
         st.stop()
     if len(val) <= threshold_val:
         st.error(
@@ -230,13 +230,11 @@ def get_train_end_date_default_value(
         Training end date default value in streamlit dashboard.
     """
     if use_cv:
-        default_end = df.ds.max()
-    else:
-        total_nb_days = (df.ds.max().date() - dates["train_start_date"]).days
-        freq = resampling["freq"][-1]
-        default_horizon = convert_into_nb_of_days(freq, config["horizon"][freq])
-        default_end = df.ds.max() - timedelta(days=min(default_horizon, total_nb_days - 1))
-    return default_end
+        return df.ds.max()
+    total_nb_days = (df.ds.max().date() - dates["train_start_date"]).days
+    freq = resampling["freq"][-1]
+    default_horizon = convert_into_nb_of_days(freq, config["horizon"][freq])
+    return df.ds.max() - timedelta(days=min(default_horizon, total_nb_days - 1))
 
 
 def get_cv_cutoffs(dates: Dict[Any, Any], freq: str) -> List[Any]:
@@ -255,20 +253,26 @@ def get_cv_cutoffs(dates: Dict[Any, Any], freq: str) -> List[Any]:
         List of all cross-validation cutoff dates.
     """
     horizon, end, n_folds = dates["folds_horizon"], dates["train_end_date"], dates["n_folds"]
-    if freq in ["s", "H"]:
-        end = datetime.combine(end, datetime.min.time())
-        cutoffs = [
+    if freq not in {"s", "H"}:
+        return [
             pd.to_datetime(
-                end - timedelta(seconds=(i + 1) * convert_into_nb_of_seconds(freq, horizon))
+                end
+                - timedelta(
+                    days=(i + 1) * convert_into_nb_of_days(freq, horizon)
+                )
             )
             for i in range(n_folds)
         ]
-    else:
-        cutoffs = [
-            pd.to_datetime(end - timedelta(days=(i + 1) * convert_into_nb_of_days(freq, horizon)))
-            for i in range(n_folds)
-        ]
-    return cutoffs
+    end = datetime.combine(end, datetime.min.time())
+    return [
+        pd.to_datetime(
+            end
+            - timedelta(
+                seconds=(i + 1) * convert_into_nb_of_seconds(freq, horizon)
+            )
+        )
+        for i in range(n_folds)
+    ]
 
 
 def get_max_possible_cv_horizon(dates: Dict[Any, Any], resampling: Dict[Any, Any]) -> int:

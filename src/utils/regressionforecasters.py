@@ -49,7 +49,7 @@ class MultipleTimestepRegressionForecaster(abc.ABC):
             self.timesteps = horizon
         # Create the list of forecasters.
         self.forecasters = []
-        if isinstance(regressor, list) is False:
+        if not isinstance(regressor, list):
             for timestep in self.timesteps:
                 r = copy.deepcopy(regressor)
                 # Maybe copy.deepcopy() isn't the right way to copy some regressors, be careful
@@ -82,12 +82,7 @@ class MultipleTimestepRegressionForecaster(abc.ABC):
         self.recursion_strat = recursion_strat
 
     def __repr__(self):
-        reprstring = (
-            f"MultipleTimestepRegressionForecaster(horizon={self._horizon}, "
-            f"forecast_type={self.forecast_type}, "
-            f"recursion_strat={self.recursion_strat}, forecasters={self.forecasters})"
-        )
-        return reprstring
+        return f"MultipleTimestepRegressionForecaster(horizon={self._horizon}, forecast_type={self.forecast_type}, recursion_strat={self.recursion_strat}, forecasters={self.forecasters})"
 
     def fit(self, X: pd.DataFrame, y, freq=None, meta_features=None):
         """Fit the forecasters to the predictors by calling either the recursive or non-recursive fit method.
@@ -154,10 +149,7 @@ class MultipleTimestepRegressionForecaster(abc.ABC):
         else:
             forecasts = self._predict_single_recursive(self, X=X, conf_ints=conf_ints)
 
-        if len(forecasts) > 1:
-            return pd.concat(forecasts, axis=0)
-        else:
-            return forecasts[0]
+        return pd.concat(forecasts, axis=0) if len(forecasts) > 1 else forecasts[0]
 
     @staticmethod
     def _predict_single_nonrecursive(self, X=None, meta_features=None, conf_ints=False):
@@ -206,22 +198,21 @@ class MultipleTimestepRegressionForecaster(abc.ABC):
         """
 
         if X is None or X.shape[0] == 1:
-            forecast = self._predict_single(
+            return self._predict_single(
                 self, X=X, meta_features=meta_features, conf_ints=conf_ints
             )
-            return forecast
-        else:
-            results_dict = {}
-            for idx in X.index:
-                X_single = pd.DataFrame(X.loc[idx, :]).T
-                if self._string_results_format:
-                    dict_idx = idx.strftime(self._string_results_format)
-                else:
-                    dict_idx = idx
-                results_dict[dict_idx] = self._predict_single(
-                    self, X_single, meta_features=meta_features, conf_ints=conf_ints
-                )
-            return results_dict
+        results_dict = {}
+        for idx in X.index:
+            X_single = pd.DataFrame(X.loc[idx, :]).T
+            dict_idx = (
+                idx.strftime(self._string_results_format)
+                if self._string_results_format
+                else idx
+            )
+            results_dict[dict_idx] = self._predict_single(
+                self, X_single, meta_features=meta_features, conf_ints=conf_ints
+            )
+        return results_dict
 
 
 class SingleTimestepRegressionForecaster(abc.ABC):
@@ -247,11 +238,7 @@ class SingleTimestepRegressionForecaster(abc.ABC):
             )
 
     def __repr__(self):
-        reprstring = (
-            f"SingleTimestepRegressionForecaster(timestep={self.timestep}, regressor={self.regressor},"
-            f" forecast_type={self.forecast_type})"
-        )
-        return reprstring
+        return f"SingleTimestepRegressionForecaster(timestep={self.timestep}, regressor={self.regressor}, forecast_type={self.forecast_type})"
 
     def fit(self, X: pd.DataFrame, y, freq=None, meta_features=None, **kwargs):
         """Fit the enclosed regressor to forecast the value of y *timestep* periods in the future.
@@ -310,11 +297,10 @@ class SingleTimestepRegressionForecaster(abc.ABC):
                 shifted_y = shifted_y / meta_feature_mean.to_numpy().reshape(
                     shifted_y.shape
                 )
-        else:
-            if self.forecast_type == "absolute_diff":
-                shifted_y = shifted_y - y.to_numpy()
-            elif self.forecast_type == "proportional_diff":
-                shifted_y = shifted_y / y.to_numpy()
+        elif self.forecast_type == "absolute_diff":
+            shifted_y = shifted_y - y.to_numpy()
+        elif self.forecast_type == "proportional_diff":
+            shifted_y = shifted_y / y.to_numpy()
         shifted_y, X = shifted_y.align(
             X, join="inner", axis=0
         )  # Reindex X to drop rows dropped in shifted_y
@@ -332,8 +318,7 @@ class SingleTimestepRegressionForecaster(abc.ABC):
         Returns:
             pandas.DateTimeIndex: Indexes for the forecasted values.
         """
-        forecast_index = X.index + self.freq * self.timestep
-        return forecast_index
+        return X.index + self.freq * self.timestep
 
     def predict(self, X=None, y=None, meta_features=None, conf_ints=False):
         """Forecast y values with the enclosed regressor.
@@ -391,8 +376,7 @@ class SingleTimestepRegressionForecaster(abc.ABC):
             (-1, 2)
         ) - meta_features[meta_feature_cols[0]].to_numpy().reshape((-1, 1))
         cis_recentred = cis_relative + mean_forecast
-        forecast = np.concatenate((mean_forecast, cis_recentred), axis=1)
-        return forecast
+        return np.concatenate((mean_forecast, cis_recentred), axis=1)
 
 
 class WrappedQuantileRegressor(abc.ABC):
@@ -430,8 +414,7 @@ class WrappedQuantileRegressor(abc.ABC):
             # self.regressors.append(regressor(alpha=quantiles[i], objective="quantile", **regressor_kwargs))
 
     def __repr__(self):
-        reprstring = f"WrappedQuantileRegressor(quantiles={self.quantiles}, regressors={self.regressors})"
-        return reprstring
+        return f"WrappedQuantileRegressor(quantiles={self.quantiles}, regressors={self.regressors})"
 
     def fit(self, X: pd.DataFrame, y: pd.Series, **kwargs):
         """
@@ -462,9 +445,10 @@ class WrappedQuantileRegressor(abc.ABC):
             A list of predicted quantile values.
 
         """
-        y_predictions = []
-        for i in range(len(self.quantiles)):
-            y_predictions.append(self.regressors[i].predict(X, **kwargs))
+        y_predictions = [
+            self.regressors[i].predict(X, **kwargs)
+            for i in range(len(self.quantiles))
+        ]
         # Turn the list of predictions into a 2d array
         y_predictions = [np.reshape(y, (-1, 1)) for y in y_predictions]
         y_predictions = np.concatenate(y_predictions, axis=1)

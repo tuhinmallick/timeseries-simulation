@@ -135,9 +135,7 @@ class MetricsCls:
         d = (true_diff * pred_diff) > 0
         ## case of plateau for both y_true, y_pred
         d[(true_diff == 0) & (pred_diff == 0)] = 1
-        dsymm = np.round(100 * d.sum() / d.size, 2)
-
-        return dsymm
+        return np.round(100 * d.sum() / d.size, 2)
 
     @staticmethod
     def MAPE(

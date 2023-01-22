@@ -89,9 +89,11 @@ def plotly_plot_forecast(
         width=figsize[0],
         height=figsize[1],
         xaxis_title="",
-        yaxis_title=f"Price, USD/toz",
+        yaxis_title="Price, USD/toz",
         hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1),
+        legend=dict(
+            orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1
+        ),
         template="plotly_dark",
         margin=dict(l=80, r=30, t=50, b=50),
         plot_bgcolor="#151934",
@@ -197,10 +199,7 @@ def plotly_plot_backtest(
             )
         )
 
-        df_test = df_backtest.copy()
-    else:
-        df_test = df_backtest.copy()
-
+    df_test = df_backtest.copy()
     # ================================ HISTORICAL FORECAST, ACTUALS AND CONFIDENCE INTERVALL ================================
     fig.add_trace(
         go.Scatter(
@@ -238,9 +237,11 @@ def plotly_plot_backtest(
         width=figsize[0],
         height=figsize[1],
         xaxis_title="",
-        yaxis_title=f"Price, USD/toz",
+        yaxis_title="Price, USD/toz",
         hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1),
+        legend=dict(
+            orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1
+        ),
         template="plotly_dark",
         margin=dict(l=80, r=30, t=50, b=50),
         plot_bgcolor="#151934",
@@ -454,9 +455,11 @@ def plotly_plot_simulation(
         width=figsize[0],
         height=figsize[1],
         xaxis_title="",
-        yaxis_title=f"Price, USD/toz",
+        yaxis_title="Price, USD/toz",
         hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1),
+        legend=dict(
+            orientation="h", yanchor="bottom", xanchor="right", y=1.0, x=1
+        ),
         template="plotly_dark",
         margin=dict(l=80, r=30, t=50, b=50),
         plot_bgcolor="#151934",

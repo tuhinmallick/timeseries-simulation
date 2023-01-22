@@ -155,12 +155,13 @@ def load_data(uploaded_file):
 
 def upload():
     dashboards = ("PGM_curated.csv", "PGM_combined_tidy.csv")
-    load_options = dict()
-    load_options["toy_dataset"] = st.checkbox(
-        "Load a uploaded dataset",
-        True,
-        help="Select this option if you want to work with uploaded Dataset",
-    )
+    load_options = {
+        "toy_dataset": st.checkbox(
+            "Load a uploaded dataset",
+            True,
+            help="Select this option if you want to work with uploaded Dataset",
+        )
+    }
     if load_options["toy_dataset"]:
         dataset_name = st.selectbox(
             "Select a uploaded dataset",
@@ -168,7 +169,7 @@ def upload():
             help="Select the dataset you want to work with",
         )
         df = load_data(os.path.join(artifact_location, "source_data", dataset_name))
-        st.write("{} has been uploaded".format(dataset_name))
+        st.write(f"{dataset_name} has been uploaded")
     else:
         df = None
         try:
@@ -177,9 +178,9 @@ def upload():
             )
             for uploaded_file in uploaded_files:
                 df = load_data(uploaded_file)
-                st.write("{} has been uploaded".format(uploaded_file.name))
+                st.write(f"{uploaded_file.name} has been uploaded")
         except Exception as err:
-            st.write("{} is not the proper file format".format(uploaded_file.name))
+            st.write(f"{uploaded_file.name} is not the proper file format")
     return df
 
 
@@ -223,7 +224,7 @@ def streamlit_menu():
     st.session_state.functionality_type = selected
     if st.session_state["authentication_status"] == True:
         col1, col2 = st.sidebar.columns([1, 0.5])
-        col1.write("Welcome *%s*" % (st.session_state["name"]))
+        col1.write(f'Welcome *{st.session_state["name"]}*')
         if col2.button(
             "Logout",
             help="If the logout buttton does not work, please refresh the page",
@@ -258,10 +259,10 @@ if st.session_state["authentication_status"]:
         print(option)
         print(st.session_state.functionality_type)
         # functionality =st.form_submit_button('Apply', on_click=set_functionality_type, args = (option,))
-        if (
-            st.session_state.functionality_type != "Historical Forecast"
-            and st.session_state.functionality_type != []
-        ):
+        if st.session_state.functionality_type not in [
+            "Historical Forecast",
+            [],
+        ]:
             with st.sidebar.expander("Dataset", expanded=True):
                 # data, load_options, config, datasets = input_dataset(config, readme, instructions)
                 # data, empty_cols = remove_empty_cols(data)
@@ -311,5 +312,5 @@ if st.session_state["authentication_status"]:
         print(err.args)
 elif authentication_status == False:
     st.error("Username/password is incorrect")
-elif authentication_status == None:
+elif authentication_status is None:
     st.warning("Please enter your username and password")

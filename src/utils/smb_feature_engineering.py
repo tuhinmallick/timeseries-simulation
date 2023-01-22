@@ -56,7 +56,6 @@ def feature_engineering_pipeline(
         # Drop the original raw indicators and target series to improve performance
         # df = df.drop(columns=[target] + indicator_cols)
 
-    # NOTE the STLModel is taken from Wen-Kai's PipeGBM Model.
     elif forecast_type in ["absolute_diff" or "absolute"]:
 
         # ===========================================================================================================
@@ -71,8 +70,8 @@ def feature_engineering_pipeline(
             df, features=column_names, lag=lag_setting, droplagna=False
         )
         df = pd.concat([df, lagdf], axis=1).dropna()
-        lagdf_columns = [c for c in lagdf.columns]
-        column_names = column_names + lagdf_columns
+        lagdf_columns = list(lagdf.columns)
+        column_names += lagdf_columns
         ## add ma / ema
         ma_setting = [3, 6]
         df, _ = fe.add_MA(df, features=column_names, window=ma_setting)
@@ -107,7 +106,7 @@ def feature_engineering_pipeline(
         df["quater"] = df.index.year
         column_names.append("quater")
 
-        # TODO add month sin cos for year and quarter.
+            # TODO add month sin cos for year and quarter.
 
     # ===========================================================================================================
     #           CRYSIS DUMMY VARIABLES

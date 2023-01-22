@@ -46,9 +46,7 @@ def plot_simulation(
         st.plotly_chart(simulation_fig, use_container_width=False, sharing="streamlit")
     with st.expander("Predicted Forecast chart"):
         st.write(
-            "####  Original monthly average forecast prices for {} months".format(
-                horizon
-            )
+            f"####  Original monthly average forecast prices for {horizon} months"
         )
         original_forecast = original_forecast.rename(
             columns={
@@ -60,9 +58,7 @@ def plot_simulation(
         st.dataframe(original_forecast)
     with st.expander("Simulated Forecast chart"):
         st.write(
-            "#### Simulated monthly average forecast prices for {} months".format(
-                horizon
-            )
+            f"#### Simulated monthly average forecast prices for {horizon} months"
         )
         diff = diff.rename(
             columns={
@@ -126,7 +122,7 @@ def get_simulation(data):
             sim_target = st.sidebar.selectbox(
                 "Please select the target feature to simulate : ",
                 all_features,
-                key="sim_feat{}".format(n),
+                key=f"sim_feat{n}",
             )
             perc_change = st.sidebar.slider(
                 "Percent Change in value",
@@ -134,7 +130,7 @@ def get_simulation(data):
                 max_value=100.0,
                 value=0.0,
                 step=0.1,
-                key="sim_prec_feat{}".format(n),
+                key=f"sim_prec_feat{n}",
             )
             # corr_btn = st.sidebar.checkbox('Check correlation matrix', on_change= set_corr_target,args=(sim_target,), key =n)
             # simulation_dict =  dict([(sim_target,perc_change)])
@@ -143,7 +139,7 @@ def get_simulation(data):
             col2.write(
                 f"New value: {round(data[sim_target][-1]+data[sim_target][-1]*(perc_change/100))}"
             )
-            simulation_dict.update({sim_target: perc_change})
+            simulation_dict[sim_target] = perc_change
         simulated = st.form_submit_button(
             "Simulate 🚀", on_click=login.set_simulation_dict, args=(simulation_dict,)
         )

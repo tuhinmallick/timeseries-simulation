@@ -71,18 +71,18 @@ def grange_and_correlate(
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     df_granger = pd.DataFrame(columns=["fval", "pval", "feature_name"])
-    for i in range(0, len(feature_names)):
+    for feature_name in feature_names:
 
         # Apply calculation function
         f_list, p_list = calculate_grangercausality(
-            df[target], df[feature_names[i]], maxlag=granger_lags
+            df[target], df[feature_name], maxlag=granger_lags
         )
 
         # Generate dataset.
         df_eval = pd.DataFrame({"fval": f_list, "pval": p_list})
 
         df_eval_filtered = df_eval.sort_values("fval").reset_index(drop=True).iloc[:1]
-        df_eval_filtered["feature_name"] = feature_names[i]
+        df_eval_filtered["feature_name"] = feature_name
 
         df_granger = df_granger.append(df_eval_filtered)
     df_granger.reset_index(drop=True, inplace=True)
@@ -99,11 +99,11 @@ def grange_and_correlate(
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     df_corr = pd.DataFrame(columns=["lag_range", "abs_corr", "feature_name"])
-    for i in range(0, len(feature_names)):
+    for feature_name_ in feature_names:
 
         # Apply cross correlation function
         xcov_monthly = [
-            crosscorr(df[target], df[feature_names[i]], lag=lag)
+            crosscorr(df[target], df[feature_name_], lag=lag)
             for lag in range(-correlation_lags, correlation_lags)
         ]
         xcov_monthly_abs = [abs(lag) for lag in xcov_monthly]
@@ -115,7 +115,7 @@ def grange_and_correlate(
         df_eval_filtered = (
             df_eval.sort_values("abs_corr").reset_index(drop=True).iloc[:1]
         )
-        df_eval_filtered["feature_name"] = feature_names[i]
+        df_eval_filtered["feature_name"] = feature_name_
 
         df_corr = df_corr.append(df_eval_filtered)
     df_corr.reset_index(drop=True, inplace=True)
@@ -149,13 +149,13 @@ def user_input_crosscorr(df_target, df_user_input, max_lags=30):
     """
     feature_names = df_user_input.columns.tolist()
     crosscorr_dict = {}
-    for i in range(0, len(feature_names)):
+    for i in range(len(feature_names)):
         # Apply cross correlation function
         xcov_monthly = [
             crosscorr(df_target, df_user_input[feature_names[i]], lag=lag)
             for lag in range(-max_lags, max_lags)
         ]
-        xcov_monthly_abs = [lag for lag in xcov_monthly]
+        xcov_monthly_abs = list(xcov_monthly)
         range_list = [*range(-max_lags, max_lags)]
 
         # Combine the data.
@@ -193,12 +193,13 @@ def user_input_correlation_picker(
     feature_names = df_user_input.columns.tolist()
 
     if selected_method == "mean":
-        correlation_dict = {}
-        for feature in feature_names:
-            correlation_dict[feature] = crosscorr_dict[feature]["correlation"].mean()
+        correlation_dict = {
+            feature: crosscorr_dict[feature]["correlation"].mean()
+            for feature in feature_names
+        }
     elif selected_method == "max":
-        correlation_dict = {}
-        for feature in feature_names:
-            correlation_dict[feature] = crosscorr_dict[feature]["correlation"].max()
-
+        correlation_dict = {
+            feature: crosscorr_dict[feature]["correlation"].max()
+            for feature in feature_names
+        }
     return correlation_dict

@@ -58,7 +58,7 @@ def save_residual_frames(
     forecast_tables_train, forecast_tables_val, forecast_tables_test
 ):
     _ = os.makedirs("outputs/residuals")
-    for timestep in range(1, horizon + 1, 1):
+    for timestep in range(1, horizon + 1):
         resid_train = add_residuals(
             forecast_tables_train[timestep - 1].iloc[:-1, :], target_series
         )
@@ -499,7 +499,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(figsize=(13, 7))
     results_dates = results_dates.loc[~results_dates.isna().any(axis=1), :]
     ax = results_dates.mean(axis=1).plot.bar(ax=ax)
-    _ = ax.set_title(f"Mean absolute error by forecast start date")
+    _ = ax.set_title("Mean absolute error by forecast start date")
     _ = ax.set_xlabel("Date")
     _ = ax.set_xticklabels(results_dates.index.strftime("%Y-%m"), rotation=45)
     _ = fig.tight_layout()
