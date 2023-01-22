@@ -460,11 +460,7 @@ def sentiment():
             color=alt.Color(value=polarity_color),
         )
 
-        polarity_values = chart.mark_point(
-            tooltip=True,
-            size=75,
-            filled=True,
-        ).encode(
+        polarity_values = chart.mark_point(tooltip=True, size=75, filled=True,).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y("polarity:Q", title="polarity"),
             color=alt.Color(value=f"{polarity_color}88"),

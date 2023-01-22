@@ -59,9 +59,7 @@ def forecaster_cross_val_score(
         predictions_list.append(y_pred)
     y_pred_all = pd.concat(predictions_list, axis=0)
     y_pred_all, y_aligned = y_pred_all.align(target_series, join="inner", axis=0)
-    return sklearn.metrics.mean_squared_error(
-        y_aligned, y_pred_all, squared=False
-    )
+    return sklearn.metrics.mean_squared_error(y_aligned, y_pred_all, squared=False)
 
 
 def test_hyperparams(
@@ -192,7 +190,9 @@ def backtest_hyperparams(
     mapes = []
     maes = []
     wmapes = []
-    for i, timestep in tqdm(enumerate(range(1, horizon + 1)), desc="Getting backtest results for timesteps"):
+    for i, timestep in tqdm(
+        enumerate(range(1, horizon + 1)), desc="Getting backtest results for timesteps"
+    ):
         hyperparams = hyperparams_list[i]
         pm = pipeline_model.PipelineModel(
             hps=hyperparams, estimator=regressor, multiout_wrapper=False
@@ -243,7 +243,9 @@ def get_train_results(
     mapes = []
     maes = []
     wmapes = []
-    for i, timestep in tqdm(enumerate(range(1, horizon + 1)), desc="Getting results on training set"):
+    for i, timestep in tqdm(
+        enumerate(range(1, horizon + 1)), desc="Getting results on training set"
+    ):
         hyperparams = hyperparams_list[i]
         pm = pipeline_model.PipelineModel(
             hps=hyperparams, estimator=regressor, multiout_wrapper=False

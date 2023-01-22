@@ -45,9 +45,7 @@ def plot_simulation(
         )
         st.plotly_chart(simulation_fig, use_container_width=False, sharing="streamlit")
     with st.expander("Predicted Forecast chart"):
-        st.write(
-            f"####  Original monthly average forecast prices for {horizon} months"
-        )
+        st.write(f"####  Original monthly average forecast prices for {horizon} months")
         original_forecast = original_forecast.rename(
             columns={
                 "forecast": "Predicted price(USD/Toz)",
@@ -57,9 +55,7 @@ def plot_simulation(
         )
         st.dataframe(original_forecast)
     with st.expander("Simulated Forecast chart"):
-        st.write(
-            f"#### Simulated monthly average forecast prices for {horizon} months"
-        )
+        st.write(f"#### Simulated monthly average forecast prices for {horizon} months")
         diff = diff.rename(
             columns={
                 "forecast": "Difference in  price(USD/Toz)",
