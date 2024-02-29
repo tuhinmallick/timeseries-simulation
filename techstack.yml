@@ -1,0 +1,554 @@
+repo_name: tuhinmallick/timeseries-simulation
+report_id: 05db7c4ce87ebfc8a17ed76487d932dd
+version: 0.1
+repo_type: Public
+timestamp: '2024-02-29T20:06:49+00:00'
+requested_by: tuhinmallick
+provider: github
+branch: main
+detected_tools_count: 30
+tools:
+- name: CSS 3
+  description: The latest evolution of the Cascading Style Sheets language
+  website_url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation
+  detection_source: Repo Metadata
+- name: Python
+  description: A clear and powerful object-oriented programming language, comparable
+    to Perl, Ruby, Scheme, or Java.
+  website_url: https://www.python.org
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation
+  detection_source: Repo Metadata
+- name: Matplotlib
+  description: A plotting library for the Python programming language
+  website_url: http://matplotlib.org
+  open_source: false
+  hosted_saas: false
+  category: Libraries
+  sub_category: Charting Libraries
+  image_url: https://img.stackshare.io/service/2993/2DZC4KaA_400x400.jpg
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: MongoDB
+  description: The database for giant ideas
+  website_url: http://www.mongodb.com/
+  open_source: true
+  hosted_saas: false
+  category: Data Stores
+  sub_category: Databases
+  image_url: https://img.stackshare.io/service/1030/leaf-360x360.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-23 00:52:37.000000000 Z
+- name: Azure Pipelines
+  description: Continuously build, test, and deploy to any platform and cloud
+  website_url: https://azure.microsoft.com/ko-kr/services/devops/pipelines/
+  open_source: false
+  hosted_saas: true
+  category: Build, Test, Deploy
+  sub_category: Continuous Integration
+  image_url: https://img.stackshare.io/service/10164/528389819366_e7a0672f0480b3e98d21_512.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/azure-pipelines.yml
+  detection_source: azure-pipelines.yml
+  last_updated_by: Amritpal Nagra
+  last_updated_on: 2022-03-18 19:31:27.000000000 Z
+- name: Docker
+  description: Enterprise Container Platform for High-Velocity Innovation.
+  website_url: https://www.docker.com/
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Virtual Machine Platforms & Containers
+  image_url: https://img.stackshare.io/service/586/n4u37v9t_400x400.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation
+  detection_source: Repo Metadata
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation
+  detection_source: Repo Metadata
+- name: GitHub Actions
+  description: Automate your workflow from idea to production
+  website_url: https://github.com/features/actions
+  open_source: false
+  hosted_saas: true
+  category: Build, Test, Deploy
+  sub_category: Continuous Integration
+  image_url: https://img.stackshare.io/service/11563/actions.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/.github/workflows/ci-cd.yml
+  detection_source: ".github/workflows/ci-cd.yml"
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-04-03 19:22:38.000000000 Z
+- name: PyPI
+  description: A repository of software for the Python programming language
+  website_url: https://pypi.org/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Hosted Package Repository
+  image_url: https://img.stackshare.io/service/12572/-RIWgodF_400x400.jpg
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-15 10:22:37.000000000 Z
+- name: Pillow
+  description: Python Imaging Library
+  website_url: https://python-pillow.github.io/
+  open_source: true
+  hosted_saas: false
+  category: Assets and Media
+  sub_category: Image Processing and Management
+  image_url: https://img.stackshare.io/service/2375/default_1f67b0ca7416a9f52beb655f90b5602d5ef74b75.jpg
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-15 10:22:37.000000000 Z
+- name: Jupyter
+  description: Multi-language interactive computing environments.
+  website_url: http://jupyter.org
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Application Utilities
+  sub_category: Data Science Notebooks
+  image_url: https://img.stackshare.io/service/4190/fGBUdNf__400x400.jpg
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation
+  detection_source: Repo Metadata
+- name: NumPy
+  description: Fundamental package for scientific computing with Python
+  website_url: http://www.numpy.org/
+  version: 1.22.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Data Science Tools
+  image_url: https://img.stackshare.io/service/2179/default_332f874a2edb2686f578aa6389313efcea1eec41.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-15 10:22:37.000000000 Z
+- name: Shell
+  description: A shell is a text-based terminal, used for manipulating programs and
+    files. Shell scripts typically manage program execution.
+  website_url: https://en.wikipedia.org/wiki/Shell_script
+  open_source: false
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation
+  detection_source: Repo Metadata
+- name: Streamlit
+  description: A Python app framework built specifically for Machine Learning and
+    Data Science teams
+  website_url: https://streamlit.io
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Application Utilities
+  sub_category: Machine Learning Tools
+  image_url: https://img.stackshare.io/service/11393/default_67e251b5860795095fe91618cf3ef8d09257469a.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-08-12 19:49:26.000000000 Z
+- name: PyYAML
+  description: YAML parser and emitter for Python
+  package_url: https://pypi.org/project/PyYAML
+  version: '6.0'
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/19829/default_74a61b43bdb9fc0cba2978316b9976f43545029b.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-15 15:10:59.000000000 Z
+- name: altair
+  description: 'Altair: A declarative statistical visualization library for Python'
+  package_url: https://pypi.org/project/altair
+  version: 4.2.0
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: dnspython
+  description: DNS toolkit
+  package_url: https://pypi.org/project/dnspython
+  version: 2.2.1
+  license: Other
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/20249/default_47b8ee8db82e43d9eef35923435bd8cc855f3a1b.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-23 00:36:16.000000000 Z
+- name: hyperopt
+  description: Distributed Asynchronous Hyperparameter Optimization
+  package_url: https://pypi.org/project/hyperopt
+  version: 0.2.7
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: lightgbm
+  description: LightGBM Python Package
+  package_url: https://pypi.org/project/lightgbm
+  version: 3.3.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: mlflow
+  description: 'MLflow: An ML Workflow Tool'
+  package_url: https://pypi.org/project/mlflow
+  version: 1.24.0
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+  vulnerabilities:
+  - name: mlflow is vulnerable to remote file access in `mlflow server` and `mlflow
+      ui` CLIs
+    cve_id: CVE-2023-1177
+    cve_url: https://github.com/advisories/GHSA-xg73-94fp-g449
+    detected_date: Mar 25
+    severity: critical
+    first_patched: 2.2.1
+  - name: MLflow Path Traversal vulnerability
+    cve_id: CVE-2023-3765
+    cve_url: https://github.com/advisories/GHSA-fmxj-6h9g-6vw3
+    detected_date: Jul 28
+    severity: critical
+    first_patched: 2.5.0
+  - name: MLflow authentication requirement bypass can allow a user to arbitrarily
+      create an account
+    cve_id: CVE-2023-6014
+    cve_url: https://github.com/advisories/GHSA-4qq5-mxxx-m6gg
+    detected_date: Nov 18
+    severity: critical
+    first_patched: 
+  - name: Remote Code Execution due to Full Controled File Write in mlflow
+    cve_id: CVE-2023-6018
+    cve_url: https://github.com/advisories/GHSA-5p3h-7fwh-92rc
+    detected_date: Nov 29
+    severity: critical
+    first_patched: 
+  - name: Path traversal in MLflow
+    cve_id: CVE-2023-6831
+    cve_url: https://github.com/advisories/GHSA-554w-xh4j-8w64
+    detected_date: Dec 16
+    severity: critical
+    first_patched: 2.9.2
+  - name: mlflow Path Traversal vulnerability
+    cve_id: CVE-2023-2780
+    cve_url: https://github.com/advisories/GHSA-wjq3-7jxx-whj9
+    detected_date: May 18
+    severity: critical
+    first_patched: 2.3.0
+  - name: Remote file access vulnerability in `mlflow server` and `mlflow ui` CLIs
+    cve_id: 
+    cve_url: https://github.com/advisories/GHSA-83fm-w79m-64r5
+    detected_date: May 2
+    severity: critical
+    first_patched: 2.3.1
+  - name: MLflow Server-Side Request Forgery (SSRF)
+    cve_id: CVE-2023-6974
+    cve_url: https://github.com/advisories/GHSA-59v3-898r-qwhj
+    detected_date: Dec 21
+    severity: critical
+    first_patched: 2.9.2
+  - name: Relative path traversal in mlflow
+    cve_id: CVE-2023-2356
+    cve_url: https://github.com/advisories/GHSA-x422-6qhv-p29g
+    detected_date: May 2
+    severity: critical
+    first_patched: 2.3.1
+  - name: MLFlow Path Traversal Vulnerability
+    cve_id: CVE-2023-6975
+    cve_url: https://github.com/advisories/GHSA-hh8p-p8mp-gqhm
+    detected_date: Dec 21
+    severity: critical
+    first_patched: 2.9.2
+  - name: MLflow allowed arbitrary files to be PUT onto the server
+    cve_id: CVE-2023-6015
+    cve_url: https://github.com/advisories/GHSA-f798-qm4r-23r5
+    detected_date: Nov 17
+    severity: critical
+    first_patched: 2.8.1
+  - name: MLflow Local File Disclosure Vulnerability
+    cve_id: CVE-2023-6977
+    cve_url: https://github.com/advisories/GHSA-qg8p-32gr-gh6x
+    detected_date: Dec 21
+    severity: high
+    first_patched: 2.9.2
+  - name: Cross-site Scripting in MLFlow
+    cve_id: CVE-2024-27132
+    cve_url: https://github.com/advisories/GHSA-6749-m5cp-6cg7
+    detected_date: Feb 27
+    severity: high
+    first_patched: 2.10.0
+  - name: MLFlow Cross-site Scripting vulnerability leads to client-side Remote Code
+      Execution
+    cve_id: CVE-2024-27133
+    cve_url: https://github.com/advisories/GHSA-3v79-q7ph-j75h
+    detected_date: Feb 28
+    severity: high
+    first_patched: 2.10.0
+  - name: Information exposure in MLflow
+    cve_id: CVE-2023-43472
+    cve_url: https://github.com/advisories/GHSA-wqxf-447m-6f5f
+    detected_date: Dec 12
+    severity: high
+    first_patched: 2.9.0
+  - name: Jinja2 template injection in mlflow
+    cve_id: CVE-2023-6709
+    cve_url: https://github.com/advisories/GHSA-cxfr-5q3r-2rc2
+    detected_date: Dec 14
+    severity: high
+    first_patched: 2.9.2
+  - name: Path traversal in MLflow
+    cve_id: CVE-2023-6753
+    cve_url: https://github.com/advisories/GHSA-v945-r3rc-6fjm
+    detected_date: Dec 14
+    severity: high
+    first_patched: 2.9.2
+  - name: mflow vulnerable to directory traversal
+    cve_id: CVE-2023-30172
+    cve_url: https://github.com/advisories/GHSA-wc6j-5g83-xfm6
+    detected_date: May 12
+    severity: high
+    first_patched: 2.0.0rc0
+  - name: mlflow vulnerable to OS Command Injection
+    cve_id: CVE-2023-4033
+    cve_url: https://github.com/advisories/GHSA-ffw3-6378-cqgp
+    detected_date: Aug 2
+    severity: high
+    first_patched: 2.6.0
+  - name: mlflow Command Injection vulnerability
+    cve_id: CVE-2023-6940
+    cve_url: https://github.com/advisories/GHSA-hvc6-42vf-jhf8
+    detected_date: Dec 20
+    severity: high
+    first_patched: 2.9.2
+  - name: MLflow Path Traversal Vulnerability
+    cve_id: CVE-2023-6909
+    cve_url: https://github.com/advisories/GHSA-5r3q-93q3-f978
+    detected_date: Dec 21
+    severity: high
+    first_patched: 2.9.2
+  - name: MLflow Path Traversal Vulnerability
+    cve_id: CVE-2023-6976
+    cve_url: https://github.com/advisories/GHSA-wv8q-4f85-2p8p
+    detected_date: Dec 21
+    severity: high
+    first_patched: 2.9.2
+  - name: Cross-site Scripting in MLflow
+    cve_id: CVE-2023-6568
+    cve_url: https://github.com/advisories/GHSA-vwhf-3v6x-wff8
+    detected_date: Dec 12
+    severity: moderate
+    first_patched: 2.9.0
+  - name: Remote file existence check vulnerability in `mlflow server` and `mlflow
+      ui` CLIs
+    cve_id: CVE-2023-1176
+    cve_url: https://github.com/advisories/GHSA-wp72-7hj9-5265
+    detected_date: Mar 25
+    severity: low
+    first_patched: 2.2.1
+- name: nltk
+  description: Natural Language Toolkit
+  package_url: https://pypi.org/project/nltk
+  version: 3.6.6
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/20023/default_b0d1a54f127d7017fce41c15f5e85568fb7019ed.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: dependabot[bot]
+  last_updated_on: 2022-04-03 19:19:19.000000000 Z
+- name: pandas
+  description: Powerful data structures for data analysis
+  package_url: https://pypi.org/project/pandas
+  version: 1.4.1
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/19837/default_85689b353a3a9409328e253ea28d859d29151e0c.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: plotly
+  description: An open-source, interactive graphing library for Python
+  package_url: https://pypi.org/project/plotly
+  version: 5.6.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/20062/default_7d86b2789b7e98a881e37db483c09c6a1aa3e995.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: pymongo
+  description: Python driver for MongoDB &lt;http://www.mongodb.org&gt;
+  package_url: https://pypi.org/project/pymongo
+  version: '4.0'
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/19865/default_7975a21f3bf03129dc3bc4168cf7cb7ee2cc14cc.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-23 00:52:37.000000000 Z
+- name: seaborn
+  description: 'Seaborn: statistical data visualization'
+  package_url: https://pypi.org/project/seaborn
+  version: 0.11.2
+  license: BSD-1-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-15 10:22:37.000000000 Z
+- name: setuptools
+  description: Easily download
+  package_url: https://pypi.org/project/setuptools
+  version: 56.0.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/19831/default_65d1c12a133e1aa67ae96a1221c9c122ddf86c5f.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+  vulnerabilities:
+  - name: pypa/setuptools vulnerable to Regular Expression Denial of Service (ReDoS)
+    cve_id: CVE-2022-40897
+    cve_url: https://github.com/advisories/GHSA-r9hx-vwmv-q579
+    detected_date: Dec 28
+    severity: high
+    first_patched: 65.5.1
+- name: statsmodels
+  description: Statistical computations and models for Python
+  package_url: https://pypi.org/project/statsmodels
+  version: 0.13.2
+  license: BSD-3-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: textblob
+  description: Simple, Pythonic text processing
+  package_url: https://pypi.org/project/textblob
+  version: 0.17.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/pypi/image.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: tqdm
+  description: Fast, Extensible Progress Meter
+  package_url: https://pypi.org/project/tqdm
+  version: 4.62.2
+  license: MPL-2.0,MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/19846/default_accee5d2b8ed75c2245f13504daf75b1cbc8cc9f.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
+- name: tweepy
+  description: Twitter library for python
+  package_url: https://pypi.org/project/tweepy
+  version: 4.7.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: PyPI Packages
+  image_url: https://img.stackshare.io/package/20397/default_49831882be649a3ae5c46617c462b503ba8fccbc.png
+  detection_source_url: https://github.com/tuhinmallick/timeseries-simulation/blob/main/requirements.txt
+  detection_source: requirements.txt
+  last_updated_by: Tuhin Mallick
+  last_updated_on: 2022-03-20 21:44:32.000000000 Z
