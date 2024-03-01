@@ -251,7 +251,6 @@ def sentiment():
             min_retweets,
             min_faves,
         ):
-
             start_date = str(rel_to_abs_date(days_ago))
 
             query_list = [
@@ -285,7 +284,6 @@ def sentiment():
         def munge_the_numbers(
             tweets, timestamp1, timestampN
         ):  # Timestamps are just for cache-busting.
-
             word_counts = defaultdict(int)
             bigram_counts = defaultdict(int)
             trigram_counts = defaultdict(int)
@@ -452,7 +450,10 @@ def sentiment():
 
         chart = alt.Chart(sentiment_df, title="Sentiment Polarity")
 
-        avg_polarity = chart.mark_line(interpolate="catmull-rom", tooltip=True,).encode(
+        avg_polarity = chart.mark_line(
+            interpolate="catmull-rom",
+            tooltip=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y(
                 "mean(polarity):Q", title="polarity", scale=alt.Scale(domain=[-1, 1])
@@ -460,7 +461,11 @@ def sentiment():
             color=alt.Color(value=polarity_color),
         )
 
-        polarity_values = chart.mark_point(tooltip=True, size=75, filled=True,).encode(
+        polarity_values = chart.mark_point(
+            tooltip=True,
+            size=75,
+            filled=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y("polarity:Q", title="polarity"),
             color=alt.Color(value=polarity_color + "88"),
