@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 
+
 # warning class
 class DuplicatedValueWarning(UserWarning):
     """use for category of warning type"""
