@@ -109,7 +109,6 @@ class PipelineModel:
     def get_quantile_regression_pred_interval(
         self, X_tra, y_tra, X_tes, y_tes=None, low=0.05, high=0.95
     ):
-
         # get hps and add relevant quantile setting
         hps = self.hps.copy()
         hps["est__objective"] = "quantile"
@@ -273,7 +272,6 @@ class PipelineModel:
     def binary_performances(
         y_true, y_prob, thresh=0.5, labels=["Positives", "Negatives"]
     ):
-
         shape = y_prob.shape
         if len(shape) > 1:
             if shape[1] > 2:

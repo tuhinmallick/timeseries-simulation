@@ -72,7 +72,6 @@ def grange_and_correlate(
 
     df_granger = pd.DataFrame(columns=["fval", "pval", "feature_name"])
     for i in range(0, len(feature_names)):
-
         # Apply calculation function
         f_list, p_list = calculate_grangercausality(
             df[target], df[feature_names[i]], maxlag=granger_lags
@@ -100,7 +99,6 @@ def grange_and_correlate(
 
     df_corr = pd.DataFrame(columns=["lag_range", "abs_corr", "feature_name"])
     for i in range(0, len(feature_names)):
-
         # Apply cross correlation function
         xcov_monthly = [
             crosscorr(df[target], df[feature_names[i]], lag=lag)
