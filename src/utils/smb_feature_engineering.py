@@ -58,7 +58,6 @@ def feature_engineering_pipeline(
 
     # NOTE the STLModel is taken from Wen-Kai's PipeGBM Model.
     elif forecast_type in ["absolute_diff" or "absolute"]:
-
         # ===========================================================================================================
         #           ADDITIVE FEATURES
         # ===========================================================================================================

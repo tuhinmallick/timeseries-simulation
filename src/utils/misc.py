@@ -2,6 +2,7 @@ import re
 import pandas as pd
 import pickle
 
+
 # warning class
 class DuplicatedValueWarning(UserWarning):
     """use for category of warning type"""
