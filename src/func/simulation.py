@@ -24,6 +24,8 @@ def load_lottiefile(filepath: str):
 
 lottie_name = "simulation_animation.json"
 lottie_json = load_lottiefile(os.path.join(animation_path, lottie_name))
+
+
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #   Simulation
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
