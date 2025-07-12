@@ -1,4 +1,5 @@
 import os, sys, logging, pathlib, pickle, traceback, time
+
 # from lib.login.login_cred import login as _login
 src_location = pathlib.Path(__file__).absolute().parent
 config_location = os.path.join(
@@ -30,6 +31,7 @@ from func.simulation import get_simulation
 from func.contact_form import contact
 from func.sentiment_analyser import sentiment
 from func.streamlit_visual import reedit_sentiments
+
 # from lib.login.login_cred import login as _login
 # from lib.login.authenticator import Hasher, Authenticate
 
@@ -141,10 +143,10 @@ st.sidebar.image(forecasty_image, output_format="PNG", use_column_width="always"
 #     _login.set_authentication_status(authentication_status)
 
 # Set authentication to True to bypass login
-if 'authentication_status' not in st.session_state:
-    st.session_state['authentication_status'] = True
-if 'name' not in st.session_state:
-    st.session_state['name'] = 'Demo User'
+if "authentication_status" not in st.session_state:
+    st.session_state["authentication_status"] = True
+if "name" not in st.session_state:
+    st.session_state["name"] = "Demo User"
 
 
 @st.cache_data
