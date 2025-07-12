@@ -8,7 +8,8 @@ from io import BytesIO
 import numpy as np
 import pandas as pd
 import streamlit as st
-from streamlit import caching
+
+# from streamlit import caching  # Deprecated in newer Streamlit versions
 
 # User settings
 import settings
@@ -33,9 +34,8 @@ def reedit_sentiments():
     # Get the last time (to check for updates in the db)
     last_updated_utc = wsb_reasoner.get_last_upload_time()
 
-    @st.cache(max_entries=5)
+    @st.cache_data(max_entries=5)
     def get_last_data_from_db(last_updated):
-
         # Get latest data
         comments_and_scores = wsb_reasoner.get_comments_and_scores_from_db()
         comments_and_scores = (
