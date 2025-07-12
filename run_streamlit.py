@@ -25,7 +25,7 @@ def __init__(self):
     self.bytes_data = None
 
 
-@st.experimental_memo
+@st.cache_data
 def load_lottieurl(url: str):
     r = requests.get(url)
     if r.status_code != 200:
@@ -33,7 +33,7 @@ def load_lottieurl(url: str):
     return r.json()
 
 
-@st.experimental_memo
+@st.cache_data
 def load_data(uploaded_file):
     df = pd.read_csv(uploaded_file)
     df["Date"] = pd.to_datetime(df["Date"])
