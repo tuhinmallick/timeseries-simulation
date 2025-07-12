@@ -10,7 +10,6 @@ altair>=5.1
 asposestorage>=1.0.2
 extra_streamlit_components>=0.1.70
 htbuilder>=0.6.0
-hyperopt>=0.2.9
 lightgbm>=4.3
 mlflow>=3.0
 pandas>=2.3.1
