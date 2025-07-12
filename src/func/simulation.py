@@ -16,7 +16,7 @@ from lib.login.login_cred import login
 import run_simulate as simulate
 
 
-@st.experimental_memo
+@st.cache_data
 def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return json.load(f)
@@ -24,6 +24,8 @@ def load_lottiefile(filepath: str):
 
 lottie_name = "simulation_animation.json"
 lottie_json = load_lottiefile(os.path.join(animation_path, lottie_name))
+
+
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 #   Simulation
 # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
