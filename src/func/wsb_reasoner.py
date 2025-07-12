@@ -119,7 +119,6 @@ def get_mentions_and_vader_scores_from_comments(comments_df, tickers_list):
 
     # Filter out tickers in comments
     def find_tickers_in_comment(body):
-
         tickers = []
 
         for word in body.split():
@@ -276,7 +275,6 @@ def complete_flow(reset=True):
 
     # Load data, filter out tickers and apply vader scores
     for after in pd.date_range(last_utc, current_utc + timedelta(hours=1), freq="1H"):
-
         # Clean cache
         shutil.rmtree(r"cache", ignore_errors=True)
 
