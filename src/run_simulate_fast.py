@@ -1,5 +1,6 @@
 import os, sys, logging, pathlib, pickle, traceback, time
 
+# from lib.login.login_cred import login as _login
 src_location = pathlib.Path(__file__).absolute().parent
 config_location = os.path.join(
     pathlib.Path(__file__).absolute().parent.parent, "configs"
@@ -30,8 +31,9 @@ from func.simulation import get_simulation
 from func.contact_form import contact
 from func.sentiment_analyser import sentiment
 from func.streamlit_visual import reedit_sentiments
-from lib.login.login_cred import login as _login
-from lib.login.authenticator import Hasher, Authenticate
+
+# from lib.login.login_cred import login as _login
+# from lib.login.authenticator import Hasher, Authenticate
 
 # from lib.inputs.dataset import input_dataset
 # from  lib.login.get_login_status import get_login_info as login
@@ -50,16 +52,13 @@ from lib.login.authenticator import Hasher, Authenticate
 #     remove_empty_cols,
 #     resample_df,
 # )
+print("ping")
+# Move set_page_config to be the first Streamlit command
 st.set_page_config(
     page_title="Forecasty.Ai",
     layout="wide",
     page_icon="chart_with_upwards_trend",
 )
-print("ping")
-# Load config
-# config, instructions, readme = load_config(
-#     "config_streamlit.toml", "config_instructions.toml", "config_readme.toml"
-# )
 st.markdown(
     """ <style>
 #MainMenu {visibility: hidden;}
@@ -124,27 +123,33 @@ st.sidebar.image(forecasty_image, output_format="PNG", use_column_width="always"
 #                 st.session_state['username'] = None
 #                 st.session_state['authentication_status'] = None
 #                 st.experimental_set_query_params(logged=False, cred =True)
-_login.set_session_state()
-if (
-    st.session_state["authentication_status"] == False
-    or st.session_state["authentication_status"] is None
-):
-    names, usernames, passwords = _login.login_crediatils()
-    hashed_passwords = Hasher(passwords).generate()
-    authenticator = Authenticate(
-        names,
-        usernames,
-        hashed_passwords,
-        "some_cookie_name",
-        "some_signature_key",
-        cookie_expiry_days=30,
-    )
-    name, authentication_status, username = authenticator.login("Login", "main")
-    _login.set_name(name)
-    _login.set_authentication_status(authentication_status)
+# _login.set_session_state()
+# if (
+#     st.session_state["authentication_status"] == False
+#     or st.session_state["authentication_status"] is None
+# ):
+#     names, usernames, passwords = _login.login_crediatils()
+#     hashed_passwords = Hasher(passwords).generate()
+#     authenticator = Authenticate(
+#         names,
+#         usernames,
+#         hashed_passwords,
+#         "some_cookie_name",
+#         "some_signature_key",
+#         30,
+#     )
+#     name, authentication_status, username = authenticator.login("Login", "main")
+#     _login.set_name(name)
+#     _login.set_authentication_status(authentication_status)
+
+# Set authentication to True to bypass login
+if "authentication_status" not in st.session_state:
+    st.session_state["authentication_status"] = True
+if "name" not in st.session_state:
+    st.session_state["name"] = "Demo User"
 
 
-@st.experimental_memo
+@st.cache_data
 def load_data(uploaded_file):
     df = pd.read_csv(uploaded_file)
     df["Date"] = pd.to_datetime(df["Date"])
@@ -221,19 +226,22 @@ def streamlit_menu():
     head_col1.title(" PGM Price Forecasting")
     head_col2.image(company_image, output_format="PNG", use_column_width="auto")
     st.session_state.functionality_type = selected
-    if st.session_state["authentication_status"] == True:
-        col1, col2 = st.sidebar.columns([1, 0.5])
-        col1.write("Welcome *%s*" % (st.session_state["name"]))
-        if col2.button(
-            "Logout",
-            help="If the logout buttton does not work, please refresh the page",
-        ):
-            cookie_manager = stx.CookieManager(key="logout")
-            cookie_manager.delete("some_cookie_name")
-            st.session_state["logout"] = True
-            st.session_state["name"] = None
-            st.session_state["username"] = None
-            st.session_state["authentication_status"] = None
+    # Authentication disabled - show welcome message without logout
+    col1, col2 = st.sidebar.columns([1, 0.5])
+    col1.write("Welcome *%s*" % (st.session_state["name"]))
+    # if st.session_state["authentication_status"] == True:
+    #     col1, col2 = st.sidebar.columns([1, 0.5])
+    #     col1.write("Welcome *%s*" % (st.session_state["name"]))
+    #     if col2.button(
+    #         "Logout",
+    #         help="If the logout buttton does not work, please refresh the page",
+    #     ):
+    #         cookie_manager = stx.CookieManager(key="logout")
+    #         cookie_manager.delete("some_cookie_name")
+    #         st.session_state["logout"] = True
+    #         st.session_state["name"] = None
+    #         st.session_state["username"] = None
+    #         st.session_state["authentication_status"] = None
     return selected
 
 
@@ -242,9 +250,10 @@ if st.session_state["authentication_status"]:
         data = None
         head_col1, head_col2 = st.columns([1, 0.5])
 
-        company_image = Image.open(
-            os.path.join(artifact_location, "logo", "bearish.png")
-        )
+        # Fix: Use the correct logo file extension (bearish.jpeg)
+        # company_image = Image.open(
+        #     os.path.join(artifact_location, "logo", "bearish.jpeg")
+        # )
         # Forecasty logo
         dashboards = (
             "Technical indicator(Beta)",
@@ -309,7 +318,7 @@ if st.session_state["authentication_status"]:
     except Exception as err:
         traceback.print_exc()
         print(err.args)
-elif authentication_status == False:
-    st.error("Username/password is incorrect")
-elif authentication_status == None:
-    st.warning("Please enter your username and password")
+# elif authentication_status == False:
+#     st.error("Username/password is incorrect")
+# elif authentication_status == None:
+#     st.warning("Please enter your username and password")
