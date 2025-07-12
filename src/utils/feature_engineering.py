@@ -4,6 +4,7 @@ import re
 import warnings
 from typing import Iterable
 
+
 # Feature Engineering functions
 def create_lag(df, features, lag=[1], droplagna=True):
     """create additional lagged features
@@ -68,7 +69,6 @@ def create_lead(df, features: Iterable, lead=[1], dropleadna=True):
 
 
 def add_MA(df, features, window, **kwargs):
-
     if isinstance(features, str):
         features = [features]
     if isinstance(window, int):
@@ -85,7 +85,6 @@ def add_MA(df, features, window, **kwargs):
 
 
 def add_EMA(df, features, alpha, adjust=True, **kwargs):
-
     if isinstance(features, str):
         features = [features]
     if isinstance(alpha, int):
@@ -101,7 +100,6 @@ def add_EMA(df, features, alpha, adjust=True, **kwargs):
 
 
 def add_MS(df, features, window, **kwargs):
-
     if isinstance(features, str):
         features = [features]
     if isinstance(window, int):
@@ -312,7 +310,8 @@ def recover_from_diff(prediction_diff, y, dlist):
 
 #     return res.reshape(y.shape)
 
-#%% DataMelter
+
+# %% DataMelter
 class DataMelter:
     def __init__(self):
         pass
