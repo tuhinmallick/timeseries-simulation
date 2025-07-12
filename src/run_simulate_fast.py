@@ -144,7 +144,7 @@ if (
     _login.set_authentication_status(authentication_status)
 
 
-@st.experimental_memo
+@st.cache_data
 def load_data(uploaded_file):
     df = pd.read_csv(uploaded_file)
     df["Date"] = pd.to_datetime(df["Date"])

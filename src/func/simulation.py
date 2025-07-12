@@ -16,7 +16,7 @@ from lib.login.login_cred import login
 import run_simulate as simulate
 
 
-@st.experimental_memo
+@st.cache_data
 def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return json.load(f)
