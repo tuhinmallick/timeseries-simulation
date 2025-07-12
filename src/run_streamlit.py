@@ -8,6 +8,8 @@ import streamlit_authenticator as stauth
 import pandas as pd
 from PIL import Image
 
+from lib.login.login_cred import login as _login
+
 src_location = pathlib.Path(__file__).absolute().parent
 config_location = os.path.join(
     pathlib.Path(__file__).absolute().parent.parent, "configs"
@@ -498,14 +500,19 @@ def main():
         st.session_state["authentication_status"] == False
         or st.session_state["authentication_status"] is None
     ):
+        names, usernames, passwords = _login.login_crediatils()
         hashed_passwords = stauth.Hasher(passwords).generate()
+        credentials = {
+            "usernames": {
+                username: {"name": name, "password": password}
+                for username, name, password in zip(usernames, names, hashed_passwords)
+            }
+        }
         authenticator = stauth.Authenticate(
-            names,
-            usernames,
-            hashed_passwords,
+            credentials,
             "some_cookie_name",
             "some_signature_key",
-            cookie_expiry_days=14,
+            30,
         )
         name, authentication_status, user_name = authenticator.login(
             "Login", location="main"

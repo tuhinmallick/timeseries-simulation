@@ -249,9 +249,9 @@ if st.session_state["authentication_status"]:
         head_col1, head_col2 = st.columns([1, 0.5])
 
         # Fix: Use the correct logo file extension (bearish.jpeg)
-        company_image = Image.open(
-            os.path.join(artifact_location, "logo", "bearish.jpeg")
-        )
+        # company_image = Image.open(
+        #     os.path.join(artifact_location, "logo", "bearish.jpeg")
+        # )
         # Forecasty logo
         dashboards = (
             "Technical indicator(Beta)",
