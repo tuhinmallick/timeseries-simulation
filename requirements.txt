@@ -7,7 +7,7 @@ Pillow==10.0.1
 PyYAML==6.0.1
 altair==5.1.2
 asposestorage==1.0.2
-extra_streamlit_components==0.1.53
+extra_streamlit_components==0.1.60
 htbuilder==0.6.0
 hyperopt==0.2.7
 lightgbm==4.1.0
