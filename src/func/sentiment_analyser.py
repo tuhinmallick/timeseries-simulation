@@ -35,7 +35,7 @@ def sentiment():
 
     with st.sidebar.form(key="my_form"):
 
-        @st.cache
+        @st.cache_resource
         def initial_setup():
             from textblob.download_corpora import download_all
 
@@ -240,7 +240,7 @@ def sentiment():
         )
 
         # @st.experimental_memo
-        @st.cache(ttl=60 * 60, **cache_args)
+        @st.cache_data(ttl=60 * 60, **cache_args)
         def search_twitter(
             query_terms,
             days_ago,
@@ -251,7 +251,6 @@ def sentiment():
             min_retweets,
             min_faves,
         ):
-
             start_date = str(rel_to_abs_date(days_ago))
 
             query_list = [
@@ -281,11 +280,10 @@ def sentiment():
             return tweets
 
         # @st.experimental_memo
-        @st.cache(**cache_args)
+        @st.cache_data(**cache_args)
         def munge_the_numbers(
             tweets, timestamp1, timestampN
         ):  # Timestamps are just for cache-busting.
-
             word_counts = defaultdict(int)
             bigram_counts = defaultdict(int)
             trigram_counts = defaultdict(int)
@@ -452,7 +450,10 @@ def sentiment():
 
         chart = alt.Chart(sentiment_df, title="Sentiment Polarity")
 
-        avg_polarity = chart.mark_line(interpolate="catmull-rom", tooltip=True,).encode(
+        avg_polarity = chart.mark_line(
+            interpolate="catmull-rom",
+            tooltip=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y(
                 "mean(polarity):Q", title="polarity", scale=alt.Scale(domain=[-1, 1])
@@ -460,7 +461,11 @@ def sentiment():
             color=alt.Color(value=polarity_color),
         )
 
-        polarity_values = chart.mark_point(tooltip=True, size=75, filled=True,).encode(
+        polarity_values = chart.mark_point(
+            tooltip=True,
+            size=75,
+            filled=True,
+        ).encode(
             x=alt.X("date:T", timeUnit=timeUnit, title="date"),
             y=alt.Y("polarity:Q", title="polarity"),
             color=alt.Color(value=polarity_color + "88"),
